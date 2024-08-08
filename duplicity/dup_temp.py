@@ -25,15 +25,12 @@ import os
 import shutil
 import sys
 
-from duplicity import (
-    config,
-    file_naming,
-    gpg,
-    log,
-    log_util,
-    path,
-    tempdir,
-)
+from duplicity import config
+from duplicity import file_naming
+from duplicity import gpg
+from duplicity import log
+from duplicity import path
+from duplicity import tempdir
 
 
 def new_temppath():
@@ -295,7 +292,7 @@ class SrcIter(object):
         try:
             res = Block(self.fp.read(self.get_read_size()))
         except Exception:
-            log_util.FatalError(
+            log.FatalError(
                 _("Failed to read %s: %s") % (self.src.uc_name, sys.exc_info()),
                 log.ErrorCode.generic,
             )

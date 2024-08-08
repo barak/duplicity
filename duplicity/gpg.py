@@ -31,18 +31,15 @@ import os
 import re
 import sys
 import tempfile
-from hashlib import (
-    md5,
-    sha1,
-)
 
-from duplicity import (
-    config,
-    gpginterface,
-    log_util,
-    tempdir,
-    util,
-)
+from duplicity import config
+from duplicity import gpginterface
+from duplicity import log
+from duplicity import tempdir
+from duplicity import util
+
+from hashlib import sha1
+from hashlib import md5
 
 blocksize = 256 * 1024
 
@@ -400,7 +397,7 @@ def GPGWriteFile(block_iter, filename, profile, size=200 * 1024 * 1024, max_foot
                 at_end_of_blockiter = 1
                 break
             except Exception as e:
-                log_util.FatalError(f"Read error on {os.fsdecode(filename)}: {str(e)}")
+                log.FatalError(f"Read error on {os.fsdecode(filename)}: {str(e)}")
             file.write(data)
 
         file.write(block_iter.get_footer())

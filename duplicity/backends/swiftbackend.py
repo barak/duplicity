@@ -21,11 +21,8 @@
 import os
 
 import duplicity.backend
-from duplicity import (
-    config,
-    log,
-    log_util,
-)
+from duplicity import config
+from duplicity import log
 from duplicity.errors import BackendException
 
 
@@ -133,7 +130,7 @@ Exception: {str(e)}"""
             log.Debug(f"Connection failed: {e.__class__.__name__} {str(e)}")
             pass
         except Exception as e:
-            log_util.FatalError(
+            log.FatalError(
                 f"Connection failed: {e.__class__.__name__} {str(e)}",
                 log.ErrorCode.connection_failed,
             )
@@ -144,12 +141,12 @@ Exception: {str(e)}"""
                 headers = dict([[policy_header, policy]]) if policy else None
                 self.conn.put_container(self.container, headers=headers)
             except Exception as e:
-                log_util.FatalError(
+                log.FatalError(
                     f"Container creation failed: {e.__class__.__name__} {str(e)}",
                     log.ErrorCode.connection_failed,
                 )
         elif policy and container_metadata[policy_header.lower()] != policy:
-            log_util.FatalError(
+            log.FatalError(
                 f"Container '{self.container}' exists but its storage policy is "
                 f"'{container_metadata[policy_header.lower()]}' not '{policy}'."
             )
@@ -162,7 +159,7 @@ Exception: {str(e)}"""
             self.svc = SwiftService(options=svc_options)
             container_stat = self.svc.stat(self.container)
         except ClientException as e:
-            log_util.FatalError(
+            log.FatalError(
                 f"Connection failed: {e.__class__.__name__} {str(e)}",
                 log.ErrorCode.connection_failed,
             )

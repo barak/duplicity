@@ -24,12 +24,9 @@
 import os
 import re
 
-from duplicity import (
-    config,
-    log,
-    log_util,
-    util,
-)
+from duplicity import config
+from duplicity import log
+from duplicity import util
 
 
 class ManifestError(Exception):
@@ -111,7 +108,7 @@ class Manifest(object):
         else:
             return
 
-        log_util.FatalError(
+        log.FatalError(
             errmsg
             + "\n\n"
             + _(

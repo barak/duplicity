@@ -31,15 +31,13 @@ from hashlib import md5
 from textwrap import dedent
 
 # TODO: Remove duplicity.argparse311 when py38 goes EOL
-from duplicity import (
-    argparse311 as argparse,
-    config,
-    dup_time,
-    errors,
-    log,
-    path,
-    selection,
-)
+from duplicity import argparse311 as argparse
+from duplicity import config
+from duplicity import dup_time
+from duplicity import errors
+from duplicity import log
+from duplicity import path
+from duplicity import selection
 
 gpg_key_patt = re.compile(r"^(0x)?([0-9A-Fa-f]{8}|[0-9A-Fa-f]{16}|[0-9A-Fa-f]{40})$")
 url_regexp = re.compile(r"^[\w\+]+://")
@@ -59,7 +57,20 @@ def command_line_error(message):
     raise CommandLineError(f"{message}\n{help_footer}")
 
 
-class AddSelectionAction(argparse.Action):
+class DuplicityAction(argparse.Action):
+    def __init__(self, option_strings, dest, **kwargs):
+        super().__init__(option_strings, dest, **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        raise NotImplementedError
+
+
+class DoNothingAction(DuplicityAction):
+    def __call__(self, parser, *args, **kw):
+        pass
+
+
+class AddSelectionAction(DuplicityAction):
     def __init__(self, option_strings, dest, **kwargs):
         super().__init__(option_strings, dest, **kwargs)
 
@@ -70,7 +81,7 @@ class AddSelectionAction(argparse.Action):
         config.select_opts.append((os.fsdecode(option_string), addarg))
 
 
-class AddFilelistAction(argparse.Action):
+class AddFilelistAction(DuplicityAction):
     def __init__(self, option_strings, dest, **kwargs):
         super().__init__(option_strings, dest, **kwargs)
 
@@ -82,7 +93,7 @@ class AddFilelistAction(argparse.Action):
             command_line_error(str(e))
 
 
-class AddRenameAction(argparse.Action):
+class AddRenameAction(DuplicityAction):
     def __init__(self, option_strings, dest, **kwargs):
         super().__init__(option_strings, dest, **kwargs)
 
@@ -91,7 +102,7 @@ class AddRenameAction(argparse.Action):
         config.rename[key] = os.fsencode(values[1])
 
 
-class SplitOptionsAction(argparse.Action):
+class SplitOptionsAction(DuplicityAction):
     def __init__(self, option_strings, dest, **kwargs):
         super().__init__(option_strings, dest, **kwargs)
 
@@ -106,7 +117,7 @@ class SplitOptionsAction(argparse.Action):
         setattr(namespace, var, opts)
 
 
-class IgnoreErrorsAction(argparse.Action):
+class IgnoreErrorsAction(DuplicityAction):
     def __init__(self, option_strings, dest, **kwargs):
         super().__init__(option_strings, dest, **kwargs)
 
@@ -118,15 +129,6 @@ class IgnoreErrorsAction(argparse.Action):
         setattr(namespace, var, True)
 
 
-class SetLogTimestampAction(argparse._StoreConstAction):
-    def __init__(self, option_strings, dest, nargs=None, **kwargs):
-        super().__init__(option_strings, dest, **kwargs)
-
-    def __call__(self, parser, namespace, values, option_string=None):
-        log._log_timestamp = True
-
-
-# TODO: Remove in 4.0.0
 class WarnAsyncStoreConstAction(argparse._StoreConstAction):
     def __init__(self, option_strings, dest, nargs=None, **kwargs):
         super().__init__(option_strings, dest, **kwargs)
@@ -151,6 +153,14 @@ class WarnAsyncStoreConstAction(argparse._StoreConstAction):
             )
         )
         setattr(namespace, self.dest, self.const)
+
+
+class SetLogTimestampAction(argparse._StoreConstAction):
+    def __init__(self, option_strings, dest, nargs=None, **kwargs):
+        super().__init__(option_strings, dest, **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        log._log_timestamp = True
 
 
 def _check_int(val):
@@ -241,6 +251,8 @@ def check_timeout(val):
 
 
 def check_verbosity(val):
+    fail = False
+    verb = log.NOTICE
     val = val.lower()
     if val in ["e", "error"]:
         verb = log.ERROR
@@ -252,34 +264,24 @@ def check_verbosity(val):
         verb = log.INFO
     elif val in ["d", "debug"]:
         verb = log.DEBUG
-    elif val.isdigit():
-        # TODO: remove in 4.0
-        log.Warn(
-            "Numeric verbosity levels are deprecated and will be removed version 4.0.\n"
-            "Use character [ewnid], or word ['error', 'warning', 'notice', 'info', 'debug']",
-        )
-        val = int(val)
-        if val >= 9:
-            verb = log.DEBUG
-        elif val >= 5:
-            verb = log.INFO
-        elif val >= 3:
-            verb = log.NOTICE
-        elif val >= 1:
-            verb = log.WARNING
-        elif val >= 0:
-            verb = log.ERROR
     else:
+        try:
+            verb = int(val)
+            if verb < 0 or verb > 9:
+                fail = True
+        except ValueError:
+            fail = True
+
+    if fail:
         # TRANSL: In this portion of the usage instructions, "[ewnid]" indicates which
         # characters are permitted (e, w, n, i, or d); the brackets imply their own
         # meaning in regex; i.e., only one of the characters is allowed in an instance.
-        # TODO: reword in 4.0
         command_line_error(
             _(
                 "Verbosity must be one of: digit [0-9], character [ewnid],\n"
                 "or word ['error', 'warning', 'notice', 'info', 'debug'].\n"
-                "The default is Notice.  It is strongly recommended\n"
-                "that verbosity level is set at Warning or higher."
+                "The default is 3 (Notice).  It is strongly recommended\n"
+                "that verbosity level is set at 2 (Warning) or higher."
             )
         )
 

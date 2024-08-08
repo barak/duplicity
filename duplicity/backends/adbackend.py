@@ -28,11 +28,8 @@ import time
 from io import DEFAULT_BUFFER_SIZE
 
 import duplicity.backend
-from duplicity import (
-    config,
-    log,
-    log_util,
-)
+from duplicity import config
+from duplicity import log
 from duplicity.errors import BackendException
 
 
@@ -71,7 +68,7 @@ class ADBackend(duplicity.backend.Backend):
         if config.volsize > (10 * 1024 * 1024 * 1024):
             # https://forums.developer.amazon.com/questions/22713/file-size-limits.html
             # https://forums.developer.amazon.com/questions/22038/support-for-chunked-transfer-encoding.html
-            log_util.FatalError(
+            log.FatalError(
                 "Your --volsize is bigger than 10 GiB, which is the maximum "
                 "file size on Amazon Drive that does not require work arounds."
             )
@@ -138,7 +135,7 @@ class ADBackend(duplicity.backend.Backend):
 
         if token is None:
             if not sys.stdout.isatty() or not sys.stdin.isatty():
-                log_util.FatalError(
+                log.FatalError(
                     f"The OAuth2 token could not be loaded from {self.OAUTH_TOKEN_PATH} "
                     f"and you are not running duplicity interactively, so duplicity "
                     f"cannot possibly access Amazon Drive."
@@ -168,7 +165,7 @@ class ADBackend(duplicity.backend.Backend):
 
         urls = endpoints_response.json()
         if "metadataUrl" not in urls or "contentUrl" not in urls:
-            log_util.FatalError("Could not retrieve endpoint URLs for this account")
+            log.FatalError("Could not retrieve endpoint URLs for this account")
         self.metadata_url = urls["metadataUrl"]
         self.content_url = urls["contentUrl"]
 
@@ -191,7 +188,7 @@ class ADBackend(duplicity.backend.Backend):
             candidates = [f for f in matches if f.get("name") == component]
 
             if len(candidates) >= 2:
-                log_util.FatalError(
+                log.FatalError(
                     f"There are multiple folders with the same name below one parent.\n"
                     f"ParentID: {parent_node_id}\nFolderName: {component}"
                 )

@@ -23,10 +23,7 @@ import os
 import time
 
 import duplicity.backend
-from duplicity import (
-    log,
-    log_util,
-)
+from duplicity import log
 from duplicity.errors import BackendException
 
 
@@ -127,7 +124,7 @@ Exception: {str(e)}"""
         except ClientException:
             pass
         except Exception as e:
-            log_util.FatalError(
+            log.FatalError(
                 f"Connection failed: {e.__class__.__name__} {str(e)}",
                 log.ErrorCode.connection_failed,
             )
@@ -138,12 +135,12 @@ Exception: {str(e)}"""
                 headers = dict([[policy_header, policy]])
                 self.conn.put_container(self.container, headers=headers)
             except Exception as e:
-                log_util.FatalError(
+                log.FatalError(
                     f"Container creation failed: {e.__class__.__name__} {str(e)}",
                     log.ErrorCode.connection_failed,
                 )
         elif policy and container_metadata[policy_header.lower()] != policy:
-            log_util.FatalError(
+            log.FatalError(
                 f"Container '{self.container}' exists but its storage policy is "
                 f"'{container_metadata[policy_header.lower()]}' not '{policy}'."
             )
@@ -221,7 +218,7 @@ Exception: {str(e)}"""
                 eta = f"{int(h)}h{int(m):02}m{int(s):02}s"
                 log.Info(f"File {remote_filename} is being unsealed, operation ETA is {eta}.")
             else:
-                log_util.FatalError(
+                log.FatalError(
                     f"Connection failed: {e.__class__.__name__} {str(e)}",
                     log.ErrorCode.connection_failed,
                 )

@@ -21,11 +21,8 @@
 import os
 
 import duplicity.backend
-from duplicity import (
-    log,
-    log_util,
-    util,
-)
+from duplicity import log
+from duplicity import util
 from duplicity.errors import BackendException
 from ._cf_pyrax import PyraxBackend
 
@@ -54,7 +51,7 @@ Exception: {str(e)}"""
             try:
                 pyrax.set_credential_file(CREDENTIALS_FILE)
             except Exception as e:
-                log_util.FatalError(
+                log.FatalError(
                     f"Connection failed, please check your credentials: " f"{e.__class__.__name__} {util.uexc(e)}",
                     log.ErrorCode.connection_failed,
                 )

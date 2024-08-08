@@ -32,29 +32,25 @@ and the time left to transfer all the (yet unknown) amount of data to send.
 This is a forecast based on gathered evidence.
 """
 
-import collections
-import pickle
-import threading
-import time
 from datetime import (
     datetime,
     timedelta,
 )
-
+import collections as sys_collections
 import math
+import pickle
+import threading
+import time
 
-from duplicity import (
-    config,
-    log,
-    log_util,
-    util,
-)
+from duplicity import config
+from duplicity import log
+from duplicity import util
 
 tracker = None
 progress_thread = None
 
 
-class Snapshot(collections.deque):
+class Snapshot(sys_collections.deque):
     """
     A convenience class for storing snapshots in a space/timing efficient manner
     Stores up to 10 consecutive progress snapshots, one for each volume
@@ -129,7 +125,7 @@ class ProgressTracker(object):
         self.last_time = None
         self.elapsed_sum = timedelta()
         self.speed = 0.0
-        self.transfers = collections.deque()
+        self.transfers = sys_collections.deque()
         self.is_full = False
         self.current_estimation = 0.0
         self.prev_estimation = 0.0
@@ -172,7 +168,7 @@ class ProgressTracker(object):
         if self.stall_last_time is None:
             self.stall_last_time = current_time
         if (current_time - self.stall_last_time).seconds > max(5, 2 * config.progress_rate):
-            log_util.TransferProgress(
+            log.TransferProgress(
                 100.0 * self.progress_estimation,
                 self.time_estimation,
                 self.total_bytecount,
@@ -294,7 +290,7 @@ class ProgressTracker(object):
         for x in self.transfers:
             self.speed = 0.3 * x + 0.7 * self.speed
 
-        log_util.TransferProgress(
+        log.TransferProgress(
             100.0 * self.progress_estimation,
             self.time_estimation,
             self.total_bytecount,

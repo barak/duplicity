@@ -29,11 +29,8 @@ import os
 import re
 
 import duplicity.backend
-from duplicity import (
-    config,
-    log,
-    log_util,
-)
+from duplicity import config
+from duplicity import log
 from duplicity.errors import BackendException
 
 
@@ -52,7 +49,7 @@ class SSHPExpectBackend(duplicity.backend.Backend):
             raise
 
         if pexpect.__version__ < "4.5.0":
-            log_util.FatalError(
+            log.FatalError(
                 f"""
                 The version of pexpect, '{pexexpect.__version__}`, is too old.  We need version 4.5.0 or above to run.
                 See https://gitlab.com/duplicity/duplicity/-/issues/125 for the gory details.
