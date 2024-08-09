@@ -1,6 +1,13 @@
 # Changelog
 
 
+## rel.3.0.2 (2024-08-09)
+
+### Changes
+
+* Fix collection-status print. [Kenneth Loafman]
+
+
 ## rel.3.0.1 (2024-08-05)
 
 ### Changes
