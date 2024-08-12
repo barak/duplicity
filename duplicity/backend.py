@@ -90,10 +90,9 @@ def import_backends():
             imp = f"duplicity.backends.{fn}"
             try:
                 __import__(imp)
-                res = "Succeeded"
             except Exception:
                 res = f"Failed: {str(sys.exc_info()[1])}"
-            log.Log(_("Import of %s %s") % (imp, res), log.INFO)
+                log.Info(_(f"Import of {imp} Failed"))
         else:
             continue
 
