@@ -1,10 +1,4 @@
 
-##### installed first to avoid conflicts #####
-
-chardet<3.10
-cryptography==3.4.8
-requests
-
 ##### basic requirements #####
 
 fasteners>=0.19
