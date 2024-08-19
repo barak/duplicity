@@ -200,7 +200,7 @@ class TestTrailingSlash(UnitTestCase):
 
     def test_slash_matches_everything(self):
         """Test / matches everything"""
-        self.assertEqual(inc_sel_dir("/", f"/tmp/{_runtest_dir}/testfiles/select/1/2"), 1)
+        self.assertEqual(inc_sel_dir("/", f"{_runtest_dir}/testfiles/select/1/2"), 1)
         self.assertEqual(inc_sel_dir("/", "/test/random/path"), 1)
         self.assertEqual(exc_sel_dir("/", "/test/random/path"), 0)
         self.assertEqual(inc_sel_dir("/", "/"), 1)

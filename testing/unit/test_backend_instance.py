@@ -254,7 +254,7 @@ class RCloneBackendTest(BackendInstanceBase):
         except Exception as e:
             self.delete_config = False
         os.makedirs(f"{_runtest_dir}/testfiles/output")
-        url = f"rclone://duptest:/%s/{_runtest_dir}/testfiles/output"
+        url = f"rclone://duptest:/{_runtest_dir}/testfiles/output"
         self.backend = duplicity.backend.get_backend_object(url)
         self.assertEqual(self.backend.__class__.__name__, "RcloneBackend")
 

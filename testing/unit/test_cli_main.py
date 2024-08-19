@@ -25,10 +25,13 @@ import unittest
 
 import pytest
 
-from duplicity import cli_main
-from duplicity import gpg
+from duplicity import (
+    cli_main,
+    gpg,
+)
 from duplicity.cli_data import *
 from duplicity.cli_util import *
+from testing import _runtest_dir
 from testing.unit import UnitTestCase
 
 
@@ -502,8 +505,6 @@ class CommandlineTest(UnitTestCase):
         """
         test intermixed args.
         """
-        from testing import _runtest_dir
-
         # Issue 766 -- intermixed -- explicit
         cline = shlex.split(
             f"--archive-dir {_runtest_dir}/backup-metadata/archive/ --tempdir {_runtest_dir}/backup-metadata/temp/ "
@@ -513,10 +514,10 @@ class CommandlineTest(UnitTestCase):
         cli_main.process_command_line(cline)
         self.assertEqual(config.action, "inc")
         self.assertEqual(config.allow_source_mismatch, True)
-        self.assertEqual(config.archive_dir, os.fsencode(f"{_runtest_dir}/backup-metadata/archive/"))
+        self.assertEqual(config.archive_dir, f"{_runtest_dir}/backup-metadata/archive/".encode())
         self.assertEqual(config.full_if_older_than, 2592000)
         self.assertEqual(config.progress, True)
-        self.assertEqual(config.temproot, os.fsencode(f"{_runtest_dir}/backup-metadata/temp/"))
+        self.assertEqual(config.temproot, f"{_runtest_dir}/backup-metadata/temp/".encode())
         self.assertEqual(config.volsize, 4294967296)
 
         # Issue 766 -- intermixed -- implicit
@@ -528,10 +529,10 @@ class CommandlineTest(UnitTestCase):
         cli_main.process_command_line(cline)
         self.assertEqual(config.action, "inc")
         self.assertEqual(config.allow_source_mismatch, True)
-        self.assertEqual(config.archive_dir, os.fsencode(f"{_runtest_dir}/backup-metadata/archive/"))
+        self.assertEqual(config.archive_dir, f"{_runtest_dir}/backup-metadata/archive/".encode())
         self.assertEqual(config.full_if_older_than, 2592000)
         self.assertEqual(config.progress, True)
-        self.assertEqual(config.temproot, os.fsencode(f"{_runtest_dir}/backup-metadata/temp/"))
+        self.assertEqual(config.temproot, f"{_runtest_dir}/backup-metadata/temp/".encode())
         self.assertEqual(config.volsize, 4294967296)
 
     @pytest.mark.usefixtures("redirect_stdin")

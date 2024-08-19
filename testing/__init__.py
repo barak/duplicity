@@ -28,10 +28,12 @@ import time
 import unittest
 from importlib import reload
 
-from duplicity import backend
-from duplicity import config
-from duplicity import log
-from duplicity import util
+from duplicity import (
+    backend,
+    config,
+    log,
+    util,
+)
 
 gettext.install("duplicity", names=["ngettext"])
 

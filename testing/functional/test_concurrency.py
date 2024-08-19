@@ -57,7 +57,6 @@ class ConcurrencyFullLivecycleTest(FunctionalTestCase):
 class ConcurrencyFailTest(FunctionalTestCase):
     def setUp(self):
         super().setUp()
-        self.backend_url = self.backend_url.replace("file", "fortestsonly")  # use _testbackend
 
     @pytest.mark.slow
     def test_put_fail_volume(self):

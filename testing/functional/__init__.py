@@ -207,7 +207,6 @@ class FunctionalTestCase(DuplicityTestCase):
         """
         using _testbackent to trigger certain failure conditions. See backends/_testbackend.py for possible trigger
         """
-        self.backend_url = self.backend_url.replace("file", "fortestsonly")  # use _testbackend
         if not options:
             options = [  # lower the retry count to fail faster.
                 "--num-ret=2",
