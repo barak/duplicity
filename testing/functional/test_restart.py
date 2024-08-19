@@ -133,7 +133,7 @@ class RestartTest(FunctionalTestCase):
 
     @unittest.skipIf(
         platform.machine() in ["ppc64el", "ppc64le"],
-        "Skip on ppc64el and ppc64le machines",
+        "See https://gitlab.com/duplicity/duplicity/-/issues/820",
     )
     def test_last_file_missing_at_end(self):
         """

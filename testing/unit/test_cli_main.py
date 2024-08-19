@@ -502,34 +502,36 @@ class CommandlineTest(UnitTestCase):
         """
         test intermixed args.
         """
+        from testing import _runtest_dir
+
         # Issue 766 -- intermixed -- explicit
         cline = shlex.split(
-            "--archive-dir /tmp/backup-metadata/archive/ --tempdir /tmp/backup-metadata/temp/ "
-            "--allow-source-mismatch --encrypt-sign-key DEADDEAD --volsize 4096 --progress -v 4 "
-            "incr --full-if-older-than 30D foo/bar --log-file /tmp/log.txt boto3+s3://foo"
+            f"--archive-dir {_runtest_dir}/backup-metadata/archive/ --tempdir {_runtest_dir}/backup-metadata/temp/ "
+            f"--allow-source-mismatch --encrypt-sign-key DEADDEAD --volsize 4096 --progress -v 4 "
+            f"incr --full-if-older-than 30D foo/bar --log-file {_runtest_dir}/log.txt boto3+s3://foo"
         )
         cli_main.process_command_line(cline)
         self.assertEqual(config.action, "inc")
         self.assertEqual(config.allow_source_mismatch, True)
-        self.assertEqual(config.archive_dir, b"/tmp/backup-metadata/archive/")
+        self.assertEqual(config.archive_dir, os.fsencode(f"{_runtest_dir}/backup-metadata/archive/"))
         self.assertEqual(config.full_if_older_than, 2592000)
         self.assertEqual(config.progress, True)
-        self.assertEqual(config.temproot, b"/tmp/backup-metadata/temp/")
+        self.assertEqual(config.temproot, os.fsencode(f"{_runtest_dir}/backup-metadata/temp/"))
         self.assertEqual(config.volsize, 4294967296)
 
         # Issue 766 -- intermixed -- implicit
         cline = shlex.split(
-            "--archive-dir /tmp/backup-metadata/archive/ --tempdir /tmp/backup-metadata/temp/ "
-            "--allow-source-mismatch --encrypt-sign-key DEADDEAD --volsize 4096 --progress -v 4 "
-            "--full-if-older-than 30D foo/bar --log-file /tmp/log.txt boto3+s3://foo"
+            f"--archive-dir {_runtest_dir}/backup-metadata/archive/ --tempdir {_runtest_dir}/backup-metadata/temp/ "
+            f"--allow-source-mismatch --encrypt-sign-key DEADDEAD --volsize 4096 --progress -v 4 "
+            f"--full-if-older-than 30D foo/bar --log-file {_runtest_dir}/log.txt boto3+s3://foo"
         )
         cli_main.process_command_line(cline)
         self.assertEqual(config.action, "inc")
         self.assertEqual(config.allow_source_mismatch, True)
-        self.assertEqual(config.archive_dir, b"/tmp/backup-metadata/archive/")
+        self.assertEqual(config.archive_dir, os.fsencode(f"{_runtest_dir}/backup-metadata/archive/"))
         self.assertEqual(config.full_if_older_than, 2592000)
         self.assertEqual(config.progress, True)
-        self.assertEqual(config.temproot, b"/tmp/backup-metadata/temp/")
+        self.assertEqual(config.temproot, os.fsencode(f"{_runtest_dir}/backup-metadata/temp/"))
         self.assertEqual(config.volsize, 4294967296)
 
     @pytest.mark.usefixtures("redirect_stdin")

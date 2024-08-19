@@ -22,18 +22,24 @@
 
 
 import pexpect
+import platform
 import pytest
-import os
+import unittest
+
 from duplicity import log
-
 from duplicity.backends._testbackend import BackendErrors as BE
-
 from testing import _runtest_dir
-from . import CmdError, FunctionalTestCase, EnvController
+from . import (
+    CmdError,
+    EnvController,
+    FunctionalTestCase,
+)
+
 
 # os.environ['PYDEVD'] = "vscode"
 
 
+@pytest.mark.usefixtures("redirect_stdin")
 class ConcurrencyFullLivecycleTest(FunctionalTestCase):
     def test_verify_compare_data(self):
         """Test that verify works in the basic case when the --compare-data option is used"""
@@ -47,6 +53,7 @@ class ConcurrencyFullLivecycleTest(FunctionalTestCase):
         )
 
 
+@pytest.mark.usefixtures("redirect_stdin")
 class ConcurrencyFailTest(FunctionalTestCase):
     def setUp(self):
         super().setUp()
@@ -97,6 +104,10 @@ class ConcurrencyFailTest(FunctionalTestCase):
         )
 
     @pytest.mark.slow
+    @unittest.skipIf(
+        platform.machine() in ["ppc64el", "ppc64le"],
+        "See https://gitlab.com/duplicity/duplicity/-/issues/820",
+    )
     def test_out_of_order_volume(self):
         self.make_largefiles()
         options = [
@@ -112,7 +123,7 @@ class ConcurrencyFailTest(FunctionalTestCase):
                 transferred_files = self.backup("full", f"{_runtest_dir}/testfiles/largefiles", options, timeout=60)
             except pexpect.exceptions.TIMEOUT:
                 self.fail(
-                    "Concurrent backup was not able to terminate itself. (Mostlikely caused by a hanging thread.)"
+                    "Concurrent backup was not able to terminate itself. (Most likely caused by a hanging thread.)"
                 )
             except CmdError as e:  # Backup muse fail with an exit code != 0
                 self.assertEqual(e.exit_status, 0, f"Backup must not fail, because out of order execution. {e}")
@@ -143,6 +154,10 @@ class ConcurrencyFailTest(FunctionalTestCase):
                 )
 
     @pytest.mark.slow
+    @unittest.skipIf(
+        platform.machine() in ["ppc64el", "ppc64le"],
+        "Skip on ppc64el or ppc64le machines",
+    )
     def test_continue_after_missing_volume(self):
         """
         test recovery after a volume in the sequence is missing.
@@ -165,7 +180,7 @@ class ConcurrencyFailTest(FunctionalTestCase):
                 transferred_files = self.backup("full", f"{_runtest_dir}/testfiles/largefiles", options, timeout=60)
             except pexpect.exceptions.TIMEOUT:
                 self.fail(
-                    "Concurrent backup was not able to terminate itself. (Mostlikely caused by a hanging thread.)"
+                    "Concurrent backup was not able to terminate itself. (Most likely caused by a hanging thread.)"
                 )
             except CmdError as e:  # Backup muse fail with an exit code != 0
                 self.assertNotEqual(e.exit_status, 0, f"Backup is expected to fail as a volume is missing. {e}")

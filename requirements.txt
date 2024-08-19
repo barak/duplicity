@@ -29,4 +29,5 @@ pydrive2
 pyrax
 python-swiftclient
 python-keystoneclient
+requests
 requests-oauthlib

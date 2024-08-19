@@ -151,7 +151,7 @@ class FunctionalTestCase(DuplicityTestCase):
         child = pexpect.spawn(
             "/bin/sh",
             ["-f", "-c", cmdline],
-            timeout=None,
+            timeout=timeout,
             env=dup_env,  # type: ignore
             encoding=config.fsencoding,
         )
