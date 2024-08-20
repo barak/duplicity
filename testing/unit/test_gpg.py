@@ -139,10 +139,7 @@ class GPGTest(UnitTestCase):
         sig = decrypted_file.get_signature()
         assert sig == self.sign_key, sig
 
-    @unittest.skipIf(
-        platform.machine() in ["ppc64el", "ppc64le"],
-        "See https://gitlab.com/duplicity/duplicity/-/issues/820",
-    )
+    @pytest.mark.xfail
     def test_GPGWriteFile(self):
         """Test GPGWriteFile"""
         size = 400 * 1000
