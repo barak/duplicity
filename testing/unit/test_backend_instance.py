@@ -249,7 +249,7 @@ class RCloneBackendTest(BackendInstanceBase):
         super().setUp()
         # add a duptest local config
         try:
-            assert not os.system("rclone config create duptest local local=true --non-interactive")
+            assert not os.system("rclone config create duptest local config_is_local true")
             self.delete_config = True
         except Exception as e:
             self.delete_config = False

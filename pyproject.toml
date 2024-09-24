@@ -91,11 +91,18 @@ target-version = [
 
 
 [tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:.*use of fork\\(\\).*:DeprecationWarning",
+    "ignore:.*ssl.PROTOCOL_TLS is deprecated.*:DeprecationWarning",
+]
 addopts = [
     "--capture=fd",
     "--failed-first",
     "--showlocals",
     "--verbose",
+    "-p no:hypothesis",
+    "-p no:randomly",
+    "-p no:xdist",
 ]
 markers = [
     "slow: test runs >= 10 secs",
