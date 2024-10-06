@@ -60,9 +60,7 @@ class CommandlineTest(UnitTestCase):
 
     def tearDown(self):
         log.shutdown()
-        os.removedirs("foo/bar")
-        os.removedirs("inc")
-        os.removedirs("full")
+        super().tearDown()
 
     def run_all_commands_with_errors(self, new_args, err_msg):
         """

@@ -34,6 +34,7 @@ from . import UnitTestCase
 
 class BackendInstanceBase(UnitTestCase):
     def setUp(self):
+        super().setUp()
         UnitTestCase.setUp(self)
         assert not os.system(f"rm -rf {_runtest_dir}/testfiles")
         os.makedirs(f"{_runtest_dir}/testfiles")
@@ -47,6 +48,7 @@ class BackendInstanceBase(UnitTestCase):
             return
         if hasattr(self.backend, "_close"):
             self.backend._close()
+        super().tearDown()
 
     def test_get(self):
         if self.backend is None:
@@ -259,6 +261,6 @@ class RCloneBackendTest(BackendInstanceBase):
         self.assertEqual(self.backend.__class__.__name__, "RcloneBackend")
 
     def tearDown(self):
-        super().tearDown()
         if self.delete_config:
             assert not os.system("rclone config delete duptest")
+        super().tearDown()

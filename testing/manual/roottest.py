@@ -38,6 +38,7 @@ class RootTest(unittest.TestCase):
     """Test doing operations that only root can"""
 
     def setUp(self):
+        super().setUp()
         # must run with euid/egid of root
         assert os.geteuid() == 0
         # make sure uid/gid match euid/egid
@@ -47,6 +48,7 @@ class RootTest(unittest.TestCase):
 
     def tearDown(self):
         assert not os.system("rm -rf /tmp/testfiles tempdir temp2.tar")
+        super().tearDown()
 
     def copyfileobj(self, infp, outfp):
         """Copy in fileobj to out, closing afterwards"""

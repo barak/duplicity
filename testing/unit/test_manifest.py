@@ -89,12 +89,14 @@ class ManifestTest(UnitTestCase):
     """Test Manifest class"""
 
     def setUp(self):
+        super().setUp()
         UnitTestCase.setUp(self)
         self.old_files_changed = config.file_changed
         config.file_changed = "testing"
 
     def tearDown(self):
         config.file_changed = self.old_files_changed
+        super().tearDown()
 
     def test_basic(self):
         vi1 = manifest.VolumeInfo()

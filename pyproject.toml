@@ -94,6 +94,7 @@ target-version = [
 filterwarnings = [
     "ignore:.*use of fork\\(\\).*:DeprecationWarning",
     "ignore:.*ssl.PROTOCOL_TLS is deprecated.*:DeprecationWarning",
+    "ignore:.*pkg_resources.*:DeprecationWarning",
 ]
 addopts = [
     "--capture=fd",

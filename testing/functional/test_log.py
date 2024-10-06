@@ -38,8 +38,8 @@ class LogTest(FunctionalTestCase):
         assert not os.system(f"rm -f {self.logfile}")
 
     def tearDown(self):
-        super().tearDown()
         assert not os.system(f"rm -f {self.logfile}")
+        super().tearDown()
 
     def test_command_line_error(self):
         """Check notification of a simple error code"""
