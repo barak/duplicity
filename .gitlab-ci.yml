@@ -80,16 +80,6 @@ code:
         - pytest testing/test_code.py
     allow_failure: true
 
-py38:
-    <<: *test-template
-    image: python:3.8
-    stage: test
-    script:
-        - python3 -m pip install -r requirements.txt
-        - python3 -m pip install -r requirements.dev
-        - python3 ./setup.py build_ext
-        - pytest testing/unit testing/functional
-
 py39:
     <<: *test-template
     image: python:3.9
@@ -123,6 +113,16 @@ py311:
 py312:
     <<: *test-template
     image: python:3.12
+    stage: test
+    script:
+        - python3 -m pip install -r requirements.txt
+        - python3 -m pip install -r requirements.dev
+        - python3 ./setup.py build_ext
+        - pytest testing/unit testing/functional
+
+py313:
+    <<: *test-template
+    image: python:3.13
     stage: test
     script:
         - python3 -m pip install -r requirements.txt
