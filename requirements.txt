@@ -7,7 +7,8 @@ setuptools
 
 ##### backend libraries #####
 
-atom
+# TODO: restore atom when new version works
+#atom - only used by gdocsbackend
 azure-storage-blob
 b2sdk
 boto3
