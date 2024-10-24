@@ -7,8 +7,8 @@ setuptools
 
 ##### backend libraries #####
 
-# TODO: restore atom when new version works
-#atom - only used by gdocsbackend
+# TODO: restore atom when new version work - only used by gdocsbackend.py
+atom ; python_version < "3.13"
 azure-storage-blob
 b2sdk
 boto3
