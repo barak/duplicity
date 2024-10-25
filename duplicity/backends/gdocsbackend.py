@@ -21,7 +21,6 @@
 
 import os.path
 import string
-import sys
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -49,18 +48,11 @@ class GDocsBackend(duplicity.backend.Backend):
             import gdata.docs.client
             import gdata.docs.data
         except ImportError as e:
-            # TODO: remove when atom works on py313
-            if sys.version_info[:2] == (3, 13):
-                raise BackendException(
-                    f"Googgle Docs backen requires the module atom which is\n"
-                    f"not compatible with Python 3.13 at the moment."
-                )
-            else:
-                raise BackendException(
-                    f"Google Docs backend requires Google Data APIs Python Client Library\n"
-                    f"(see http://code.google.com/p/gdata-python-client/).\n"
-                    f"Exception: {str(e)}"
-                )
+            raise BackendException(
+                f"Google Docs backend requires Google Data APIs Python Client Library\n"
+                f"(see http://code.google.com/p/gdata-python-client/).\n"
+                f"Exception: {str(e)}"
+            )
 
         # Setup client instance.
         self.client = gdata.docs.client.DocsClient(source=f"duplicity {__version__}")
