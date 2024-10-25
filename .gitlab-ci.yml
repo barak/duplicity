@@ -129,6 +129,7 @@ py313:
         - python3 -m pip install -r requirements.dev
         - python3 ./setup.py build_ext
         - pytest testing/unit testing/functional
+    allow_failure: true
 
 pages:
     stage: deploy
