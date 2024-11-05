@@ -128,7 +128,7 @@ gpg_options = ""
 gpg_profile = None
 
 # Maximum file blocksize
-max_blocksize = 2048
+max_blocksize = 0
 
 # If true, filelists and directory statistics will be split on
 # nulls instead of newlines.

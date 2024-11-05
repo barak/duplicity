@@ -192,7 +192,7 @@ def check_file(val):
     try:
         return os.fsencode(expand_fn(val))
     except Exception as e:
-        command_line_error(f"{val} is not a valide pathname: {str(e)}")
+        command_line_error(f"{val} is not a valid pathname: {str(e)}")
 
 
 def check_interval(val):
@@ -298,6 +298,9 @@ def dflt(val):
 
 
 def expand_fn(filename):
+    """
+    Expand user and vars in filename
+    """
     return os.path.expanduser(os.path.expandvars(filename))
 
 
@@ -474,3 +477,10 @@ def set_selection():
     sel = selection.Select(config.local_path)
     sel.ParseArgs(config.select_opts, config.select_files)
     config.select = sel.set_iter()
+
+
+def round512(s):
+    """
+    Round s to nearest 512 boundary
+    """
+    return ((abs(s) + 511) // 512) * 512

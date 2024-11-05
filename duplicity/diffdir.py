@@ -28,7 +28,9 @@ the second, the ROPath iterator is put into tar block form.
 """
 
 import io
+import math
 
+from duplicity import cli_util
 from duplicity import progress
 from duplicity import statistics
 from duplicity import dup_tarfile
@@ -745,13 +747,14 @@ def get_block_size(file_len):
     """
     Return a reasonable block size to use on files of length file_len
 
-    If the block size is too big, deltas will be bigger than is
-    necessary.  If the block size is too small, making deltas and
-    patching can take a really long time.
+    If config.max_blocksize is supplied use it, otherwise use the
+    isqrt(file_len) as the block size.
+
+    block size is rounded up to the nearest 512 byte boundary.
     """
-    if file_len < 1024000:
-        return 512  # set minimum of 512 bytes
+
+    block_size = cli_util.round512(math.isqrt(file_len))
+    if config.max_blocksize:
+        return min(block_size, config.max_blocksize)
     else:
-        # Split file into about 2000 pieces, rounding to 512
-        file_blocksize = int((file_len / (2000 * 512))) * 512
-        return min(file_blocksize, config.max_blocksize)
+        return block_size
