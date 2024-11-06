@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: duplicity\n"
 "Report-Msgid-Bugs-To: Kenneth Loafman <kenneth@loafman.com>\n"
 "POT-Creation-Date: 2024-07-25 11:34-0500\n"
-"PO-Revision-Date: 2024-07-25 16:39\n"
+"PO-Revision-Date: 2024-10-23 22:07\n"
 "Last-Translator: \n"
 "Language-Team: Spanish (Modern)\n"
 "Language: es_EM\n"
@@ -793,7 +793,7 @@ msgstr "Usando el nombre de la copia de seguridad: {config.backup_name}"
 
 #: ../duplicity/cli_util.py:47
 msgid "Enter 'duplicity --help' for help screen."
-msgstr "Introduzca 'duplicidad --help' para la pantalla de ayuda."
+msgstr "Introduzca 'duplicity --help' para la pantalla de ayuda."
 
 #: ../duplicity/cli_util.py:116
 msgid "Running in 'ignore errors' mode due to --ignore-errors.\n"
