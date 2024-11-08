@@ -43,6 +43,9 @@ files_to_test.extend(glob.glob(os.path.join(_top_dir, "testing/*.py")))
 # don't test argparse311.py.  not really ours.
 files_to_test.remove(os.path.join(_top_dir, "duplicity/argparse311.py"))
 
+# TODO: remove when pylint AST builder is fixed.
+files_to_test.remove(os.path.join(_top_dir, "duplicity/backends/giobackend.py"))
+
 
 @unittest.skipIf(os.environ.get("USER", "") == "buildd", "Skip test on Launchpad")
 class CodeTest(DuplicityTestCase):
@@ -90,7 +93,7 @@ class CodeTest(DuplicityTestCase):
         self.run_checker(
             [
                 "pylint",
-                f"--rcfile={os.path.join(_top_dir, 'setup.cfg')}",
+                f"--rcfile={os.path.join(_top_dir, 'pyproject.toml')}",
             ]
             + files_to_test
         )
