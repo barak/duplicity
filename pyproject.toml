@@ -22,6 +22,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: System :: Archiving :: Backup",
 ]
 
@@ -87,6 +88,7 @@ target-version = [
     "py310",
     "py311",
     "py312",
+    "py313",
 ]
 
 
@@ -119,7 +121,7 @@ archs = [
     "x86_64",
 ]
 build = [
-    "cp{38,39,310,311,312}-manylinux_x86_64",
+    "cp{38,39,310,311,312,313}-manylinux_x86_64",
 ]
 before-build = [
     # WARNING: wheel builds are Centos based, not Debian.

@@ -34,7 +34,7 @@ fi
 VERSION=`./setup.py --version`
 echo "$0 of ${VERSION}"
 
-VERS="3.8 3.9 3.10 3.11 3.12"
+VERS="3.8 3.9 3.10 3.11 3.12 3.13"
 
 # We use pyenv to make a reproducible environment for multiple versions.
 # See: https://github.com/pyenv/pyenv/ for links and install commands.

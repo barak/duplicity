@@ -88,6 +88,7 @@ RUN pyenv install 3.9.19
 RUN pyenv install 3.10.14
 RUN pyenv install 3.11.10
 RUN pyenv install 3.12.6
+RUN pyenv install 3.13.0
 
 COPY requirements.* /tmp
 RUN echo Installing /tmp/requirements for 3.8 \
@@ -112,6 +113,11 @@ RUN echo Installing /tmp/requirements for 3.11 \
     && pip install -r /tmp/requirements.txt
 RUN echo Installing /tmp/requirements for 3.12 \
     && pyenv global 3.12.6 \
+    && pip install --upgrade pip setuptools \
+    && pip install -r /tmp/requirements.dev \
+    && pip install -r /tmp/requirements.txt
+RUN echo Installing /tmp/requirements for 3.13.0 \
+    && pyenv global 3.13.0 \
     && pip install --upgrade pip setuptools \
     && pip install -r /tmp/requirements.dev \
     && pip install -r /tmp/requirements.txt

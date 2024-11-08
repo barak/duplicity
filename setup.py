@@ -39,7 +39,7 @@ from setuptools.command.build_ext import build_ext
 
 # check that we can function here
 if not ((3, 8) <= sys.version_info[:2]):
-    print("Sorry, duplicity requires version 3.8 thru 3.12 of Python.", file=sys.stderr)
+    print("Sorry, duplicity requires version 3.8 thru 3.13 of Python.", file=sys.stderr)
     sys.exit(1)
 
 Version: str = "3.0.3.dev"
