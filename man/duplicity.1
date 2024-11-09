@@ -327,8 +327,8 @@ no --archive-dir, --name=foo
 .TP
 .B --asynchronous-upload
 .B (DISCONTINUED)
-This option is discontinued because of instability. 
-`--concurrency` is the new replacement. 
+This option is discontinued because of instability.
+`--concurrency` is the new replacement.
 
 .TP
 .BI "--azure-blob-tier"
@@ -373,14 +373,14 @@ Alternatively you might choose
 .TP
 .BI "--concurrency " number
 Give the number of background process that should be use to run concurrent
-backend task. This decuples local operations like de/encrption, volume creation etc. 
+backend task. This decouples local operations like de/encrption, volume creation etc.
 from transfering to/from backends.
 The intended end-result is a faster backup, because the local
 CPU and your bandwidth can be more consistently utilized. Use of this
 option implies additional need for disk space in the temporary storage
 location; rather than needing to store only one volume at a time,
 enough storage space is required to store n+1 volumes.
-Depending on the backend and network parallel operations can speed up things. 
+Depending on the backend and network parallel operations can speed up things.
 A good starting point for concurrency is 1-4. Check duplicity statistics for fine tuning.
 In most cases this should not extend the number of CPUs minus one of your system.
 
@@ -757,17 +757,18 @@ Write the log with timestamp and log level before the message, similar to syslog
 
 .TP
 .BI "--max-blocksize " number
-determines the number of the blocks examined for changes during the diff process.
-For files < 1MB the blocksize is a constant of 512.
-For files over 1MB the size is given by:
-.br
-    file_blocksize = int((file_len / (2000 * 512)) * 512)
-    return min(file_blocksize, config.max_blocksize)
-where config.max_blocksize defaults to 2048.
+limits the maximum size of the blocks examined for changes during the diff process.
+
+By default the integer square root of file length is used as the librsync block size.
+Minimum being 512 byte with no maximum unless --max-blocksize is supplied.
+Block size is rounded up to the nearest 512 byte boundary.
 
 If you specify a larger max_blocksize, your difftar files will be larger, but your sigtar files will be smaller.
 If you specify a smaller max_blocksize, the reverse occurs.
+
 The --max-blocksize option should be in multiples of 512.
+
+Max blocksize defaults to not supplied.
 
 .TP
 .BI --mf-purge
@@ -2864,7 +2865,7 @@ Use the following environment variables for more settings:
 .RE
 
 .SH ARGPARSE PROBLEM
-Since we converted command line parsing from 
+Since we converted command line parsing from
 .B optparse
 to
 .B argparse

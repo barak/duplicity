@@ -745,12 +745,12 @@ def write_block_iter(block_iter, out_obj):
 
 def get_block_size(file_len):
     """
-    Return a reasonable block size to use on files of length file_len
+    Return a reasonable block size to use on files of length file_len.
 
-    If config.max_blocksize is supplied use it, otherwise use the
-    isqrt(file_len) as the block size.
+    Use the integer square root of file length as the librsync block size.
+    Minimum being 512 byte with no maximum unless --max-blocksize is supplied.
 
-    block size is rounded up to the nearest 512 byte boundary.
+    Block size is rounded up to the nearest 512 byte boundary.
     """
 
     block_size = cli_util.round512(math.isqrt(file_len))

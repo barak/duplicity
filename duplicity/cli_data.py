@@ -450,7 +450,11 @@ OptionKwargs = dict(
     max_blocksize=dict(
         metavar=_("number"),
         type=round512,
-        help="Limit the maximum librsync rolling block size to this many bytes. Rounded to the next 512 byte boundary.",
+        help=(
+            "The integer square root of file length is used as the librsync block size\n"
+            "up to max_blocksize if --max-blocksie is supplied.\n"
+            "Block size is rounded up to the nearest 512 byte boundary."
+        ),
         default=dflt(config.max_blocksize),
     ),
     metadata_sync_mode=dict(
