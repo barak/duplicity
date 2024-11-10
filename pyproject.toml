@@ -82,6 +82,7 @@ exclude = [
 
 [tool.black]
 line-length = 120
+required-version="24"
 target-version = [
     "py38",
     "py39",
