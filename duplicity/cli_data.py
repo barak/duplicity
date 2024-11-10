@@ -452,7 +452,7 @@ OptionKwargs = dict(
         type=round512,
         help=(
             "The integer square root of file length is used as the librsync block size\n"
-            "up to max_blocksize if --max-blocksie is supplied.\n"
+            "up to this maximum block size value in bytes if supplied.\n"
             "Block size is rounded up to the nearest 512 byte boundary."
         ),
         default=dflt(config.max_blocksize),
