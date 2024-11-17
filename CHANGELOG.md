@@ -1,6 +1,119 @@
 # Changelog
 
 
+## rel.3.0.3 (2024-11-17)
+
+### Changes
+
+* Run po/update-pot. [Kenneth Loafman]
+
+* Move config from code to pyproject.toml. [Kenneth Loafman]
+
+* Fix docs for --max-blocksize. [Kenneth Loafman]
+
+* Upgrade black to 24.10.0 for py313. [Kenneth Loafman]
+
+* Allow Python 3.13 to install. [Kenneth Loafman]
+
+* Some code test changes. [Kenneth Loafman]
+
+    - move pylint to pyproject.toml
+    - remove giobackend.py from files to test
+
+* High memory usage when creating duplicity backup of a single very
+large file. [Kenneth Loafman]
+
+    Return a reasonable block size to use on files of length file_len
+
+    If max_blocksize==N is supplied use it, otherwise use the
+    integer square root of file_len as the block size.
+
+    Block size is rounded up to the nearest 512 byte boundary.
+
+* Fix problem with reading ".../progress" file after aborted. [Charles Lane]
+
+    This is mentioned in (long ago!) issue #80 I've hit the same problem many times, so tracked it down with a fix.
+
+    Fix problem with reading ".../progress" file after aborted backup run. This results in an error message (and lack of %backup) when using the --progress command line option.
+
+    Note that the code to save the "progress" file worked fine, and this change is so that reading the "progress" file is similar: making the path to the "progress" file, and having the "b" flag for binary i/o.
+
+    Fixes #80
+
+* Allow failure on py13 test. [Kenneth Loafman]
+
+* Revert gdocsbackend.py.  Remove TODO's. [Kenneth Loafman]
+
+* Fix requirements for upcoming atom release. [Kenneth Loafman]
+
+    - 0.10.5 or earlier for python <= 3.12
+    - 0.11.0 or later for python >= 3.13
+
+* Turn off atom for py313. [Kenneth Loafman]
+
+    - add error for py313 in gdocksbackend.py
+    - Only used by gdocsbackend.py
+    - fails install on py313.
+
+* Temp removal of atom requirement. [Kenneth Loafman]
+
+    Only used by gdocsbackend.py.  Fails install.
+
+* Remove py38 and add py313. [Kenneth Loafman]
+
+* Cleanup pytest run. [Kenneth Loafman]
+
+    make sure super().setUp() and super().tearDown() are called.
+    * remove files from the \_runtest_dir that we created.
+    * added conftest:pytest_sessionfinish().
+    * added more warning suppression.
+
+* Fix unit/test\_file\_naming.py. [Kenneth Loafman]
+
+    - curtime* set in wrong place for tests.
+    - set curtime and curtimestr from setUp().
+
+* Mark test\_GPGWriteFile as xfail. [Kenneth Loafman]
+
+    - some machines like ppc64* and i686 may fail
+
+* Testfortestsonlys and other dirs should be in \_runtest\_dir. [Kenneth Loafman]
+
+    Fixes #838
+
+* Testing/functional/test\_concurrency.py hangs on ppc64le only. [Kenneth Loafman]
+
+* Remove version specs in requirements.txt. [Kenneth Loafman]
+
+    - pipdeptree shows no upper limit that forced specs.
+
+* Only log if backend import failed. [Kenneth Loafman]
+
+* Set version for LP. [Kenneth Loafman]
+
+### Fix
+
+* Typo in max block size doc. [ede]
+
+* Fix testing/docker to enable pytest to run w/o gpg fails. [Kenneth Loafman]
+
+    Also fixes the following new issues:
+
+    * ignores new pylint error (new pylint)
+    * fixes RCloneBackenTest (new rclone)
+    * ignore fork() DeprecationWarning (nonsense)
+    * change tests from tox to pytest
+    * exclude pytest plugins that cause problems
+
+* Add setuptools to requirements.txt. [Kenneth Loafman]
+
+    Seems py312 no longer supplies by default.
+
+* Verbosity setting is broken with concurrency. [Kenneth Loafman]
+
+    Fixes #839
+
+
 ## rel.3.0.2 (2024-08-09)
 
 ### Changes
