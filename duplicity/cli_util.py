@@ -481,6 +481,6 @@ def set_selection():
 
 def round512(s):
     """
-    Round s to nearest 512 boundary
+    Round to nearest 512 boundary
     """
-    return ((abs(s) + 511) // 512) * 512
+    return ((max(1, abs(s)) + 511) // 512) * 512
