@@ -1,9 +1,11 @@
 # Changelog
 
 
-## (unreleased)
+## rel.3.0.3.1 (2024-11-19)
 
 ### Changes
+
+* Fix .gitchangelog.rc for 4 digit version. [Kenneth Loafman]
 
 * Fix so amd64 snaps build with tahoe support. [Kenneth Loafman]
 
