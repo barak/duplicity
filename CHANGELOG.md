@@ -1,6 +1,21 @@
 # Changelog
 
 
+## rel.3.0.3.1 (2024-11-19)
+
+### Changes
+
+* Fix .gitchangelog.rc for 4 digit version. [Kenneth Loafman]
+
+* Fix so amd64 snaps build with tahoe support. [Kenneth Loafman]
+
+### Fix
+
+* Fix handling of zero length files for older librsync versions. [edeso]
+
+    Fixes #848
+
+
 ## rel.3.0.3 (2024-11-17)
 
 ### Changes
