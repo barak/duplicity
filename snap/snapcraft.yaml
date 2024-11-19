@@ -1,5 +1,5 @@
 name: duplicity
-version: 3.0.4.dev
+version: 3.0.3.1
 license: GPL-2.0
 summary: Efficient, encrypted backup to local or remote hosts
 description: |
