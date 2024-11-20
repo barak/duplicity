@@ -291,13 +291,6 @@ setup(
     ext_modules=ext_modules,
     data_files=get_data_files(),
     include_package_data=True,
-    tests_require=[
-        "fasteners",
-        "pexpect",
-        "pytest",
-        "pytest-runner",
-    ],
-    test_suite="testing",
     cmdclass={
         "build_ext": BuildExtCommand,
         "setversion": SetVersionCommand,
