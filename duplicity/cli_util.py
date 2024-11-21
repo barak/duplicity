@@ -481,6 +481,7 @@ def set_selection():
 
 def round512(s):
     """
-    Round to nearest 512 boundary
+    Rounds up to the next 512 boundary. For negative numbers the absolute value will be used.
+    Minimum return value is 512.
     """
     return ((max(1, abs(s)) + 511) // 512) * 512
