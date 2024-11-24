@@ -377,8 +377,8 @@ idr_fakeroot = None
 # whether to check remote manifest (requires private key)
 check_remote = True
 
-# log verbosity, default get set in program logic.
-verbosity = None
+# log verbosity.
+verbosity = log.NOTICE
 
 # whether 'inc` is explicit or not
 # inc_explicit = True
