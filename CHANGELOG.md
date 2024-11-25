@@ -1,6 +1,31 @@
 # Changelog
 
 
+## rel.3.0.3.2 (2024-11-25)
+
+### Changes
+
+* Improve round512 method docstring. [ede]
+
+* Remove 'test' mentions from setup.py. [Kenneth Loafman]
+
+* Set dev version for LP. [Kenneth Loafman]
+
+* Fix so amd64 snaps build with tahoe support. [Kenneth Loafman]
+
+* Set dev version for LP. [Kenneth Loafman]
+
+### Fix
+
+* Concurrency without setting verbosity throws exception. [Kenneth Loafman]
+
+* Argument --max-blocksize: invalid round512 value. [Kenneth Loafman]
+
+* Fix handling of zero length files for older librsync versions. [edeso]
+
+    Fixes #848
+
+
 ## rel.3.0.3.1 (2024-11-19)
 
 ### Changes
