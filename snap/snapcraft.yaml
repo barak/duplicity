@@ -61,8 +61,8 @@ parts:
             # python module tahoe-lafs dies trying to compile really old pycddl 
             # on other archs than amd64, as python plugin does not support 
             # conditions we only include it in amd64 snaps manually here
-            if [ "$SNAPCRAFT_BUILD_FOR" != "amd64" ]; then
-                echo "Skipping tahoe-lafs integration on arch '$SNAPCRAFT_BUILD_FOR'!='amd64'"
+            if [ "$SNAPCRAFT_ARCH_BUILD_FOR" != "amd64" ]; then
+                echo "Skipping tahoe-lafs integration on arch that is not 'amd64'."
             else
                 python3 -m pip install zfec==1.5.7.4
                 python3 -m pip install tahoe-lafs
