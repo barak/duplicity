@@ -84,7 +84,6 @@ exclude = [
 line-length = 120
 required-version="24"
 target-version = [
-    "py38",
     "py39",
     "py310",
     "py311",
@@ -112,6 +111,7 @@ markers = [
     "slow: test runs >= 10 secs",
 ]
 testpaths = [
+    "testing/test_code.py",
     "testing/unit",
     "testing/functional",
 ]

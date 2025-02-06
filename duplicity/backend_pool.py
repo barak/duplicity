@@ -52,9 +52,9 @@ from duplicity import (
     util,
 )
 
+# TODO: remove when 3.8 is deprecated.
 if sys.version_info[:2] == (3, 8):
     # patching buggy 3.8 implementation.
-    # TODO: remove when 3.8 is deprecated.
     import atexit
     import concurrent.futures.process
 
