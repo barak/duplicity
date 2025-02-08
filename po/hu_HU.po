@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: duplicity\n"
 "Report-Msgid-Bugs-To: Kenneth Loafman <kenneth@loafman.com>\n"
-"POT-Creation-Date: 2024-11-17 10:47-0600\n"
-"PO-Revision-Date: 2024-11-17 17:08\n"
+"POT-Creation-Date: 2025-02-08 11:17-0600\n"
+"PO-Revision-Date: 2025-02-08 18:13\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Language: hu_HU\n"
@@ -492,7 +492,7 @@ msgid "path"
 msgstr "útvonal"
 
 #: ../duplicity/cli_data.py:116
-msgid "Hot|Cool|Archive"
+msgid "Hot|Cool|Cold|Archive"
 msgstr ""
 
 #. Used in usage help to represent a desired number of
@@ -1422,25 +1422,25 @@ msgid "                PYTHONOPTIMIZE in the environment causes duplicity to fai
 "                "
 msgstr ""
 
-#: ../duplicity/dup_main.py:1655
+#: ../duplicity/dup_main.py:1662
 #, python-brace-format
 msgid "Last {action} backup left a partial set, restarting."
 msgstr ""
 
-#: ../duplicity/dup_main.py:1659
+#: ../duplicity/dup_main.py:1666
 #, python-brace-format
 msgid "Cleaning up previous partial {action} backup set, restarting."
 msgstr ""
 
-#: ../duplicity/dup_main.py:1673
+#: ../duplicity/dup_main.py:1680
 msgid "Last full backup date: none"
 msgstr "Legutolsó teljes biztonsági mentés dátuma: nincs."
 
-#: ../duplicity/dup_main.py:1680
+#: ../duplicity/dup_main.py:1687
 msgid "Last full backup is too old, forcing full backup"
 msgstr "Legutolsó teljes biztonsági mentés túl régi, teljes mentés kell."
 
-#: ../duplicity/dup_main.py:1736
+#: ../duplicity/dup_main.py:1743
 msgid "When using symmetric encryption, the signing passphrase must equal the encryption passphrase."
 msgstr "Szimmetrikus titkosítás használatakor az aláíró jelszónak meg kell egyeznie a titkosítási jelszóval."
 
@@ -1772,21 +1772,6 @@ msgstr "Ideiglenes állomány elfelejtése: %s"
 #, python-format
 msgid "Attempt to forget unknown tempfile %s - this is probably a bug."
 msgstr "Ismeretlen %s ideiglenes állomány felejtésére tett kísérlet - ez valószínűleg egy hiba (bug)."
-
-#: ../duplicity/tempdir.py:281
-#, python-format
-msgid "Removing still remembered temporary file %s"
-msgstr "Ismert ideiglenes %s állomány törlése"
-
-#: ../duplicity/tempdir.py:284
-#, python-format
-msgid "Cleanup of temporary file %s failed"
-msgstr "A %s ideiglenes állomány törlése sikertelen volt"
-
-#: ../duplicity/tempdir.py:290
-#, python-format
-msgid "Cleanup of temporary directory %s failed - this is probably a bug."
-msgstr "A %s ideiglenes állomány törlése sikertelen volt - ez valószínűleg egy hiba (bug)."
 
 #: ../duplicity/util.py:176
 #, python-format

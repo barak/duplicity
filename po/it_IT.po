@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: duplicity\n"
 "Report-Msgid-Bugs-To: Kenneth Loafman <kenneth@loafman.com>\n"
-"POT-Creation-Date: 2024-11-17 10:47-0600\n"
-"PO-Revision-Date: 2024-11-17 17:08\n"
+"POT-Creation-Date: 2025-02-08 11:17-0600\n"
+"PO-Revision-Date: 2025-02-08 18:13\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Language: it_IT\n"
@@ -492,8 +492,8 @@ msgid "path"
 msgstr "percorso"
 
 #: ../duplicity/cli_data.py:116
-msgid "Hot|Cool|Archive"
-msgstr "Archivio Hot<unk> Cool<unk>"
+msgid "Hot|Cool|Cold|Archive"
+msgstr ""
 
 #. Used in usage help to represent a desired number of
 #. something. Example:
@@ -1423,25 +1423,25 @@ msgid "                PYTHONOPTIMIZE in the environment causes duplicity to fai
 "                "
 msgstr ""
 
-#: ../duplicity/dup_main.py:1655
+#: ../duplicity/dup_main.py:1662
 #, python-brace-format
 msgid "Last {action} backup left a partial set, restarting."
 msgstr "Ultimo backup {action} ha lasciato un set parziale, riavvio."
 
-#: ../duplicity/dup_main.py:1659
+#: ../duplicity/dup_main.py:1666
 #, python-brace-format
 msgid "Cleaning up previous partial {action} backup set, restarting."
 msgstr "Pulizia del precedente set di backup parziale {action} , riavvio."
 
-#: ../duplicity/dup_main.py:1673
+#: ../duplicity/dup_main.py:1680
 msgid "Last full backup date: none"
 msgstr "Data dell'ultimo backup completo: nessuna"
 
-#: ../duplicity/dup_main.py:1680
+#: ../duplicity/dup_main.py:1687
 msgid "Last full backup is too old, forcing full backup"
 msgstr "L'ultimo backup completo è troppo vecchio, viene forzato il backup completo"
 
-#: ../duplicity/dup_main.py:1736
+#: ../duplicity/dup_main.py:1743
 msgid "When using symmetric encryption, the signing passphrase must equal the encryption passphrase."
 msgstr "Quando si usa la cifratura simmetrica, la passphrase di firma deve corrispondere alla passphrase di cifratura."
 
@@ -1792,21 +1792,6 @@ msgstr "File temporaneo %s dimenticato"
 #, python-format
 msgid "Attempt to forget unknown tempfile %s - this is probably a bug."
 msgstr "Tentativo di dimenticare il file temporaneo sconosciuto %s - questo è probabilmente un bug."
-
-#: ../duplicity/tempdir.py:281
-#, python-format
-msgid "Removing still remembered temporary file %s"
-msgstr "Rimozione del file temporaneo %s ancora ricordato"
-
-#: ../duplicity/tempdir.py:284
-#, python-format
-msgid "Cleanup of temporary file %s failed"
-msgstr "Pulizia del file temporaneo %s non riuscita"
-
-#: ../duplicity/tempdir.py:290
-#, python-format
-msgid "Cleanup of temporary directory %s failed - this is probably a bug."
-msgstr "Pulizia della directory temporanea %s non riuscita - probabilmente si tratta di un bug."
 
 #: ../duplicity/util.py:176
 #, python-format

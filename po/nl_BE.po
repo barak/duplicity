@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: duplicity\n"
 "Report-Msgid-Bugs-To: Kenneth Loafman <kenneth@loafman.com>\n"
-"POT-Creation-Date: 2024-11-17 10:47-0600\n"
-"PO-Revision-Date: 2024-11-17 17:09\n"
+"POT-Creation-Date: 2025-02-08 11:17-0600\n"
+"PO-Revision-Date: 2025-02-08 18:14\n"
 "Last-Translator: \n"
 "Language-Team: Dutch, Belgium\n"
 "Language: nl_BE\n"
@@ -492,8 +492,8 @@ msgid "path"
 msgstr "pad"
 
 #: ../duplicity/cli_data.py:116
-msgid "Hot|Cool|Archive"
-msgstr "Hot|Cool|Archive"
+msgid "Hot|Cool|Cold|Archive"
+msgstr ""
 
 #. Used in usage help to represent a desired number of
 #. something. Example:
@@ -1423,25 +1423,25 @@ msgid "                PYTHONOPTIMIZE in the environment causes duplicity to fai
 "                "
 msgstr ""
 
-#: ../duplicity/dup_main.py:1655
+#: ../duplicity/dup_main.py:1662
 #, python-brace-format
 msgid "Last {action} backup left a partial set, restarting."
 msgstr "Laatste {action} reservekopie gemaakt van een gedeeltelijke set en herstart opnieuw."
 
-#: ../duplicity/dup_main.py:1659
+#: ../duplicity/dup_main.py:1666
 #, python-brace-format
 msgid "Cleaning up previous partial {action} backup set, restarting."
 msgstr "Opschonen vorige gedeeltelijke {action} backup set en opnieuw opstarten."
 
-#: ../duplicity/dup_main.py:1673
+#: ../duplicity/dup_main.py:1680
 msgid "Last full backup date: none"
 msgstr "Laatste volledige back-up datum: geen"
 
-#: ../duplicity/dup_main.py:1680
+#: ../duplicity/dup_main.py:1687
 msgid "Last full backup is too old, forcing full backup"
 msgstr "Laatste volledige back-up is te oud, waardoor volledige back-up wordt gedwongen"
 
-#: ../duplicity/dup_main.py:1736
+#: ../duplicity/dup_main.py:1743
 msgid "When using symmetric encryption, the signing passphrase must equal the encryption passphrase."
 msgstr "Bij gebruik van symmetrische encryptie moet de ondertekenende wachtwoordzin gelijk zijn aan de encryptie wachtzin."
 
@@ -1792,21 +1792,6 @@ msgstr "Tijdelijk bestand %s wordt vergeten"
 #, python-format
 msgid "Attempt to forget unknown tempfile %s - this is probably a bug."
 msgstr "Poging om onbekend tijdelijk bestand %s te vergeten: dit is waarschijnlijk een bug."
-
-#: ../duplicity/tempdir.py:281
-#, python-format
-msgid "Removing still remembered temporary file %s"
-msgstr "Verwijderen nog steeds onthouden tijdelijke bestand %s"
-
-#: ../duplicity/tempdir.py:284
-#, python-format
-msgid "Cleanup of temporary file %s failed"
-msgstr "Opschonen van tijdelijk bestand %s is mislukt"
-
-#: ../duplicity/tempdir.py:290
-#, python-format
-msgid "Cleanup of temporary directory %s failed - this is probably a bug."
-msgstr "Opschonen van tijdelijke map %s is mislukt - dit is waarschijnlijk een bug."
 
 #: ../duplicity/util.py:176
 #, python-format

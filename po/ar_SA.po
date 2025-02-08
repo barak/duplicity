@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: duplicity\n"
 "Report-Msgid-Bugs-To: Kenneth Loafman <kenneth@loafman.com>\n"
-"POT-Creation-Date: 2024-11-17 10:47-0600\n"
-"PO-Revision-Date: 2024-11-17 17:08\n"
+"POT-Creation-Date: 2025-02-08 11:17-0600\n"
+"PO-Revision-Date: 2025-02-08 18:13\n"
 "Last-Translator: \n"
 "Language-Team: Arabic\n"
 "Language: ar_SA\n"
@@ -500,8 +500,8 @@ msgid "path"
 msgstr "المسار"
 
 #: ../duplicity/cli_data.py:116
-msgid "Hot|Cool|Archive"
-msgstr "الأرشيف الساخن"
+msgid "Hot|Cool|Cold|Archive"
+msgstr ""
 
 #. Used in usage help to represent a desired number of
 #. something. Example:
@@ -1429,25 +1429,25 @@ msgid "                PYTHONOPTIMIZE in the environment causes duplicity to fai
 "                "
 msgstr ""
 
-#: ../duplicity/dup_main.py:1655
+#: ../duplicity/dup_main.py:1662
 #, python-brace-format
 msgid "Last {action} backup left a partial set, restarting."
 msgstr "آخر نسخة احتياطية {action} تركت مجموعة جزئية، إعادة التشغيل."
 
-#: ../duplicity/dup_main.py:1659
+#: ../duplicity/dup_main.py:1666
 #, python-brace-format
 msgid "Cleaning up previous partial {action} backup set, restarting."
 msgstr "تنظيف مجموعة النسخ الاحتياطي الجزئية {action} السابقة، إعادة التشغيل."
 
-#: ../duplicity/dup_main.py:1673
+#: ../duplicity/dup_main.py:1680
 msgid "Last full backup date: none"
 msgstr "تاريخ النسخ الاحتياطي الأخير: لا يوجد"
 
-#: ../duplicity/dup_main.py:1680
+#: ../duplicity/dup_main.py:1687
 msgid "Last full backup is too old, forcing full backup"
 msgstr "آخر نسخة احتياطية كاملة قديمة جداً، مما يجبر على النسخ الاحتياطي الكامل"
 
-#: ../duplicity/dup_main.py:1736
+#: ../duplicity/dup_main.py:1743
 msgid "When using symmetric encryption, the signing passphrase must equal the encryption passphrase."
 msgstr "عند استخدام التشفير المتماثل، يجب أن تعادل عبارة مرور كلمة مرور التشفير."
 
@@ -1795,21 +1795,6 @@ msgstr "نسيان الملف المؤقت %s"
 #, python-format
 msgid "Attempt to forget unknown tempfile %s - this is probably a bug."
 msgstr "محاولة لنسيان الملف الإفتراضي %s غير معروف، ربما يكون هذا خطأ."
-
-#: ../duplicity/tempdir.py:281
-#, python-format
-msgid "Removing still remembered temporary file %s"
-msgstr "إزالة ما زال يتذكر الملف المؤقت %s"
-
-#: ../duplicity/tempdir.py:284
-#, python-format
-msgid "Cleanup of temporary file %s failed"
-msgstr "فشل تنظيف الملف المؤقت %s"
-
-#: ../duplicity/tempdir.py:290
-#, python-format
-msgid "Cleanup of temporary directory %s failed - this is probably a bug."
-msgstr "فشل تنظيف الدليل المؤقت %s - ربما هذا خطأ."
 
 #: ../duplicity/util.py:176
 #, python-format
