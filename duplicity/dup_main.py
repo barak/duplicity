@@ -1585,7 +1585,7 @@ def main():
         )
 
     # TODO: remove when 3.8 is deprecated.
-    if sys.version_info[:2] == (3, 8) and os.eniron.get("SNAP", False):
+    if sys.version_info[:2] == (3, 8) and not os.environ.get("SNAP", False):
         log.Warn(
             "Starting deprecation of python 3.8 support. Support for python 3.8. will finally removed with the "
             "release of 3.14.  For details see https://devguide.python.org/versions/"
