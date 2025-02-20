@@ -442,7 +442,7 @@ def write_multivol(backup_type, tarblock_iter, man_outfp, sig_outfp, backend):
     backend_pooler = None
     command2vol_map: Dict[int, CommandMetaData] = {}
     if config.concurrency > 0:
-        backend_pooler = backend_pool.BackendPool(backend.backend.parsed_url.url_string, processes=config.concurrency)
+        backend_pooler = backend_pool.BackendPool(config.target_url, processes=config.concurrency)
 
     while not at_end:
         # set up iterator
