@@ -1,7 +1,7 @@
 # -*- Mode:Python; indent-tabs-mode:nil; tab-width:4; encoding:utf-8 -*-
 #
-# Copyright 2002 Ben Escoto <ben@emerose.org>
-# Copyright 2007 Kenneth Loafman <kenneth@loafman.com>
+# Copyright 2002 Ben Escoto
+# Copyright 2007 Kenneth Loafman
 # Copyright 2013 Edgar Soldin
 #                 - ssl cert verification, some robustness enhancements
 #
@@ -114,7 +114,7 @@ class CustomHTTPSConnection(http.client.HTTPSConnection):
 class WebDAVBackend(duplicity.backend.Backend):
     """Backend for accessing a WebDAV repository.
 
-    webdav backend contributed in 2006 by Jesper Zedlitz <jesper@zedlitz.de>
+    webdav backend contributed in 2006 by Jesper Zedlitz
     """
 
     """

@@ -4,8 +4,11 @@ version = "3.0.5.dev"
 dynamic = ["dependencies"]
 description = "Encrypted backup using rsync algorithm"
 authors = [
-    { name = "Ben Escoto", email = "ben@emrose.org" },
     { name = "Kenneth Loafman", email = "kenneth@loafman.com" },
+]
+maintainers = [
+    { name = "Edgar Soldin" },
+    { name = "Thomas Laubrock" },
 ]
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">= 3.8, < 3.14"
@@ -44,7 +47,13 @@ duplicity = "duplicity.__main__:dup_run"
 
 
 [project.urls]
-url = "http://duplicity.us"
+Homepage = "http://duplicity.us"
+Download = "https://gitlab.com/duplicity/duplicity/-/releases"
+Issues = "https://gitlab.com/duplicity/duplicity/-/issues"
+Contact = "https://lists.nongnu.org/mailman/listinfo/duplicity-talk"
+Documentation = "http://duplicity.us"
+Repository = "https://gitlab.com/duplicity/duplicity"
+Changelog = "https://gitlab.com/duplicity/duplicity/-/blob/main/CHANGELOG.md"
 
 
 [tool.setuptools]

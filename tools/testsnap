@@ -1,8 +1,8 @@
 #!/bin/bash
 # -*- Mode:Shell; indent-tabs-mode:nil; tab-width -*-
 #
-# Copyright 2022 Kenneth Loafman <kenneth@loafman.com>,
-# Edgar Soldin <https://soldin.de>
+# Copyright 2022 Kenneth Loafman,
+# Copyright 2022 Edgar Soldin
 #
 # This file is part of duplicity.
 #

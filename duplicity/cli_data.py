@@ -1,6 +1,6 @@
 # -*- Mode:Python; indent-tabs-mode:nil; tab-width:4; encoding:utf-8 -*-
 #
-# Copyright 2022 Kenneth Loafman <kenneth@loafman.com>
+# Copyright 2022 Kenneth Loafman
 #
 # This file is part of duplicity.
 #

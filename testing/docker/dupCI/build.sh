@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Copyright 2017 Nils Tekampe <nils@tekampe.org>,
-# Kenneth Loafman <kenneth@loafman.com>
+# Copyright 2017 Nils Tekampe
+# Copyright 2017 Kenneth Loafman
 #
 # This file is part of duplicity.
 # This script sets up a test network for the tests of dupclicity
