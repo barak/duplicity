@@ -471,7 +471,8 @@ class Backend(object):
                 password = None
         return password
 
-    def munge_password(self, commandline):
+    @staticmethod
+    def munge_password(commandline):
         """
         Remove password from commandline by substituting the password
         found in the URL, if any, with a generic place-holder.
@@ -480,10 +481,7 @@ class Backend(object):
         guaranteed that the results are correct (i.e., more than just
         the ':password@' may be substituted.
         """
-        if self.parsed_url.password:
-            return re.sub(r"(:([^\s:/@]+)@([^\s@]+))", r":*****@\3", commandline)
-        else:
-            return commandline
+        return re.sub(r"(:([^\s:/@]+)@([^\s@]+))", r":*****@\3", commandline)
 
     def __subprocess_popen(self, args):
         """

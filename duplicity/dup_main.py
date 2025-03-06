@@ -40,6 +40,7 @@ from textwrap import dedent
 from typing import Dict
 
 from duplicity import __version__
+from duplicity import backend
 from duplicity import backend_pool
 from duplicity import cli_main
 from duplicity import config
@@ -1483,7 +1484,8 @@ def log_startup_parms(verbosity=log.INFO):
     """
     log.Log("=" * 80, verbosity)
     log.Log(f"duplicity {__version__}", verbosity)
-    log.Log(f"Args: {' '.join([os.fsdecode(arg) for arg in sys.argv])}", verbosity)
+    cmd_line = " ".join([os.fsdecode(arg) for arg in sys.argv])
+    log.Log(f"Args: {backend.Backend.munge_password(cmd_line)}", verbosity)
     log.Log(" ".join(platform.uname()), verbosity)
     log.Log(f"{sys.executable or sys.platform} {sys.version}", verbosity)
     log.Log("=" * 80, verbosity)
