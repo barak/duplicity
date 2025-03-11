@@ -31,6 +31,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import xml.dom.minidom
+import sys
 
 import duplicity.backend
 from duplicity import config
@@ -219,7 +220,7 @@ class WebDAVBackend(duplicity.backend.Backend):
             self.headers["Authorization"] = self.get_digest_authorization(path)
 
         log.Debug(_("WebDAV %s %s request with headers: %s ") % (method, quoted_path, munge_headers(self.headers)))
-        log.Debug(_("WebDAV data length: %s ") % len(str(data)))
+        log.Debug(_("WebDAV data length: %s ") % sys.getsizeof(data))
         self.conn.request(method, quoted_path, data, self.headers)
         response = self.conn.getresponse()
         log.Debug(_("WebDAV response status %s with reason '%s'.") % (response.status, response.reason))
@@ -242,7 +243,7 @@ class WebDAVBackend(duplicity.backend.Backend):
             self.headers["Authorization"] = self.get_authorization(response, quoted_path)
             log.Debug(_("WebDAV retry request with authentification headers."))
             log.Debug(_("WebDAV %s %s request2 with headers: %s ") % (method, quoted_path, munge_headers(self.headers)))
-            log.Debug(_("WebDAV data length: %s ") % len(str(data)))
+            log.Debug(_("WebDAV data length: %s ") % sys.getsizeof(data))
             self.conn.request(method, quoted_path, data, self.headers)
             response = self.conn.getresponse()
             log.Debug(_("WebDAV response2 status %s with reason '%s'.") % (response.status, response.reason))
