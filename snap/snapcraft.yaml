@@ -1,5 +1,5 @@
 name: duplicity
-version: 3.0.5.dev2
+version: 3.0.5.dev3
 license: GPL-2.0
 summary: Efficient, encrypted backup to local or remote hosts
 description: |
@@ -73,14 +73,13 @@ parts:
                 "$PIP" install tahoe-lafs
             fi
 
-            # DISABLED using core24 python seems to work fine, verify python binary is in snap
-            #if [ -z "$(find "${CRAFT_PART_INSTALL}" -type f -executable -name 'python3.12')" ]; then
-            #  echo "ERROR. Missing python binary in snap. Check stage-packages."
-            #  exit 1
-            #fi
-            # fix symlink in venv/bin/, point to python of core24 snap
-            #ln -sf ../../../bin/python3.12 "${CRAFT_PART_INSTALL}${DUPL_VENV}"/bin/python3
-            ln -sf /snap/core24/current/usr/bin/python3 "${CRAFT_PART_INSTALL}${DUPL_VENV}"/bin/python3
+            # verify python binary is in snap
+            if [ -z "$(find "${CRAFT_PART_INSTALL}" -type f -executable -name 'python3.12')" ]; then
+              echo "ERROR. Missing python binary in snap. Check stage-packages."
+              exit 1
+            fi
+            # fix symlink in venv/bin/, point to python of this snap
+            ln -sf ../../../bin/python3.12 "${CRAFT_PART_INSTALL}${DUPL_VENV}"/bin/python3
             "${CRAFT_PART_INSTALL}${DUPL_VENV}"/bin/python3 --version
             # internet says it's a good idea to remove this file, it supposedly breaks things
             rm -v "$CRAFT_PART_INSTALL${DUPL_VENV}"/pyvenv.cfg
@@ -111,12 +110,12 @@ parts:
             - python3-openssl
             - pkg-config
         stage-packages:
-            #- libpython3.12-minimal
-            #- libpython3.12-stdlib
-            #- libpython3.12t64
-            #- python3-minimal
-            #- python3.12-minimal
-            #- python3-venv
+            - libpython3.12-minimal
+            - libpython3.12-stdlib
+            - libpython3.12t64
+            - python3-minimal
+            - python3.12-minimal
+            - python3-venv
             - librsync2t64
             # (backend) binaries
             - gnupg
