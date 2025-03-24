@@ -69,6 +69,7 @@ def getpass_safe(message):
     return getpass.getpass(message)
 
 
+# TODO: Simplify and refactor: https://gitlab.com/duplicity/duplicity/-/merge_requests/288#note_2406527475
 def get_passphrase(n, action, for_signing=False):
     """
     Check to make sure passphrase is indeed needed, then get
@@ -149,6 +150,14 @@ def get_passphrase(n, action, for_signing=False):
         and (config.gpg_profile.recipients or config.gpg_profile.hidden_recipients)
         and (not config.gpg_profile.sign_key or (not config.restart and not for_signing))
     ):
+        return ""
+
+    elif (
+        (config.gpg_profile.recipients or config.gpg_profile.hidden_recipients)
+        and config.metadata_sync_mode == "partial"
+        and action in ["full"]
+    ):
+        log.Info(_("Skipping passphrase input for full backup with encryption keys."))
         return ""
 
     # Finally, ask the user for the passphrase
@@ -1634,6 +1643,7 @@ def do_backup(action):
     # check archive synch with remote, fix if needed
     if action not in [
         "collection-status",
+        "full",
         "remove-all-but-n-full",
         "remove-all-inc-of-but-n-full",
         "remove-old",
