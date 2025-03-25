@@ -35,6 +35,7 @@ class SwiftBackend(duplicity.backend.Backend):
         duplicity.backend.Backend.__init__(self, parsed_url)
 
         try:
+            from swiftclient.service import SwiftUploadObject
             from swiftclient.service import SwiftService
             from swiftclient import Connection
             from swiftclient import ClientException
@@ -173,8 +174,6 @@ Exception: {str(e)}"""
     def _put(self, source_path, remote_filename):
         lp = os.fsdecode(source_path.name)
         if config.mp_segment_size > 0:
-            from swiftclient.service import SwiftUploadObject
-
             st = os.stat(lp)
             # only upload using Dynamic Large Object if mpvolsize is triggered
             if st.st_size >= config.mp_segment_size:
