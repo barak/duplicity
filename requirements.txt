@@ -3,7 +3,7 @@
 
 fasteners>=0.19
 python-gettext>=5.0
-setuptools>60.0,<78.0
+setuptools>78.1.0
 
 ##### backend libraries #####
 

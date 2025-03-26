@@ -36,7 +36,7 @@ requires = [
     "pip>=24.0",
     "pipx>=1.5",
     "packaging>=20.0",
-    "setuptools>60.0,<78.0",
+    "setuptools>78.1.0",
     "wheel>=0.42.0",
 ]
 build-backend = "setuptools.build_meta"
