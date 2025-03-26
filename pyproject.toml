@@ -12,10 +12,10 @@ maintainers = [
 ]
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">= 3.8, < 3.14"
+license = "GPL-2.0-or-later"
 classifiers = [
     "Development Status :: 6 - Mature",
     "Environment :: Console",
-    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
     "Operating System :: MacOS",
     "Operating System :: POSIX",
     "Programming Language :: C",
