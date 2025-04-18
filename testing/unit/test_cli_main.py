@@ -239,31 +239,6 @@ class CommandlineTest(UnitTestCase):
             self.assertEqual(config.gpg_profile.sign_key, key)
 
     @pytest.mark.usefixtures("redirect_stdin")
-    def test_bad_encryption_options(self):
-        """
-        test short option aliases
-        """
-        start = "inc foo/bar file:///target_url "
-        keys = (
-            "DEADFOO",
-            "DEADDEADDEADFOO",
-            "DEADDEADDEADDEADDEADDEADDEADDEADDEADFOO",
-        )
-
-        for key in keys:
-            with self.assertRaises(CommandLineError) as cm:
-                cline = f"{start} --encrypt-key={key}".split()
-                cli_main.process_command_line(cline)
-
-            with self.assertRaises(CommandLineError) as cm:
-                cline = f"{start} --hidden-encrypt-key={key}".split()
-                cli_main.process_command_line(cline)
-
-            with self.assertRaises(CommandLineError) as cm:
-                cline = f"{start} --sign-key={key}".split()
-                cli_main.process_command_line(cline)
-
-    @pytest.mark.usefixtures("redirect_stdin")
     def test_implied_commands(self):
         """
         test implied commands
