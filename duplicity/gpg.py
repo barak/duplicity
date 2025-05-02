@@ -141,7 +141,8 @@ class GPGFile(object):
             gnupg.call = config.gpg_binary
         gnupg.options.meta_interactive = 0
         gnupg.options.extra_args.append("--no-secmem-warning")
-        gnupg.options.extra_args.append("--ignore-mdc-error")
+        if not config.use_gpgsm:
+            gnupg.options.extra_args.append("--ignore-mdc-error")
 
         # Support three versions of gpg present 1.x, 2.0.x, 2.1.x
         if profile.gpg_version[:1] == (1,):
@@ -191,8 +192,9 @@ class GPGFile(object):
                 cmdlist.append("--encrypt")
             else:
                 cmdlist.append("--symmetric")
-            # use integrity protection
-            gnupg.options.extra_args.append("--force-mdc")
+            if not config.use_gpgsm:
+                # use integrity protection
+                gnupg.options.extra_args.append("--force-mdc")
             # Skip the passphrase if using the agent
             if config.use_agent:
                 gnupg_fhs = [

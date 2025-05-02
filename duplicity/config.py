@@ -127,6 +127,9 @@ gpg_options = ""
 # files.  Replaces encryption_keys, sign_key, and passphrase settings.
 gpg_profile = None
 
+# Use gpgsm tool, which is very similar gpg but using PKCS#7 file format.
+use_gpgsm = False
+
 # Maximum file blocksize
 max_blocksize = 0
 

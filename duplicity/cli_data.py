@@ -371,6 +371,12 @@ OptionKwargs = dict(
         ),
         default=dflt(config.gpg_options),
     ),
+    use_gpgsm=dict(
+        action="store_true",
+        dest="use_gpgsm",
+        help="Use gpgsm tool, which is very similar gpg but using PKCS#7 file format.",
+        default=dflt(config.use_gpgsm),
+    ),
     hidden_encrypt_key=dict(
         metavar=_("gpg-key-id"),
         type=set_hidden_encrypt_key,
