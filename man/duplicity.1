@@ -1239,6 +1239,27 @@ uses the agent only if
 is given, just like GnuPG 1.
 
 .TP
+.BI --use-gpgsm
+If this option is specified, then GnuPG encryption process uses binary
+.B gpgsm
+instead of
+.BR gpg .
+This is part of the GnuPG suite, but using the Cryptographic Message Syntax
+(CMS) file format (aka PKCS#7, this file format is also compatible with other tools,
+like
+.BR "openssl smime" ).
+
+Encrypted files will have the file extension
+.B .p7m
+instead of
+.BR .gpg .
+Any operation which requires decryption (restore, list-current-files, etc.)
+must also specify
+.IR --use-gpgsm .
+
+gpgsm does not support symmetric (password) encryption or hidden recipients.
+
+.TP
 .BI "--verbosity " level ", -v" level
 Specify output verbosity level (log level).
 Named levels and corresponding values are
