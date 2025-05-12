@@ -308,3 +308,12 @@ def genstrtotime(timestr, override_curtime=None):
         return t
     else:
         error()
+
+
+def genstrtoseconds(timestr, override_curtime=None):
+    """Convert a generic time string to a time in seconds since curtime"""
+    if override_curtime is None:
+        if curtime is None:
+            setcurtime()
+        override_curtime = curtime
+    return override_curtime - genstrtotime(timestr, override_curtime)

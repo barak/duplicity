@@ -195,9 +195,9 @@ def check_file(val):
         command_line_error(f"{val} is not a valid pathname: {str(e)}")
 
 
-def check_interval(val):
+def check_time_delta(val):
     try:
-        return dup_time.intstringtoseconds(val)
+        return dup_time.genstrtoseconds(val)
     except dup_time.TimeException as e:
         command_line_error(str(e))
 
