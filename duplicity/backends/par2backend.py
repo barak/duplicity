@@ -95,7 +95,10 @@ class Par2Backend(backend.Backend):
         # double-check that the mandatory and correctly named source file now exist
         if not source_hardlink.exists():
             par2temp.deltree()
-            log.FatalError(f"FAILED to create hard link for par2 processing as '{os.fsdecode(source_hardlink.get_canonical())}'")
+            log.FatalError(
+                f"FAILED to create hard link for par2 processing as "
+                f"'{os.fsdecode(source_hardlink.get_canonical())}'"
+            )
 
         log.Info("Create Par2 recovery files")
         par2create = (
