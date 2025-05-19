@@ -1638,7 +1638,7 @@ def do_backup(action):
     check_resources(action)
 
     # get current collection status
-    col_stats = dup_collections.CollectionsStatus(config.backend, config.archive_dir_path, action).set_values()
+    col_stats = dup_collections.CollectionsStatus(config.backend, config.archive_dir_path).set_values()
 
     # check archive synch with remote, fix if needed
     if action not in [
@@ -1677,9 +1677,7 @@ def do_backup(action):
                     # remove last partial backup and get new collection status
                     log.Notice(_(f"Cleaning up previous partial {action} backup set, restarting."))
                     last_backup.delete()
-                    col_stats = dup_collections.CollectionsStatus(
-                        config.backend, config.archive_dir_path, action
-                    ).set_values()
+                    col_stats = dup_collections.CollectionsStatus(config.backend, config.archive_dir_path).set_values()
                     continue
             break
         break

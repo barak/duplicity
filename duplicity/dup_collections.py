@@ -668,13 +668,12 @@ class CollectionsStatus(object):
     Hold information about available chains and sets
     """
 
-    def __init__(self, backend, archive_dir_path, action):
+    def __init__(self, backend, archive_dir_path):
         """
         Make new object.  Does not set values
         """
         self.backend = backend
         self.archive_dir_path = archive_dir_path
-        self.action = action
 
         # Will hold (signature chain, backup chain) pair of active
         # (most recent) chains
