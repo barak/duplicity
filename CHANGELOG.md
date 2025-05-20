@@ -1,6 +1,116 @@
 # Changelog
 
 
+## (unreleased)
+
+### New
+
+* Add basic Ubuntu LTS Docker builds. [Kenneth Loafman]
+
+### Changes
+
+* Delete unused CollectionsStatus.action variable. [Catalin Patulea]
+
+    Added in 754b34bf3 but no longer needed for that purpose.
+
+* Fix tools/makesnap.  CLI changes. [Kenneth Loafman]
+
+* Document --use-gpgsm flag in man page. [Catalin Patulea]
+
+    Related to #866
+
+* Delete unused BackupSet.action variable. [Catalin Patulea]
+
+    It was introduced in commit 754b34bf3 as an optimization.
+
+    Uses of it varied over time (commits 606fb53e0, 33668f957, 83dda9b6a) but is currently unused.
+
+* Support gpg binary 'gpgsm'. [Catalin Patulea]
+
+    Fixes #866
+
+* Accept GPG user id formats other than hex. [Kenneth Loafman]
+
+    https://www.gnupg.org/documentation/manuals/gnupg/Specify-a-User-ID.html
+
+* Add env var BACKEND\_PASSWORD, deprecate FTP\_PASSWORD. [ede]
+
+* Restore backends.  Set setuptools<78.0.0. [Kenneth Loafman]
+
+* Issue883.sh ==> issue863.sh. [Kenneth Loafman]
+
+* Move import in function to \_\_init\_\_(). [Kenneth Loafman]
+
+* PyPA struck again.  'positional' does not build now. [Kenneth Loafman]
+
+* Enhance Docker testing. [Kenneth Loafman]
+
+* Simplify snap by not packaging python but using core24's python
+instead... [ede]
+
+* Fix issue103.sh and add issue103-conc.sh. [Kenneth Loafman]
+
+* Improve contact points. [Kenneth Loafman]
+
+    - pyproject.toml has the biggest set. Added URLs, etc.
+    - lots of 1-liners removing select email addresses.
+    - correct multi-line copyright statements.
+
+### Fix
+
+* Incompatible with par2cmdline v1.0.0. [ede]
+
+    fixes #871
+
+* Allow the full range of time formats as arguments to --full-if-older-
+than. [Timothy Allen]
+
+    Fixes #869
+
+* Fix problems with password request and metadata sync. [Kenneth Loafman]
+
+    - skip sync on full. not needed.
+    - skip password prompt if full and has encrypt keys.
+
+* Snapcraft.io didn't like us to symlink core24's python... [ede]
+
+* "OverflowError: bytes object is too large to make repr" see issue 862. [ede]
+
+* Prevent webdav log password at info log level... [ede]
+
+    - lower logging of requests etc. to debug level
+    - munge password in url in startup parameters
+    - do not print auth headers in Webdav
+
+
+## rel.3.0.4.1 (2025-02-26)
+
+### New
+
+* Introduce core24 snaps now in even more flavor *errr* archs... [ede]
+
+    namely amd64, arm64, armhf, ppc64el, riscv64, s390x
+
+### Changes
+
+* Replace 4 short files with 4 lines in build.sh. [Kenneth Loafman]
+
+* Delete unneeded tools. [Kenneth Loafman]
+
+* Run po/update-pot. [Kenneth Loafman]
+
+### Fix
+
+* Par2 files for vol1.difftar not being created when --concurrency is
+set. [Thomas Laubrock]
+
+    fixes #858
+
+* Fix typo in previous. [Kenneth Loafman]
+
+* Suppress deprecation error for core20 snap users. [Kenneth Loafman]
+
+
 ## rel.3.0.4 (2025-02-08)
 
 ### New
@@ -40,11 +150,7 @@
 
 * Remove 'test' mentions from setup.py. [Kenneth Loafman]
 
-* Set dev version for LP. [Kenneth Loafman]
-
 * Fix so amd64 snaps build with tahoe support. [Kenneth Loafman]
-
-* Set dev version for LP. [Kenneth Loafman]
 
 ### Fix
 
@@ -159,8 +265,6 @@ large file. [Kenneth Loafman]
     - pipdeptree shows no upper limit that forced specs.
 
 * Only log if backend import failed. [Kenneth Loafman]
-
-* Set version for LP. [Kenneth Loafman]
 
 ### Fix
 
@@ -302,8 +406,6 @@ n+1 volumes, switch to "spawn". [Thomas Laubrock]
 
 ### Changes
 
-* Bump version to 2.2.4.rc3. [Kenneth Loafman]
-
 * Use pip-compile to build requirements.txt. [Kenneth Loafman]
 
 
@@ -318,8 +420,6 @@ n+1 volumes, switch to "spawn". [Thomas Laubrock]
     This reverts commit ce3baa9a86ed6734dc7b013b6aaa1b873a2ba481.
 
 * Add requirements.dev to tests. [Kenneth Loafman]
-
-* Bump version to 2.2.4.rc2. [Kenneth Loafman]
 
 * Split requirements.txt into .txt and .dev. [Kenneth Loafman]
 
@@ -376,8 +476,6 @@ n+1 volumes, switch to "spawn". [Thomas Laubrock]
 * Add deprecation warning for `--async` [poggenpower]
 
 * Restore previous docs/Makefile. [Kenneth Loafman]
-
-* Set version for LP dev PPA. [Kenneth Loafman]
 
 * Set packaging and black version requirements. [Kenneth Loafman]
 
@@ -617,8 +715,6 @@ flow. [Christopher Haglund]
 
     - We already had lower limit of 3.8, make 3.11 upper limit.
 
-* Update version for LP. [Kenneth Loafman]
-
 ### Fix
 
 * Swap implied and removed action checks. [Kenneth Loafman]
@@ -646,8 +742,6 @@ flow. [Christopher Haglund]
 * Add test\_black to test\_code.py.  Convert to black format. [Kenneth Loafman]
 
 * --asynchronous-upload is not parsed correctly. [Kenneth Loafman]
-
-* Update version for LP. [Kenneth Loafman]
 
 ### Fix
 
@@ -2766,8 +2860,6 @@ registering more than one affinity prefix per backend. [KheOps]
     This reverts commit 6dac477cb3ddfb5f7a8f05162d1658725f4f379a, reversing
     changes made to cdfbaf8cfd4fcf2fbbecc3c2adc9fe1753ee6c30.
 
-* Bump version for LP dev build. [Kenneth Loafman]
-
 * Always paperwork. [Kenneth Loafman]
 
 * Allow setting s3 region and endpoint. [Marco Herrn]
@@ -2888,8 +2980,6 @@ use it to pass supplementary info to the backend. [Joshua Chan]
 
     - Cleanup with Paramiko backend does not remove files due to missing
         filename byte decoding
-
-* Bump version for LP build. [Kenneth Loafman]
 
 * Fix check for s3 glacier/deep. [Michael Terry]
 
@@ -9488,8 +9578,6 @@ registering more than one affinity prefix per backend. [KheOps]
     This reverts commit f25e9740e17d24cf309aee136953d8fd51a7bf9b, reversing
     changes made to 2890326dfd7a5bf9ea340aca76d96ebcd25aa8b6.
 
-* Bump version for LP dev build. [Kenneth Loafman]
-
 
 ## rel.0.8.15 (2020-07-27)
 
@@ -9615,8 +9703,6 @@ use it to pass supplementary info to the backend. [Joshua Chan]
 
     - Cleanup with Paramiko backend does not remove files due to missing
         filename byte decoding
-
-* Bump version for LP build. [Kenneth Loafman]
 
 * Fix check for s3 glacier/deep. [Michael Terry]
 
