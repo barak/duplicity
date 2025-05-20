@@ -58,6 +58,8 @@ instead... [ede]
 
 ### Fix
 
+* Fix gpgsm version check. [Catalin Patulea]
+
 * Incompatible with par2cmdline v1.0.0. [ede]
 
     fixes #871
