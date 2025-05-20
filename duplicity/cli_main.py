@@ -268,8 +268,8 @@ def process_command_line(cmdline_list):
         config.gpg_binary = util.which(program)
     gpg_version = ".".join(map(str, config.gpg_profile.gpg_version))
     log.Info(_(f"GPG binary is {config.gpg_binary}, version {gpg_version}"))
-    if config.use_gpgsm and self.gpg_version < (2, 2, 27):
-        log.FatalError(f"Version {self.gpg_version} of gpgsm is not supported.  Minimum version is 2.2.27")
+    if config.use_gpgsm and config.gpg_profile.gpg_version < (2, 2, 27):
+        log.FatalError(f"Version {gpg_version} of gpgsm is not supported.  Minimum version is 2.2.27")
 
     # --use-agent is not safe for symmetric encryption.
     # Notify user and let them decide.
