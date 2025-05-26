@@ -54,6 +54,7 @@ def check_common_error(error_handler, function, args=()):
             and errno.errorcode.get(exc.errno)
             in [
                 "EPERM",
+                "ENODEV",
                 "ENOENT",
                 "EACCES",
                 "EBUSY",
