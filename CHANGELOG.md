@@ -9,6 +9,13 @@
 
 ### Changes
 
+* Add ENODEV to list of "robust" ignored exceptions. [Michael Terry]
+
+    This is a "No such device" error and can happen for example when a
+    NAS mount folder is unavailable.
+
+    A deja-dup user [hit this](https://gitlab.gnome.org/World/deja-dup/-/issues/263) with a dir like `/truenas` that was unavailable.
+
 * Delete unused CollectionsStatus.action variable. [Catalin Patulea]
 
     Added in 754b34bf3 but no longer needed for that purpose.
