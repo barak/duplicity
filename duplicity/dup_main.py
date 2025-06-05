@@ -1198,7 +1198,7 @@ def sync_archive(col_stats):
     @rtype: void
     @return: void
     """
-    suffixes = [b".g", b".gpg", b".z", b".gz", b".part"]
+    suffixes = [b".g", b".gpg", b".p7m", b".z", b".gz", b".part"]
 
     def is_needed(filename):
         """Indicates if the metadata file should be synced.
