@@ -1,7 +1,7 @@
 [project]
 name = "duplicity"
 version = "3.0.5.dev8"
-dynamic = ["dependencies"]
+dynamic = ["dependencies", "optional-dependencies"]
 description = "Encrypted backup using rsync algorithm"
 authors = [
     { name = "Kenneth Loafman", email = "kenneth@loafman.com" },
@@ -31,14 +31,7 @@ classifiers = [
 
 
 [build-system]
-requires = [
-    "build>=1.1",
-    "pip>=24.0",
-    "pipx>=1.5",
-    "packaging>=20.0",
-    "setuptools>=78.1.0",
-    "wheel>=0.42.0",
-]
+requires = ["setuptools>=78.1.0"]
 build-backend = "setuptools.build_meta"
 
 
@@ -56,37 +49,13 @@ Repository = "https://gitlab.com/duplicity/duplicity"
 Changelog = "https://gitlab.com/duplicity/duplicity/-/blob/main/CHANGELOG.md"
 
 
-[tool.setuptools]
-platforms = [
-    "any"
-]
-
-
 [tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+dependencies = { file = "requirements.txt" }
+optional-dependencies.dev = { file = "requirements.dev" }
 
 
 [tool.setuptools.packages.find]
-where = [
-    ".",
-]
-include = [
-    "duplicity",
-    "duplicity.backends",
-    "duplicity.backends.pyrax_identity",
-]
-exclude = [
-    ".*",
-    "Makefile",
-    "crowdin.yml",
-    "debian*",
-    "docs*",
-    "readthedocs.yaml",
-    "snap*",
-    "testing*",
-    "tools*",
-    "venv*",
-]
+include = ["duplicity*"]
 
 
 [tool.black]
