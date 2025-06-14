@@ -78,6 +78,13 @@ code:
         - pytest testing/test_code.py
     allow_failure: true
 
+py38:
+    <<: *test-template
+    image: python:3.8
+    stage: test
+    script:
+        - pytest testing/unit testing/functional
+
 py39:
     <<: *test-template
     image: python:3.9
