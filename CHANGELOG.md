@@ -1,13 +1,20 @@
 # Changelog
 
 
-## (unreleased)
+## rel.3.0.5 (2025-06-19)
 
 ### New
 
 * Add basic Ubuntu LTS Docker builds. [Kenneth Loafman]
 
 ### Changes
+
+* Run po/update-pot. [Kenneth Loafman]
+
+* Changes to support Ubuntu 20.04. [Kenneth Loafman]
+
+    move setuptools back to version 68.1.0
+    * add py38 test to CI
 
 * Add ENODEV to list of "robust" ignored exceptions. [Michael Terry]
 
@@ -64,6 +71,20 @@ instead... [ede]
     - correct multi-line copyright statements.
 
 ### Fix
+
+* Fix build-system.requires and requirements.txt. [Branch Vincent]
+
+    - Moves `setuptools` from `requirements.txt` to `requirements.dev`, since neither `setuptools` nor `pkg_resources` is used/imported at runtime. Some dev scripts still execute `setup.py` directly (which is [deprecated](https://packaging.python.org/en/latest/discussions/setup-py-deprecated/)) or else we could remove it entirely and just rely on PEP 517's build reqs
+    - Remove unused requirements from the `build-system.requires` table. These requirements are only what's needed by the [build backend](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#declaring-the-build-backend), which in this case is `setuptools` and thus whatever `setup.py` needs to import
+    - Removes `python-gettext` (which provides a `pythongettext` package) from `requirements.txt`, which was unused (only the stdlib's `gettext` package is currently used)
+    - Simplifies `pyproject.toml`'s `tool.setuptools.packages.find` metadata and removes the duplication from `setup.py`
+    - Updates CI to test a PEP 517 build rather than directly executing `setup.py` and adds a `dev` extra for convenience
+
+* Fix handling of .p7m filename suffix during sync. [Catalin Patulea]
+
+* Cache negative getpwnam/getgrnam lookups. [Arda Gürcan]
+
+    Fixes #875
 
 * Fix gpgsm version check. [Catalin Patulea]
 
