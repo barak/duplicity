@@ -279,6 +279,15 @@ class SetVersionCommand(Command):
 
 
 setup(
+    packages=[
+        "duplicity",
+        "duplicity.backends",
+        "duplicity.backends.pyrax_identity",
+    ],
+    package_dir={
+        "duplicity": "duplicity",
+        "duplicity.backends": "duplicity/backends",
+    },
     ext_modules=ext_modules,
     data_files=get_data_files(),
     include_package_data=True,

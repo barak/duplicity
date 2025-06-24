@@ -53,7 +53,6 @@ workflow:
         - apt-get install -y build-essential git intltool lftp librsync-dev
                              libffi-dev libssl-dev openssl par2 rclone rdiff 
                              tzdata
-        - python3 -m pip install -e .[dev]
 
 variables:
     # Cache local items
@@ -75,6 +74,9 @@ code:
     image: python:3.12
     stage: test
     script:
+        - python3 -m pip install -r requirements.txt
+        - python3 -m pip install -r requirements.dev
+        - python3 ./setup.py build_ext
         - pytest testing/test_code.py
     allow_failure: true
 
@@ -90,6 +92,9 @@ py39:
     image: python:3.9
     stage: test
     script:
+        - python3 -m pip install -r requirements.txt
+        - python3 -m pip install -r requirements.dev
+        - python3 ./setup.py build_ext
         - pytest testing/unit testing/functional
 
 py310:
@@ -97,6 +102,9 @@ py310:
     image: python:3.10
     stage: test
     script:
+        - python3 -m pip install -r requirements.txt
+        - python3 -m pip install -r requirements.dev
+        - python3 ./setup.py build_ext
         - pytest testing/unit testing/functional
 
 py311:
@@ -104,6 +112,9 @@ py311:
     image: python:3.11
     stage: test
     script:
+        - python3 -m pip install -r requirements.txt
+        - python3 -m pip install -r requirements.dev
+        - python3 ./setup.py build_ext
         - pytest testing/unit testing/functional
 
 py312:
@@ -111,6 +122,9 @@ py312:
     image: python:3.12
     stage: test
     script:
+        - python3 -m pip install -r requirements.txt
+        - python3 -m pip install -r requirements.dev
+        - python3 ./setup.py build_ext
         - pytest testing/unit testing/functional
 
 py313:
@@ -118,6 +132,9 @@ py313:
     image: python:3.13
     stage: test
     script:
+        - python3 -m pip install -r requirements.txt
+        - python3 -m pip install -r requirements.dev
+        - python3 ./setup.py build_ext
         - pytest testing/unit testing/functional
     allow_failure: true
 
@@ -133,7 +150,8 @@ pages:
         - apt-get update
         - apt-get install -y git python3-pip git intltool
         - python3 -m pip install --upgrade pip
-        - python3 -m pip install -e .[dev]
+        - python3 -m pip install -r requirements.txt
+        - python3 -m pip install -r requirements.dev
         - VERSION=`./setup.py --version`
         - echo "make docs of ${VERSION}"
         - make docs
