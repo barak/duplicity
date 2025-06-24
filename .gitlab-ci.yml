@@ -85,6 +85,9 @@ py38:
     image: python:3.8
     stage: test
     script:
+        - python3 -m pip install -r requirements.txt
+        - python3 -m pip install -r requirements.dev
+        - python3 ./setup.py build_ext
         - pytest testing/unit testing/functional
 
 py39:
