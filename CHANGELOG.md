@@ -1,6 +1,19 @@
 # Changelog
 
 
+## rel.3.0.5.1 (2025-06-25)
+
+### Changes
+
+* Fixes for LP builds.  See #877. [Kenneth Loafman]
+
+### Fix
+
+* Revert "Fix build-system.requires and requirements.txt" [Kenneth Loafman]
+
+    This reverts commit 3683aa4dd8c0a5fa4d70eee256a853310ffa9a87.
+
+
 ## rel.3.0.5 (2025-06-19)
 
 ### New
