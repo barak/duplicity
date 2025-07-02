@@ -96,7 +96,7 @@ def dup_run():
         # For backend errors, don't show an ugly stack trace by
         # default. But do with sufficient verbosity.
         log.Info(_("Backend error detail: %s") % util.exception_traceback())
-        log.FatalError(f"{e.__class__.__name__}: {util.uexc(e)}", log.ErrorCode.user_error, e.__class__.__name__)
+        log.FatalError(f"{e.__class__.__name__}: {util.uexc(e)}", log.ErrorCode.backend_error, e.__class__.__name__)
 
     except Exception as e:
         util.release_lockfile()
