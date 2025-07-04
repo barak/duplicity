@@ -1,5 +1,7 @@
+build
+setuptools>=68.1.0
 
- ##### testing libraries #####
+##### testing libraries #####
 
 black==24.8.0
 coverage

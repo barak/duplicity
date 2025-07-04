@@ -55,6 +55,6 @@ pot:
 	po/update-pot
 
 sdist:
-	python3 ./setup.py -q sdist
+	python3 -m build --sdist
 
 .PHONY: clean docs ext help pot sdist

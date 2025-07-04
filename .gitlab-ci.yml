@@ -53,9 +53,7 @@ workflow:
         - apt-get install -y build-essential git intltool lftp librsync-dev
                              libffi-dev libssl-dev openssl par2 rclone rdiff
                              tzdata
-        - python3 -m pip install -r requirements.txt
-        - python3 -m pip install -r requirements.dev
-        - python3 ./setup.py build_ext
+        - python3 -m pip install -e .[dev]
 
 variables:
     # Cache local items
@@ -131,8 +129,7 @@ pages:
         - apt-get update
         - apt-get install -y git python3-pip git intltool
         - python3 -m pip install --upgrade pip
-        - python3 -m pip install -r requirements.txt
-        - python3 -m pip install -r requirements.dev
+        - python3 -m pip install -e .[dev]
         - VERSION=`./setup.py --version`
         - echo "make docs of ${VERSION}"
         - make docs
