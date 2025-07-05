@@ -8,6 +8,11 @@
 %:
 	dh $@ --with python3 --buildsystem=pybuild
 
+override_dh_python3:
+	mkdir -p $(CURDIR)/debian/duplicity/usr/bin
+	mv -f $(CURDIR)/debian/duplicity.sh $(CURDIR)/debian/duplicity/usr/bin/duplicity
+	dh_python3
+
 override_dh_auto_test:
 	echo "Skipping tests.  Done on GitLab"
 
