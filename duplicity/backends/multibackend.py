@@ -288,14 +288,17 @@ class MultiBackend(duplicity.backend.Backend):
                     )
                     raise BackendException("failed to write")
 
-                # If we've looped around, and none of them passed, fail
-                if (self.__write_cursor == first) and not passed:
-                    log.Log(
-                        _("MultiBackend: failed to write %s. Tried all backing stores and none succeeded")
-                        % source_path,
-                        log.ERROR,
-                    )
-                    raise BackendException("failed to write")
+                if self.__write_cursor == first:
+                    if passed:
+                        break
+                    else:
+                        # If we've looped around, and none of them passed, fail
+                        log.Log(
+                            _("MultiBackend: failed to write %s. Tried all backing stores and none succeeded")
+                            % source_path,
+                            log.ERROR,
+                        )
+                        raise BackendException("failed to write")
 
     def _get(self, remote_filename, local_path):
         # since the backend operations will be retried, we can't
