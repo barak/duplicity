@@ -407,22 +407,18 @@ def retry(operation, fatal=True):
                             extra = " ".join(
                                 [operation] + [make_filename(x) for x in args if (x and isinstance(x, str))]
                             )
-                            if multiprocessing.parent_process():
-                                # running as a child process we need to raise an exception to signal an issue
-                                log.Error(
-                                    _("Giving up after %s attempts. %s: %s. (for trace back: set log level DEBUG)")
-                                    % (n, e.__class__.__name__, util.uexc(e)),
-                                    code=code,
-                                    extra=extra,
-                                )
-                                e.code = code
-                                raise
-                            else:
-                                log.FatalError(
-                                    _("Giving up after %s attempts. %s: %s") % (n, e.__class__.__name__, util.uexc(e)),
-                                    code=code,
-                                    extra=extra,
-                                )
+                            log.Error(
+                                _("Giving up after %s attempts. %s: %s. (for trace back: set log level DEBUG)")
+                                % (n, e.__class__.__name__, util.uexc(e)),
+                                code=code,
+                                extra=extra,
+                            )
+                            e.code = code
+                            # Ensure it's a BackendException, so that __main__ top-level handler exits with
+                            # code backend_error.
+                            if not isinstance(e, BackendException):
+                                e = BackendException(str(e), code=e.code)
+                            raise e
                         else:
                             log.Warn(
                                 _("Attempt of %s Nr. %s failed. %s: %s")
