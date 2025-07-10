@@ -328,17 +328,18 @@ class MultiBackend(duplicity.backend.Backend):
     def _list(self):
         lists = []
         for s in self.__stores:
-            config.are_errors_fatal["list"] = (False, [])
-            l = s.list()
+            try:
+                l = s.list()
+            except BackendException as e:
+                l = []
+                last_exception = e
+            else:
+                last_exception = None
             log.Notice(_("MultiBackend: %s: %d files") % (s.backend.parsed_url.strip_auth(), len(l)))
-            if len(l) == 0 and duplicity.backend._last_exception:
+            if len(l) == 0 and last_exception:
                 log.Warn(
-                    _(
-                        f"Exception during list of {s.backend.parsed_url.strip_auth()}: "
-                        f"{util.uexc(duplicity.backend._last_exception)}"
-                    )
+                    _(f"Exception during list of {s.backend.parsed_url.strip_auth()}: " f"{util.uexc(last_exception)}")
                 )
-                duplicity.backend._last_exception = None
             lists.append(l)
         # combine the lists into a single flat list w/o duplicates via set:
         result = list({item for sublist in lists for item in sublist})
