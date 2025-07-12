@@ -30,6 +30,8 @@ services:
         image: distro/ub20
         container_name: ub20
         hostname: ub20
+        environment:
+            - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
         command: -c "make ext ; pytest ${PYTEST_ARGS}"
         volumes:
@@ -40,8 +42,10 @@ services:
         image: distro/ub22
         container_name: ub22
         hostname: ub22
+        environment:
+            - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
-        command: -c "make ext ; pytest ${PYTEST_ARGS}"
+        command: -c "sleep 2 ; make ext ; pytest ${PYTEST_ARGS}"
         volumes:
             - ../../..:/root/duplicity
             - pytest:/root/duplicity/.pytest_cache
@@ -50,8 +54,10 @@ services:
         image: distro/ub24
         container_name: ub24
         hostname: ub24
+        environment:
+            - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
-        command: -c "make ext ; pytest ${PYTEST_ARGS}"
+        command: -c "sleep 4 ; make ext ; pytest ${PYTEST_ARGS}"
         volumes:
             - ../../..:/root/duplicity
             - pytest:/root/duplicity/.pytest_cache
