@@ -31,7 +31,7 @@ cd `dirname "$0"`/distro
 cp -rp ../../gnupg ./
 
 # setup requirements
-cp -p ../../../requirements.dev ./requirements.dev
+cp -p ../../../requirements.* ./
 cat ../../../requirements.txt | grep -v setuptools | grep -v pyrax > ./requirements.txt
 
 # build version specced by Dockerfile extenwion

@@ -31,8 +31,8 @@ cd `dirname "$0"`/dupCI
 cp -rp ../../gnupg ./
 
 # setup requirements
-cp -p ../../../requirements.txt ./
-sed '1,/documentation libraries/!d' ../../../requirements.dev > requirements.dev
+cp -p ../../../requirements.* ./
+cat ../../../requirements.txt | grep -v setuptools | grep -v pyrax > ./requirements.txt
 
 # build version specced by Dockerfile extenwion
 for FILE in Dockerfile.py3*; do

@@ -33,7 +33,7 @@ services:
         environment:
             - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
-        command: -c "make ext ; pytest ${PYTEST_ARGS}"
+        command: -c "make ext ; pytest ${PYTEST_ARGS:-""}"
         volumes:
             - ../../..:/root/duplicity
             - pytest:/root/duplicity/.pytest_cache
@@ -45,7 +45,7 @@ services:
         environment:
             - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
-        command: -c "sleep 2 ; make ext ; pytest ${PYTEST_ARGS}"
+        command: -c "sleep 2 ; make ext ; pytest ${PYTEST_ARGS:-""}"
         volumes:
             - ../../..:/root/duplicity
             - pytest:/root/duplicity/.pytest_cache
@@ -54,10 +54,10 @@ services:
         image: dupci/py311
         container_name: py311
         hostname: py311
-        entrypoint: /bin/bash
         environment:
             - PYTEST_ARGS=${PYTEST_ARGS:-""}
-        command: -c "sleep 4 ; make ext ; pytest ${PYTEST_ARGS}"
+        entrypoint: /bin/bash
+        command: -c "sleep 4 ; make ext ; pytest ${PYTEST_ARGS:-""}"
         volumes:
             - ../../..:/root/duplicity
             - pytest:/root/duplicity/.pytest_cache
@@ -69,7 +69,7 @@ services:
         environment:
             - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
-        command: -c "sleep 6 ; make ext ; pytest ${PYTEST_ARGS}"
+        command: -c "sleep 6 ; make ext ; pytest ${PYTEST_ARGS:-""}"
         volumes:
             - ../../..:/root/duplicity
             - pytest:/root/duplicity/.pytest_cache
@@ -81,7 +81,7 @@ services:
         environment:
             - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
-        command: -c "sleep 8 ; make ext ; pytest ${PYTEST_ARGS}"
+        command: -c "sleep 8 ; make ext ; pytest ${PYTEST_ARGS:-""}"
         volumes:
             - ../../..:/root/duplicity
             - pytest:/root/duplicity/.pytest_cache
@@ -93,7 +93,7 @@ services:
         environment:
             - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
-        command: -c "sleep 10 ; make ext ; pytest ${PYTEST_ARGS}"
+        command: -c "sleep 10 ; make ext ; pytest ${PYTEST_ARGS:-""}"
         volumes:
             - ../../..:/root/duplicity
             - pytest:/root/duplicity/.pytest_cache
