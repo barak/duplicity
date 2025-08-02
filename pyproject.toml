@@ -128,17 +128,43 @@ testpaths = [
 
 
 [tool.cibuildwheel]
+
+[tool.cibuildwheel.config-settings]
+build-option = "--use-pep517"
+
+[tool.cibuildwheel.linux]
 archs = [
     "x86_64",
+    "aarch64",
 ]
 build = [
-    "cp{38,39,310,311,312,313}-manylinux_x86_64",
+    "cp{39,310,311,312,313}-manylinux_aarch64",
+    "cp{39,310,311,312,313}-manylinux_x86_64",
 ]
 before-build = [
     # WARNING: wheel builds are Centos based, not Debian.
-    "yum install -y gcc gcc-c++ make git intltool lftp librsync-devel",
-    "yum install -y libffi-devel openssl-devel openssl par2cmdline rdiff-backup tzdata",
-    "python -m pip install -r requirements.txt",
+    "yum update -y",
+    "yum install -y gcc gcc-c++ make git intltool librsync-devel",
+    "yum install -y libffi-devel openssl-devel openssl tzdata",
+    "yum install -y libxml2-devel libxslt-devel",
+    "python -m pip install -q -r requirements.txt",
+    "python ./setup.py build_ext",
+]
+
+[tool.cibuildwheel.macos.environment]
+MACOSX_DEPLOYMENT_TARGET="15.0"
+
+[tool.cibuildwheel.macos]
+archs = [
+    "x86_64",
+    "arm64",
+]
+build = [
+    "cp{39,310,311,312,313}-macosx_arm64",
+    "cp{39,310,311,312,313}-macosx_x86_64",
+]
+before-build = [
+    "python -m pip install -q -r requirements.txt",
     "python ./setup.py build_ext",
 ]
 

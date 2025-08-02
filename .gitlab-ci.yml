@@ -29,6 +29,17 @@ workflow:
           when: always
         - when: never
 
+variables:
+    # Cache local items
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+    # Set to non-interactive so no tzdata prompt
+    DEBIAN_FRONTEND: "noninteractive"
+    # Signal we are running on GitLab CI
+    NON_NATIVE: "true"
+
+default:
+    interruptible: true
+
 .test-template: &test-template
     stage: test
     rules:
@@ -56,22 +67,9 @@ workflow:
         - python3 -m pip install -r requirements.txt
         - python3 -m pip install -r requirements.dev
         - python3 ./setup.py build_ext
-
-variables:
-    # Cache local items
-    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-    # Set to non-interactive so no tzdata prompt
-    DEBIAN_FRONTEND: "noninteractive"
-    # Signal we are running on GitLab CI
-    NON_NATIVE: "true"
-
-default:
-    interruptible: true
-
 code:
     <<: *test-template
     image: python:3.12
-    stage: test
     script:
         - pytest testing/test_code.py
     allow_failure: true
@@ -79,42 +77,36 @@ code:
 py39:
     <<: *test-template
     image: python:3.9
-    stage: test
     script:
         - pytest testing/unit testing/functional
 
 py310:
     <<: *test-template
     image: python:3.10
-    stage: test
     script:
         - pytest testing/unit testing/functional
 
 py311:
     <<: *test-template
     image: python:3.11
-    stage: test
     script:
         - pytest testing/unit testing/functional
 
 py312:
     <<: *test-template
     image: python:3.12
-    stage: test
     script:
         - pytest testing/unit testing/functional
 
 py313:
     <<: *test-template
     image: python:3.13
-    stage: test
     script:
         - pytest testing/unit testing/functional
 
 py314:
     <<: *test-template
     image: python:3.14-rc
-    stage: test
     script:
         - pytest testing/unit testing/functional
     allow_failure: true
@@ -178,7 +170,7 @@ website:
 wheels:
     stage: deploy
     when: manual
-    image: python:3.8
+    image: python:3.13
     # make a docker daemon available for cibuildwheel to use
     services:
         - name: docker:dind
@@ -191,7 +183,7 @@ wheels:
         DOCKER_TLS_CERTDIR: ""
     script:
         - curl -sSL https://get.docker.com/ | sh
-        - python -m pip install cibuildwheel==2.16.5
+        - python -m pip install cibuildwheel==3.1.1
         - cibuildwheel --output-dir wheelhouse
     artifacts:
         paths:
