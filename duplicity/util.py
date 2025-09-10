@@ -345,12 +345,12 @@ def start_debugger():
         # ignition
         try:
             pydevd_pycharm.settrace(
-                debug_host,
+                host=debug_host,
                 port=debug_port,
                 suspend=False,
-                stdoutToServer=True,
-                stderrToServer=True,
-                # patch_multiprocessing=True,
+                stdout_to_server=True,
+                stderr_to_server=True,
+                patch_multiprocessing=True,
             )
             log.Info(f"Connection {debug_host}:{debug_port} accepted for debug.")
         except ConnectionRefusedError as e:

@@ -220,7 +220,7 @@ def check_source_url(val):
     return val
 
 
-def check_target_dir(val):
+def check_target_path(val):
     if not is_path(val):
         command_line_error(_(f"Target should be directory, not url.  Got '{val}' instead."))
     if not os.path.exists(val):

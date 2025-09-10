@@ -47,8 +47,8 @@ class DuplicityCommands:
     remove_older_than = ["remove_time", "target_url"]
     remove_all_but_n_full = ["count", "target_url"]
     remove_all_inc_of_but_n_full = ["count", "target_url"]
-    restore = ["source_url", "target_dir"]
-    verify = ["source_url", "target_dir"]
+    restore = ["source_url", "target_path"]
+    verify = ["source_url", "target_path"]
 
 
 @dataclass(order=True)
@@ -960,13 +960,13 @@ trans = {
     "source_path": _("source_path"),
     # TRANSL: Used in usage help to represent a URL files will be coming
     # FROM. Example:
-    # duplicity [restore] [options] source_url target_dir
+    # duplicity [restore] [options] source_url target_path
     "source_url": _("source_url"),
     # TRANSL: Used in usage help to represent the name of a single file
     # directory or a Unix-style path to a directory. where files will be
     # going TO. Example:
-    # duplicity [restore] [options] source_url target_dir
-    "target_dir": _("target_dir"),
+    # duplicity [restore] [options] source_url target_path
+    "target_path": _("target_path"),
     # TRANSL: Used in usage help to represent a URL files will be going TO.
     # Example:
     # duplicity [full|incremental] [options] source_path target_url
