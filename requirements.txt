@@ -19,7 +19,7 @@ google-auth-oauthlib
 httplib2
 jottalib
 keyring
-lxml
+lxml<=5.4.0  # newer vers do not build on Ubuntu < 24.04
 mediafire
 megatools
 paramiko

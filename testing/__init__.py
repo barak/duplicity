@@ -76,7 +76,7 @@ if os.environ.get("DOCKER_GNUPGHOME", ""):
 else:
     os.environ["GNUPGHOME"] = os.path.join(_testing_dir, "gnupg")
 
-# bzr does not honor perms so fix the perms and avoid annoying error
+# fix the perms and avoid annoying error
 os.system(f"chmod 700 {os.path.join(_testing_dir, 'gnupg')}")
 
 # Standardize time

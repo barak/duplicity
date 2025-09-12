@@ -179,7 +179,7 @@ class Select(object):
 
         if not path.type:
             # base doesn't exist
-            log.Warn(_("Warning: base %s doesn't exist, continuing") % path.uc_name)
+            log.Warn(_("WARNING: base %s doesn't exist, continuing") % path.uc_name)
             return
         log.Debug(_("Selecting %s") % path.uc_name)
         yield path

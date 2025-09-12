@@ -28,10 +28,12 @@
 
 import sys
 
-import duplicity.errors
-from duplicity import log
-from duplicity import tempdir
-from duplicity import util
+from duplicity import (
+    errors,
+    log,
+    tempdir,
+    util,
+)
 from duplicity.dup_main import main
 from duplicity.gpg import GPGError
 
@@ -84,14 +86,14 @@ def dup_run():
         log.Info(_("GPG error detail: %s") % util.exception_traceback())
         log.FatalError(f"{e.__class__.__name__}: {e.args[0]}", log.ErrorCode.gpg_failed, e.__class__.__name__)
 
-    except duplicity.errors.UserError as e:
+    except errors.UserError as e:
         util.release_lockfile()
         # For user errors, don't show an ugly stack trace by
         # default. But do with sufficient verbosity.
         log.Info(_("User error detail: %s") % util.exception_traceback())
         log.FatalError(f"{e.__class__.__name__}: {util.uexc(e)}", log.ErrorCode.user_error, e.__class__.__name__)
 
-    except duplicity.errors.BackendException as e:
+    except errors.BackendException as e:
         util.release_lockfile()
         # For backend errors, don't show an ugly stack trace by
         # default. But do with sufficient verbosity.

@@ -92,7 +92,7 @@ exclude = [
 
 [tool.black]
 line-length = 120
-required-version="24"
+required-version = "24"
 target-version = [
     "py39",
     "py310",
@@ -100,6 +100,14 @@ target-version = [
     "py312",
     "py313",
 ]
+
+
+[tool.flynt]
+line-length = 120
+dry-run = true
+aggressive = true
+transform-joins = true
+exclude = ["argparse311"]
 
 
 [tool.pytest.ini_options]

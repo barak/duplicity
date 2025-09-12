@@ -44,9 +44,9 @@ class DuplicityCommands:
     full = ["source_path", "target_url"]
     incremental = ["source_path", "target_url"]
     list_current_files = ["target_url"]
-    remove_older_than = ["remove_time", "target_url"]
     remove_all_but_n_full = ["count", "target_url"]
     remove_all_inc_of_but_n_full = ["count", "target_url"]
+    remove_older_than = ["remove_time", "target_url"]
     restore = ["source_url", "target_path"]
     verify = ["source_url", "target_path"]
 
@@ -63,9 +63,9 @@ class CommandAliases:
     full = ["fb"]
     incremental = ["incr", "inc", "ib"]
     list_current_files = ["ls"]
-    remove_older_than = ["ro"]
     remove_all_but_n_full = ["ra"]
     remove_all_inc_of_but_n_full = ["ri"]
+    remove_older_than = ["ro"]
     restore = ["rb"]
     verify = ["vb"]
 

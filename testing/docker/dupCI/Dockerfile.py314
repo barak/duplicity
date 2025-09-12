@@ -35,14 +35,14 @@ RUN apt update \
     && apt upgrade -y \
     && apt install -y \
         build-essential \
-        gpg \
         git \
         gpg \
         intltool \
         lftp \
-        librsync-dev \
         libffi-dev \
+        librsync-dev \
         libssl-dev \
+        libxml2 \
         openssl \
         par2 \
         rclone \

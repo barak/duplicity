@@ -41,7 +41,6 @@ class RestoreTest(FunctionalTestCase):
 
         self.restore_opts = [
             "restore",
-            "--name=backup1",
             f"file://{_runtest_dir}/testfiles/output",
             f"{_runtest_dir}/testfiles/restore_test",
         ]
@@ -52,33 +51,31 @@ class RestoreTest(FunctionalTestCase):
 
         self.restore_curdir_opts = [
             "restore",
-            "--name=backup1",
             f"file://{_runtest_dir}/testfiles/output",
             f"./",
         ]
 
     def test_restore_to_nonexisting_dir(self):
         """
-        Expected behaviour is restore to a new directory.
+        Expected behaviour is restore to target directory.
         """
         self.backup("full", f"{_runtest_dir}/testfiles/dir1")
-        self.run_duplicity(options=self.restore_opts)
+        self.restore()
         self.assertEqual(
             os.listdir(f"{_runtest_dir}/testfiles/dir1"),
-            os.listdir(f"{_runtest_dir}/testfiles/restore_test"),
+            os.listdir(f"{_runtest_dir}/testfiles/restore_out"),
         )
 
     def test_restore_path_to_nonexisting_dir(self):
         """
-        Expected behaviour is restore to a new directory.
+        Expected behaviour is restore to target directory.
         """
         self.backup("full", f"{_runtest_dir}/testfiles/dir1")
-        self.run_duplicity(options=self.restore_path_opts)
-        self.assertTrue(os.path.isfile(f"{_runtest_dir}/testfiles/restore_test"))
+        self.restore()
         self.assertTrue(
             filecmp.cmp(
                 f"{_runtest_dir}/testfiles/dir1/deleted_file",
-                f"{_runtest_dir}/testfiles/restore_test",
+                f"{_runtest_dir}/testfiles/restore_out/deleted_file",
             )
         )
 

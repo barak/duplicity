@@ -53,7 +53,7 @@ def exception_traceback(limit=50):
     lines.extend(traceback.format_exception_only(type, value))
 
     msg = "Traceback (innermost last):\n"
-    msg = msg + "%-20s %s" % (str.join("", lines[:-1]), lines[-1])
+    msg = msg + f"{str.join('', lines[:-1]):20} {lines[-1]}"
 
     return msg
 
@@ -107,7 +107,7 @@ def maybe_ignore_errors(fn):
         return fn()
     except Exception as e:
         if config.ignore_errors:
-            log.Warn(_("IGNORED_ERROR: Warning: ignoring error as requested: %s: %s") % (e.__class__.__name__, uexc(e)))
+            log.Warn(_("IGNORED_ERROR: WARNING: ignoring error as requested: %s: %s") % (e.__class__.__name__, uexc(e)))
             return None
         else:
             raise

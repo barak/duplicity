@@ -52,6 +52,7 @@ class Manifest(object):
         @rtype: Manifest
         @return: manifest
         """
+        self.corrupt_filelist = False
         self.hostname = None
         self.local_dirname = None
         self.volume_info_dict = {}  # dictionary vol numbers -> vol infos
@@ -435,7 +436,7 @@ class VolumeInfo(object):
             field_name = line_split[0].lower()
             other_fields = line_split[1:]
             if field_name == b"Volume":
-                log.Warn(_("Warning, found extra Volume identifier"))
+                log.Warn(_("WARNING. found extra Volume identifier"))
                 break
             elif field_name == b"startingpath":
                 self.start_index = string_to_index(other_fields[0])

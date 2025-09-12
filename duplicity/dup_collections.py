@@ -21,18 +21,24 @@
 
 """Classes and functions on collections of backup volumes"""
 
-import os
 import gzip
 import json
+import os
 
-from duplicity import config
-from duplicity import dup_time
-from duplicity import file_naming
-from duplicity import log
-from duplicity import manifest
-from duplicity import path
-from duplicity import util
+from duplicity import (
+    config,
+    dup_time,
+    file_naming,
+    log,
+    manifest,
+    path,
+    util,
+)
 from duplicity.gpg import GPGError
+from duplicity.log import (
+    InfoCode,
+    Log,
+)
 
 
 class CollectionsError(Exception):
@@ -48,7 +54,8 @@ class BackupSet(object):
         """
         Initialize new backup set, only backend is required at first
         """
-        self.backend = backend
+        self.type = None  # full or inc
+        self.backend = backend  # backend to use
         self.info_set = False  # true if fields are set
         self.volume_name_dict = {}  # dict from volume number to filename
         self.remote_manifest_name = None  # full name of remote manifest
@@ -60,13 +67,34 @@ class BackupSet(object):
         self.end_time = None  # will be set if inc
         self.partial = False  # true if a partial backup
         self.encrypted = False  # true if an encrypted backup
-        self.files_changed = []
+        self.files_changed = []  # list of files changed
+        self.mf_missing = {}  # vols missing from manifest
+        self.cs_missing = {}  # vols missing from collection
 
     def is_complete(self):
         """
         Assume complete if found manifest file
         """
         return self.remote_manifest_name
+
+    def is_missing(self):
+        """
+        Assume missing if manifest entries or difftar volumes are missing
+        """
+        return self.mf_missing or self.cs_missing
+
+    def get_missing(self):
+        """
+        check that we have a complete set of volumes.
+        """
+        try:
+            mf = self.get_manifest()
+        except Exception as e:
+            return
+        mf_set = set(mf.volume_info_dict.keys())
+        cs_set = set(self.volume_name_dict.keys())
+        self.mf_missing = cs_set - mf_set
+        self.cs_missing = mf_set - cs_set
 
     def add_filename(self, filename, pr=None):
         """
@@ -261,7 +289,7 @@ class BackupSet(object):
                 remote_manifest = local_manifest
             else:
                 log.FatalError(
-                    _("Fatal Error: Neither remote nor local " "manifest is readable."),
+                    _("Fatal Error: Neither remote nor local manifest is readable."),
                     log.ErrorCode.unreadable_manifests,
                 )
         remote_manifest.check_dirinfo()
@@ -281,6 +309,7 @@ class BackupSet(object):
         """
         assert self.remote_manifest_name
         manifest_buffer = self.get_remote_file(self.remote_manifest_name)
+        log.Info(_(f"Processing remote manifest {self.remote_manifest_name} ({len(manifest_buffer)})"))
         return manifest.Manifest().from_string(manifest_buffer)
 
     def get_remote_file(self, remote_file):
@@ -668,12 +697,13 @@ class CollectionsStatus(object):
     Hold information about available chains and sets
     """
 
-    def __init__(self, backend, archive_dir_path):
+    def __init__(self, backend, archive_dir_path, first=False):
         """
         Make new object.  Does not set values
         """
         self.backend = backend
         self.archive_dir_path = archive_dir_path
+        self.first = first
 
         # Will hold (signature chain, backup chain) pair of active
         # (most recent) chains
@@ -689,9 +719,11 @@ class CollectionsStatus(object):
         self.remote_orphaned_sig_names = []
         self.orphaned_backup_sets = None
         self.incomplete_backup_sets = None
+        self.missing_difftar_sets = None
+        self.last_chain_missing_difftars = False
 
         # True if set_values() below has run
-        self.values_set = None
+        self.values_set = False
 
     def to_log_info(self):
         """
@@ -734,7 +766,7 @@ class CollectionsStatus(object):
             l.append("")
 
         if self.matched_chain_pair:
-            l.append("\n" + _("Found primary backup chain with matching " "signature chain:"))
+            l.append("\n" + _("Found primary backup chain with matching signature chain:"))
             l.append(str(self.matched_chain_pair[1]))
         else:
             l.append(_("No backup chains with active signatures found"))
@@ -743,7 +775,7 @@ class CollectionsStatus(object):
             l.append(_("Also found %d backup set(s) not part of any chain,") % len(self.orphaned_backup_sets))
             l.append(_("and %d incomplete backup set(s).") % len(self.incomplete_backup_sets))
             # TRANSL: "cleanup" is a hard-coded command, so do not translate it
-            l.append(_("These may be deleted by running duplicity with the " '"cleanup" command.'))
+            l.append(_('These may be deleted by running duplicity with the "cleanup" command.'))
         else:
             l.append(_("No orphaned or incomplete backup sets found."))
 
@@ -757,7 +789,7 @@ class CollectionsStatus(object):
         do not warn about unnecessary sig chains.  This is because there may
         naturally be some unecessary ones after a full backup.
         """
-        self.values_set = 1
+        self.values_set = True
 
         # get remote filename list
         backend_filename_list = self.backend.list()
@@ -779,6 +811,7 @@ class CollectionsStatus(object):
             backup_chains,
             self.orphaned_backup_sets,
             self.incomplete_backup_sets,
+            self.missing_difftar_sets,
         ) = self.get_backup_chains(partials + backend_filename_list)
         backup_chains = self.get_sorted_chains(backup_chains)
         self.all_backup_chains = backup_chains
@@ -819,7 +852,7 @@ class CollectionsStatus(object):
                     and sig_chains[i].end_time == latest_backup_chain.get_all_sets()[-2].end_time
                 ):
                     # It matches, remove the last backup set:
-                    log.Warn(_("Warning, discarding last backup set, because " "of missing signature file."))
+                    log.Warn(_("WARNING. discarding last backup set, because of missing signature file."))
                     self.incomplete_backup_sets.append(latest_backup_chain.incset_list[-1])
                     latest_backup_chain.incset_list = latest_backup_chain.incset_list[:-1]
                 else:
@@ -840,9 +873,35 @@ class CollectionsStatus(object):
         """
         assert self.values_set
 
+        def missing_to_log_info(s):
+            """
+            Generate log information for missing volumes in the backup chain.
+            """
+            l = []
+            if s.is_missing():
+                l.append(
+                    f"WARNING: Backup set at {dup_time.timetostring(s.start_time)} has missing "
+                    f"volumes or manifest entries:"
+                )
+                if s.cs_missing:
+                    l.append(f"  - remote volumes: {[f'vol{mv}.difftar' for mv in s.cs_missing]}")
+                if s.mf_missing:
+                    l.append(f"  - manifest entries: {[f'vol{mv}.difftar' for mv in s.mf_missing]}")
+            return l
+
+        def missing_difftars(bsets):
+            """
+            Check for and print missing volumes
+            """
+            l = []
+            for bset in bsets:
+                if missing := missing_to_log_info(bset):
+                    l.extend(missing)
+            return l
+
         if self.local_orphaned_sig_names:
             log.Warn(
-                _("Warning, found the following local orphaned signature file(s):")
+                _("WARNING. found the following local orphaned signature file(s):")
                 + "\n"
                 + "\n".join(map(os.fsdecode, self.local_orphaned_sig_names)),
                 log.WarningCode.orphaned_sig,
@@ -850,7 +909,7 @@ class CollectionsStatus(object):
 
         if self.remote_orphaned_sig_names:
             log.Warn(
-                _("Warning, found the following remote orphaned signature file(s):")
+                _("WARNING. found the following remote orphaned signature file(s):")
                 + "\n"
                 + "\n".join(map(os.fsdecode, self.remote_orphaned_sig_names)),
                 log.WarningCode.orphaned_sig,
@@ -858,23 +917,42 @@ class CollectionsStatus(object):
 
         if self.all_sig_chains and sig_chain_warning and not self.matched_chain_pair:
             log.Warn(
-                _("Warning, found signatures but no corresponding " "backup files"),
+                _("WARNING. found signatures but no corresponding backup files"),
                 log.WarningCode.unmatched_sig,
-            )
-
-        if self.incomplete_backup_sets:
-            log.Warn(
-                _("Warning, found incomplete backup sets, probably left " "from aborted session"),
-                log.WarningCode.incomplete_backup,
             )
 
         if self.orphaned_backup_sets:
             log.Warn(
-                _("Warning, found the following orphaned backup file(s):")
+                _("WARNING. found the following orphaned backup file(s):")
                 + "\n"
                 + "\n".join(map(str, self.orphaned_backup_sets)),
                 log.WarningCode.orphaned_backup,
             )
+
+        if self.missing_difftar_sets:
+
+            log.Warn(
+                _("WARNING. found missing difftar(s) in backup sets, possibly left from aborted session:\n")
+                + "\n".join(missing_difftars(self.missing_difftar_sets)),
+                log.WarningCode.incomplete_backup,
+            )
+
+            last_backup_chain = self.all_backup_chains[-1]
+            for bset in last_backup_chain.get_all_sets():
+                if bset.is_missing():
+                    self.last_chain_missing_difftars = True
+
+            if config.action == "inc" and self.last_chain_missing_difftars:
+                if self.first:
+                    log.FatalError(
+                        "ERROR, the last backup chain has missing difftar volumes as above.\n"
+                        "You must run a full backup as the next backup."
+                    )
+                else:
+                    log.Error(
+                        "ERROR, the last backup chain has missing difftar volumes as above.\n"
+                        "You must run a full backup as the next backup."
+                    )
 
     def get_backup_chains(self, filename_list):
         """
@@ -908,7 +986,8 @@ class CollectionsStatus(object):
 
         for f in filename_list:
             add_to_sets(f)
-        sets, incomplete_sets = self.get_sorted_sets(sets)
+
+        sets, incomplete_sets, missing_difftar_sets = self.get_sorted_sets(sets)
 
         chains, orphaned_sets = [], []
 
@@ -933,22 +1012,27 @@ class CollectionsStatus(object):
 
         for s in sets:
             add_to_chains(s)
-        return chains, orphaned_sets, incomplete_sets
+        return chains, orphaned_sets, incomplete_sets, missing_difftar_sets
 
     def get_sorted_sets(self, set_list):
         """
-        Sort set list by end time, return (sorted list, incomplete)
+        Sort set list by end time, return (sorted list, incomplete, missing_difftar_sets)
         """
-        time_set_pairs, incomplete_sets = [], []
+        time_set_pairs = []
+        incomplete_sets = []
+        missing_difftar_sets = []
         for set in set_list:  # pylint: disable=redefined-builtin
+            set.get_missing()
             if not set.is_complete():
                 incomplete_sets.append(set)
-            elif set.type == "full":
+            if set.is_missing():
+                missing_difftar_sets.append(set)
+            if set.type == "full":
                 time_set_pairs.append((set.time, set))
             else:
                 time_set_pairs.append((set.end_time, set))
         time_set_pairs.sort(key=lambda x: x[0])
-        return [p[1] for p in time_set_pairs], incomplete_sets
+        return [p[1] for p in time_set_pairs], incomplete_sets, missing_difftar_sets
 
     def get_signature_chains(self, local, filelist=None):
         """
@@ -999,7 +1083,8 @@ class CollectionsStatus(object):
                 orphaned_filenames.append(sig_filename)
         return chains, orphaned_filenames
 
-    def get_sorted_chains(self, chain_list):
+    @staticmethod
+    def get_sorted_chains(chain_list):
         """
         Return chains sorted by end_time.  If tie, local goes last
         """
@@ -1096,7 +1181,7 @@ class CollectionsStatus(object):
         assert self.values_set
         local_filenames = []
         remote_filenames = []
-        ext_containers = self.orphaned_backup_sets + self.incomplete_backup_sets
+        ext_containers = self.orphaned_backup_sets + self.incomplete_backup_sets + self.missing_difftar_sets
         for set_or_chain in ext_containers:
             if set_or_chain.backend:
                 remote_filenames.extend(set_or_chain.get_filenames())
@@ -1106,7 +1191,8 @@ class CollectionsStatus(object):
         remote_filenames += self.remote_orphaned_sig_names
         return local_filenames, remote_filenames
 
-    def sort_sets(self, setlist):
+    @staticmethod
+    def sort_sets(setlist):
         """Return new list containing same elems of setlist, sorted by time"""
         pairs = sorted([(s.get_time(), s) for s in setlist])
         return [p[1] for p in pairs]
@@ -1338,3 +1424,55 @@ class BackupSetChangesStatus(object):
             + ["-------------------------"]
         )
         return "\n".join(l)
+
+
+def PrintCollectionStatus(col_stats, force_print=False):
+    """
+    Prints a collection status to the log.
+    """
+    Log(
+        str(col_stats),
+        8,
+        InfoCode.collection_status,
+        "\n" + "\n".join(col_stats.to_log_info()),
+        force_print,
+    )
+
+
+def PrintCollectionErrors(missing, force_print=True):
+    """
+    Prints a collection status to the log.
+    """
+    Log(
+        "\n" + "\n".join(missing),
+        8,
+        InfoCode.collection_status,
+        None,
+        force_print,
+    )
+
+
+def PrintCollectionFileChangedStatus(col_stats, filepath, force_print=False):
+    """
+    Prints a collection status to the log.
+    """
+    Log(
+        str(col_stats.get_file_changed_record(filepath)),
+        8,
+        InfoCode.collection_status,
+        None,
+        force_print,
+    )
+
+
+def PrintCollectionChangesInSet(col_stats, set_index, force_print=False):
+    """
+    Prints changes in the specified set to the log.
+    """
+    Log(
+        str(col_stats.get_all_file_changed_records(set_index)),
+        8,
+        InfoCode.collection_status,
+        None,
+        force_print,
+    )
