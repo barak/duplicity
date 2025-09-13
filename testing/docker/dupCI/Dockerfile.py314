@@ -39,10 +39,9 @@ RUN apt update \
         gpg \
         intltool \
         lftp \
-        libffi-dev \
         librsync-dev \
+        libffi-dev \
         libssl-dev \
-        libxml2 \
         openssl \
         par2 \
         rclone \

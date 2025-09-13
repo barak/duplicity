@@ -21,6 +21,8 @@
 
 
 import os
+import re
+import sys
 import unittest
 
 import pytest
@@ -263,6 +265,58 @@ class FinalTest(FunctionalTestCase):
     def test_concurrency_and_skip_if_no_change(self):
         backup_options = ["--concurrency=2", "--skip-if-no-change"]
         self.run_with_no_change(backup_options=backup_options)
+
+    # TODO: Collect regression issues into a separate test suite.
+    def test_regression_issues(self):
+        """
+        test regression issues.
+        """
+        # Issue 888 - collection_status --file-changed="foo\ bar" fails with type error
+        filenames = ["foo", "bar", "foo bar"]
+        os.mkdir(f"{_runtest_dir}/testfiles/issue888")
+        for filename in filenames:
+            open(f"{_runtest_dir}/testfiles/issue888/{filename}", "w").write(f"{filename}")
+
+        self.backup(
+            "full",
+            f"{_runtest_dir}/testfiles/issue888",
+            options=["--no-encrypt", "--no-compress"],
+        )
+
+        self.run_duplicity(
+            options=[
+                "list-current-files",
+                f"file://{_runtest_dir}/testfiles/output",
+                f"--log-file={_runtest_dir}/testfiles/issue888/testing.out",
+            ]
+        )
+        txt = open(f"{_runtest_dir}/testfiles/issue888/testing.out").read()
+        print(txt, file=sys.stderr)
+        for filename in filenames:
+            self.assertRegex(
+                txt,
+                rf". .* {filename}\n",
+                f"filename {filename} not found in list-current-files output",
+            )
+
+        for filename in filenames:
+            self.run_duplicity(
+                options=[
+                    "collection-status",
+                    f"file://{_runtest_dir}/testfiles/output",
+                    "--file-changed",
+                    filename,
+                    f"--log-file={_runtest_dir}/testfiles/issue888/testing.out",
+                ],
+            )
+            txt = open(f"{_runtest_dir}/testfiles/issue888/testing.out").read()
+            print(txt, file=sys.stderr)
+            patt = re.compile(rf".\s+File: b'{filename}'\n")
+            self.assertRegex(
+                txt,
+                patt,
+                f"filename {filename} not found in collection-status output",
+            )
 
 
 if __name__ == "__main__":
