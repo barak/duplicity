@@ -267,7 +267,7 @@ def restart_position_iterator(tarblock_iter):
                     break
             if tarblock_iter.previous_index > last_index:
                 log.Warn(
-                    _("File %s complete in backup set.\n" "Continuing restart on file %s.")
+                    _("File %s complete in backup set.\nContinuing restart on file %s.")
                     % (util.uindex(last_index), util.uindex(tarblock_iter.previous_index)),
                     log.ErrorCode.restart_file_not_found,
                 )
@@ -277,7 +277,7 @@ def restart_position_iterator(tarblock_iter):
             iter_result = next(tarblock_iter)
     except StopIteration:
         log.Warn(
-            _("File %s missing in backup set.\n" "Continuing restart on file %s.")
+            _("File %s missing in backup set.\nContinuing restart on file %s.")
             % (util.uindex(last_index), util.uindex(tarblock_iter.previous_index)),
             log.ErrorCode.restart_file_not_found,
         )
@@ -362,7 +362,7 @@ def write_multivol(backup_type, tarblock_iter, man_outfp, sig_outfp, backend):
         vol1_filename = file_naming.get(backup_type, 1, encrypted=config.encryption, gzipped=config.compression)
         if vol1_filename != backup_set.volume_name_dict[1]:
             log.FatalError(
-                _("Restarting backup, but current encryption " "settings do not match original settings"),
+                _("Restarting backup, but current encryption settings do not match original settings"),
                 log.ErrorCode.enryption_mismatch,
             )
 

@@ -357,7 +357,7 @@ class Select(object):
             )
         elif isinstance(exc, GlobbingError):
             log.FatalError(
-                _("Fatal Error while processing expression\n" "%s") % exc,
+                _("Fatal Error while processing expression\n%s") % exc,
                 log.ErrorCode.globbing_error,
             )
         else:

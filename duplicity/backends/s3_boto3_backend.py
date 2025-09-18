@@ -168,7 +168,7 @@ class S3Boto3Backend(duplicity.backend.Backend):
         elif config.s3_use_sse_kms:
             if config.s3_kms_key_id is None:
                 raise FatalBackendException(
-                    "S3 USE SSE KMS was requested, but key id not provided " "require (--s3-kms-key-id)",
+                    "S3 USE SSE KMS was requested, but key id not provided require (--s3-kms-key-id)",
                     code=log.ErrorCode.s3_kms_no_id,
                 )
             extra_args["ServerSideEncryption"] = "aws:kms"

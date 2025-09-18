@@ -594,7 +594,7 @@ class BackendWrapper(object):
             self.backend._get(remote_filename, local_path)
             local_path.setdata()
             if not local_path.exists():
-                raise BackendException(_("File %s not found locally after get " "from backend") % local_path.uc_name)
+                raise BackendException(_("File %s not found locally after get from backend") % local_path.uc_name)
         else:
             raise NotImplementedError()
 

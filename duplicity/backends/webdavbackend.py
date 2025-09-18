@@ -390,7 +390,7 @@ class WebDAVBackend(duplicity.backend.Backend):
         raw_filename = self.getText(href.childNodes).strip()
         parsed_url = urllib.parse.urlparse(urllib.parse.unquote(raw_filename))
         filename = parsed_url.path
-        log.Debug(_("WebDAV path decoding and translation: " "%s -> %s") % (raw_filename, filename))
+        log.Debug(_("WebDAV path decoding and translation: %s -> %s") % (raw_filename, filename))
 
         # at least one WebDAV server returns files in the form
         # of full URL:s. this may or may not be

@@ -198,7 +198,7 @@ class SetVersionCommand(Command):
         if self.dry_run:
             print("Dry run, no changes will be made.")
 
-        # .TH DUPLICITY 1 "$reldate" "Version $version" "User Manuals" \"  -*- nroff -*-
+        # .TH DUPLICITY 1 "$reldate" "Version $versionUser Manuals" \"  -*- nroff -*-
         self.version_source(
             r"""\.TH\ DUPLICITY\ 1\ "(?P<reldate>[^"]*)"\ "Version\ (?P<version>[^"]*)"\ "User\ Manuals"\ \\"\ """
             r"""\ \-\*\-\ nroff\ \-\*\-""",

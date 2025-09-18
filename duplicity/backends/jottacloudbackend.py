@@ -80,9 +80,7 @@ class JottaCloudBackend(duplicity.backend.Backend):
                 JFSIncompleteFile,
             )
         except ImportError:
-            raise BackendException(
-                "JottaCloud backend requires jottalib" " (see https://pypi.python.org/pypi/jottalib)."
-            )
+            raise BackendException("JottaCloud backend requires jottalib (see https://pypi.python.org/pypi/jottalib).")
 
         # Set jottalib loggers to the same verbosity as duplicity
         duplicity_log_level = get_duplicity_log_level()
