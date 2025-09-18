@@ -183,8 +183,9 @@ wheels:
         DOCKER_TLS_CERTDIR: ""
     script:
         - curl -sSL https://get.docker.com/ | sh
-        - python -m pip install cibuildwheel==3.1.1
-        - cibuildwheel --output-dir wheelhouse
+        - python -m pip install cibuildwheel==3.1.4
+        - cibuildwheel --output-dir wheelhouse --platform linux
+#        - cibuildwheel --output-dir wheelhouse --platform macos
     artifacts:
         paths:
             - wheelhouse/

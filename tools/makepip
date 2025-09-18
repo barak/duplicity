@@ -31,11 +31,3 @@ echo "$0 of ${VERSION}"
 
 # make source distribution (.tar.gz)
 python3 ./setup.py -q sdist
-
-# make wheel distribution (.whl)
-python3 -m cibuildwheel --platform=linux .
-
-# macOS wheels need macOS to build
-if [ $(uname -s) == "Darwin" ]; then
-    python3 -m cibuildwheel --platform=macos .
-fi
