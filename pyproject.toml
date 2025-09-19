@@ -11,7 +11,7 @@ maintainers = [
     { name = "Thomas Laubrock" },
 ]
 readme = { file = "README.md", content-type = "text/markdown" }
-requires-python = ">= 3.8, < 3.15"
+requires-python = ">= 3.8, < 3.14"
 # not all LP builders will take license=
 #license = "GPL-2.0-or-later"
 classifiers = [

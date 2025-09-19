@@ -58,6 +58,11 @@ def with_tempdir(fn):
 
 
 def dup_run():
+    # check that we can function here
+    if not ((3, 8) <= sys.version_info[:2] <= (3, 13)):
+        print("Sorry, duplicity requires version 3.8 thru 3.13 of Python.", file=sys.stderr)
+        sys.exit(1)
+
     try:
         log.setup()
         util.start_debugger()
