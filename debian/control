@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Duplicity Team <duplicity-team@lists.launchpad.net>
 Build-Depends: debhelper (>= 13),
                dh-python,
-               python3 (>= 3.8),
+               python3 (>= 3.9),
                gnupg,
                librsync-dev (>= 0.9.6),
                par2,
@@ -22,7 +22,7 @@ Build-Depends: debhelper (>= 13),
                rsync,
 Homepage: https://duplicity.gitlab.io
 Standards-Version: 3.9.5
-X-Python3-Version: >= 3.8
+X-Python3-Version: >= 3.9
 
 Package: duplicity
 Architecture: any

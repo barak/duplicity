@@ -42,7 +42,6 @@ from duplicity import config
 from . import UnitTestCase
 
 
-@unittest.skipIf(sys.version_info[:2] < (3, 6), "Skip on bad urllib.parse handling")
 class ParsedUrlTest(UnitTestCase):
     """Test the ParsedUrl class"""
 
