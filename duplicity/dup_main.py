@@ -1595,19 +1595,20 @@ def main():
     Start/end here
     """
     # per bug https://bugs.launchpad.net/duplicity/+bug/931175
-    # duplicity crashes when PYTHONOPTIMIZE is set, so check
+    # duplicity crashes when python optimization is set, so check
     # and refuse to run if it is set.
-    if "PYTHONOPTIMIZE" in os.environ:
+    if sys.flags.optimize:
         log.FatalError(
             dedent(
                 _(
                     """\
-                PYTHONOPTIMIZE in the environment causes duplicity to fail to
-                recognize its own backups.  Please remove PYTHONOPTIMIZE from
-                the environment and rerun the backup.
+                    Setting python optimization causes duplicity to fail to
+                    recognize its own backups.  Please remove PYTHONOPTIMIZE
+                    from the environment or -O and -OO from the commandline,
+                    then rerun the backup.
 
-                See https://bugs.launchpad.net/duplicity/+bug/931175
-                """
+                    See https://bugs.launchpad.net/duplicity/+bug/931175
+                    """
                 )
             ),
             log.ErrorCode.pythonoptimize_set,
