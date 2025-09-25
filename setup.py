@@ -42,7 +42,7 @@ if not ((3, 8) <= sys.version_info[:2] <= (3, 13)):
     print("Sorry, duplicity requires version 3.8 thru 3.13 of Python.", file=sys.stderr)
     sys.exit(1)
 
-Version: str = "3.0.6.dev8"
+Version: str = "3.0.6.dev9"
 reldate: str = time.strftime("%B %d, %Y", time.gmtime(int(os.environ.get("SOURCE_DATE_EPOCH", time.time()))))
 
 # READTHEDOCS uses setup.py sdist but can't handle extensions
@@ -198,7 +198,7 @@ class SetVersionCommand(Command):
         if self.dry_run:
             print("Dry run, no changes will be made.")
 
-        # .TH DUPLICITY 1 "$reldate" "Version $versionUser Manuals" \"  -*- nroff -*-
+        # .TH DUPLICITY 1 "$reldate" "Version $version" "User Manuals" \"  -*- nroff -*-
         self.version_source(
             r"""\.TH\ DUPLICITY\ 1\ "(?P<reldate>[^"]*)"\ "Version\ (?P<version>[^"]*)"\ "User\ Manuals"\ \\"\ """
             r"""\ \-\*\-\ nroff\ \-\*\-""",
