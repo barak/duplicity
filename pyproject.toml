@@ -108,6 +108,7 @@ line-length = 120
 dry-run = true
 aggressive = true
 transform-joins = true
+# TODO: Remove duplicity.argparse311 when py310 goes EOL
 exclude = ["argparse311"]
 
 

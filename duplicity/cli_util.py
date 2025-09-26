@@ -30,7 +30,7 @@ import sys
 from hashlib import md5
 from textwrap import dedent
 
-# TODO: Remove duplicity.argparse311 when py38 goes EOL
+# TODO: Remove duplicity.argparse311 when py310 goes EOL
 from duplicity import argparse311 as argparse
 from duplicity import config
 from duplicity import dup_time
