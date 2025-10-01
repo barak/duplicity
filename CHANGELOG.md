@@ -1,6 +1,140 @@
 # Changelog
 
 
+## (unreleased)
+
+### New
+
+* Set black>=24.8.0. [Kenneth Loafman]
+
+### Changes
+
+* Fix chdir() in tools/setversion. [Kenneth Loafman]
+
+* Move SetVersionCommand to tools/setversion. [Kenneth Loafman]
+
+* Don't check versions under pytest. [Kenneth Loafman]
+
+* Fix/add TODO's for argparse311. [Kenneth Loafman]
+
+* Mark test\_GzipWriteFile as xfail, may fail. [Kenneth Loafman]
+
+    - xfail because random data may cause Compression Failure
+
+* Only run on py39 thru py314. [Kenneth Loafman]
+
+* Change version max to 3.13. [Kenneth Loafman]
+
+* Updates to wheels build. [Kenneth Loafman]
+
+* Upload manylinux wheels to PyPi. [Kenneth Loafman]
+
+    - supports python 39,310,311,312,313 arches x86_64, aarch64 on Linux
+    - supports python 39,310,311,312,313 arches x86_64, arm64 on macOS
+
+* More changes for Docker testing. [Kenneth Loafman]
+
+* Boto3 1.36+ breaks Duplicity...but there is a workaround. [ede]
+
+* Add regression test for #881. [Catalin Patulea]
+
+* Docker changes ported from issue815. [Kenneth Loafman]
+
+    A number of changes to `testing/docker` in issue815 that need to be released separately.
+
+### Fix
+
+* Fix test\_out\_of\_order\_volume() in concurrency. [Thomas Laubrock]
+
+* Black to run on py314. [Kenneth Loafman]
+
+* Fix check for optimization. [Kenneth Loafman]
+
+* Isolate .pytest\_cache using volumes. [Kenneth Loafman]
+
+* Minor s3 clarification. [ede]
+
+* Fix check for optimization. [Kenneth Loafman]
+
+* Collection-status with a specific file fails with TypeError. [Kenneth Loafman]
+
+* Duplicity verify fails with KeyError. [Kenneth Loafman]
+
+    - Fixes #815
+    - Optimizes imports
+    - Misc. test/doc fixes
+
+* Restore a file to directory fails and empties target directory -
+related to #111. [Kenneth Loafman]
+
+* Add gpg to install lists. [Kenneth Loafman]
+
+* GPG test fixes from issue815. [Kenneth Loafman]
+
+* Make swiftbackend imports global. [Kenneth Loafman]
+
+    Fixes #886
+
+* Multi backend: if we looped around, and any passed, break out. [Catalin Patulea]
+
+* Fix:usr: make @retry report fatals as exceptions, not log.FatalError. [Catalin Patulea]
+
+    Final retry exceptions are now passed up to the handler in __main__.py.
+
+    This fixes #881 where the outer 'multi' backend actually wants to catch the
+    exception (onfail=continue) instead of exiting the process.
+
+    Based on the preparation in earlier commits, this commit does not affect the
+    process exit code, it's still backend_error.
+
+    Handling of such exceptions in multiprocessing parent/child process is now the
+    same and no longer requires a special case.
+
+    This will enable more cleanups in future commits.
+
+* On uncaught BackendException, make the exit code backend\_error (50). [Catalin Patulea]
+
+    BackendException handler was added in March 2009 (commit 2d37baa3). Not clear if
+    exit code user_error was intentional or copy/paste from the 'except UserError'
+    block above.
+
+    This is in preparation to modify @retry to pass fatal exceptions up, instead of
+    immediately exiting using log.FatalError, while keeping the same exit code.
+
+* Fix typo in collection-status --jsonstat example. [Catalin Patulea]
+
+* Revert "use pyproject plugin for ppa" [Kenneth Loafman]
+
+    This reverts commit 4dc57cc0
+
+* Use pyproject plugin for ppa. [Branch Vincent]
+
+    Relanding 3683aa4d after fixing the debian package for #877. Before, debian used the legacy `setup.py install` method, meaning none of the metadata in `pyproject.toml` was used (including scripts, hence the need for workarounds like 4636e043308e79bfd693c40f6c8076d5e5680d2d). To fix:
+
+    * Opt-in to using a PEP 517 build by depending on `pybuild-plugin-pyproject` (following the guidance of pybuild's [manpage](https://manpages.debian.org/testing/dh-python/pybuild.1.en.html#pyproject))
+    * Replace other various invocations of `setup.py` with the same [`build`](https://github.com/pypa/build) frontend
+
+* Fix TotalDestinationSizeChange with concurrency. [Martin Wilck]
+
+    With --concurrency n (n \> 1), duplicity always prints TotalDestinationSizeChange 0 (0 bytes).
+
+    Fix it by returning bytes_written from collect_put_results(). Fixes #880.
+
+* Pexpect+sftp: support absolute path in URL. [Martin Wilck]
+
+    Fix it by stripping only a single `/` from parsed_url.path.
+
+    Fixes #879.
+
+### Other
+
+* Chr:usr: remove 'are\_errors\_fatal' mechanism, no longer needed. [Catalin Patulea]
+
+    Since the recent commit to raise @retry final errors as exceptions,
+    are_errors_fatal mechanism is no longer needed, we can use a normal 'except'
+    block.
+
+
 ## rel.3.0.5.1 (2025-06-25)
 
 ### Changes
