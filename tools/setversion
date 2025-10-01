@@ -33,7 +33,7 @@ def set_version(new_version):
     """
 
     # run from project root
-    os.chdir("..")
+    os.chdir(f"{os.path.dirname(__file__)}/..")
 
     # .TH DUPLICITY 1 "$reldate" "new_version $version" "User Manuals" \"  -*- nroff -*-
     version_source(
