@@ -36,7 +36,7 @@ services:
         command: -c "make ext ; pytest ${PYTEST_ARGS:-""}"
         volumes:
             - ../../..:/root/duplicity
-            - pytest:/root/duplicity/.pytest_cache
+            - pytest_ub20:/root/duplicity/.pytest_cache
 
     ub22:
         image: distro/ub22
@@ -48,7 +48,7 @@ services:
         command: -c "sleep 2 ; make ext ; pytest ${PYTEST_ARGS:-""}"
         volumes:
             - ../../..:/root/duplicity
-            - pytest:/root/duplicity/.pytest_cache
+            - pytest_ub22:/root/duplicity/.pytest_cache
 
     ub24:
         image: distro/ub24
@@ -60,7 +60,9 @@ services:
         command: -c "sleep 4 ; make ext ; pytest ${PYTEST_ARGS:-""}"
         volumes:
             - ../../..:/root/duplicity
-            - pytest:/root/duplicity/.pytest_cache
+            - pytest_ub24:/root/duplicity/.pytest_cache
 
 volumes:
-    pytest:
+    pytest_ub20:
+    pytest_ub22:
+    pytest_ub24:

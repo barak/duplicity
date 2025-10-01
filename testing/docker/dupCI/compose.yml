@@ -36,7 +36,7 @@ services:
         command: -c "make ext ; pytest ${PYTEST_ARGS:-""}"
         volumes:
             - ../../..:/root/duplicity
-            - pytest:/root/duplicity/.pytest_cache
+            - pytest_py39:/root/duplicity/.pytest_cache
 
     py310:
         image: dupci/py310
@@ -48,7 +48,7 @@ services:
         command: -c "sleep 2 ; make ext ; pytest ${PYTEST_ARGS:-""}"
         volumes:
             - ../../..:/root/duplicity
-            - pytest:/root/duplicity/.pytest_cache
+            - pytest_py310:/root/duplicity/.pytest_cache
 
     py311:
         image: dupci/py311
@@ -60,7 +60,7 @@ services:
         command: -c "sleep 4 ; make ext ; pytest ${PYTEST_ARGS:-""}"
         volumes:
             - ../../..:/root/duplicity
-            - pytest:/root/duplicity/.pytest_cache
+            - pytest_py311:/root/duplicity/.pytest_cache
 
     py312:
         image: dupci/py312
@@ -72,7 +72,7 @@ services:
         command: -c "sleep 6 ; make ext ; pytest ${PYTEST_ARGS:-""}"
         volumes:
             - ../../..:/root/duplicity
-            - pytest:/root/duplicity/.pytest_cache
+            - pytest_py312:/root/duplicity/.pytest_cache
 
     py313:
         image: dupci/py313
@@ -84,7 +84,7 @@ services:
         command: -c "sleep 8 ; make ext ; pytest ${PYTEST_ARGS:-""}"
         volumes:
             - ../../..:/root/duplicity
-            - pytest:/root/duplicity/.pytest_cache
+            - pytest_py313:/root/duplicity/.pytest_cache
 
     py314:
         image: dupci/py314
@@ -96,7 +96,12 @@ services:
         command: -c "sleep 10 ; make ext ; pytest ${PYTEST_ARGS:-""}"
         volumes:
             - ../../..:/root/duplicity
-            - pytest:/root/duplicity/.pytest_cache
+            - pytest_py314:/root/duplicity/.pytest_cache
 
 volumes:
-    pytest:
+    pytest_py39:
+    pytest_py310:
+    pytest_py311:
+    pytest_py312:
+    pytest_py313:
+    pytest_py314:

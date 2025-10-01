@@ -1355,13 +1355,13 @@ scheme://[/]path
 .RE
 
 .SS Use BACKEND_PASSWORD (How to provide password in a secure way)
-It is not recommended to expose the password on the command line 
-e.g. as part of the target url since it can be revealed to anyone 
+It is not recommended to expose the password on the command line
+e.g. as part of the target url since it can be revealed to anyone
 with permissions to do process listings. it is possible however.
 
 Consider setting the environment variable
 .B BACKEND_PASSWORD
-or other backend specific environment variables instead which do not 
+or other backend specific environment variables instead which do not
 suffer the security flaw mentioned above.
 
 .SS Details and descriptive examples per backend
@@ -2982,7 +2982,7 @@ The local signatures will not be encrypted and stored in the archive dir (see
 .SH REQUIREMENTS
 Duplicity requires a POSIX-like operating system with a
 .B python
-interpreter version 3.8+ installed.
+interpreter version 3.9+ installed.
 It is best used under GNU/Linux.
 
 Some backends also require additional components (probably available as packages for your specific platform):
