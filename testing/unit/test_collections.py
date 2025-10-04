@@ -55,6 +55,9 @@ remote_sigchain_filename_list = [
     b"duplicity-new-signatures.2002-08-17T16:17:01-07:00.to.2002-08-18T00:04:30-07:00.sigtar.gpg",
     b"duplicity-new-signatures.2002-08-18T00:04:30-07:00.to.2002-08-20T00:00:00-07:00.sigtar.gpg",
 ]
+remote_sigchain_filename_list2 = [
+    b"duplicity-full-signatures.2003-08-17T16:17:01-07:00.sigtar.gpg",
+]
 
 local_sigchain_filename_list = [
     b"duplicity-full-signatures.2002-08-17T16:17:01-07:00.sigtar.gz",
@@ -92,6 +95,15 @@ filename_list3 = [
     b"duplicity-full.2002-08-17T16:17:01-07:00.vol4.difftar.gpg",
     b"duplicity-full.2002-08-17T16:17:01-07:00.vol5.difftar.gpg",
     b"duplicity-full.2002-08-17T16:17:01-07:00.vol6.difftar.gpg",
+]
+
+remove_older_than = [
+    b"duplicity-full.20251003T104900Z.vol1.difftar.gz",
+    b"duplicity-full.20251003T104922Z.vol1.difftar.gz",
+    b"duplicity-full-signatures.20251003T104900Z.sigtar.gz",
+    b"duplicity-full-signatures.20251003T104922Z.sigtar.gz",
+    b"duplicity-full.20251003T104900Z.manifest",
+    b"duplicity-full.20251003T104922Z.manifest",
 ]
 
 partial_filename_list = []
@@ -236,14 +248,27 @@ class CollectionTest(UnitTestCase):
         self.sigchain_fileobj_check_list(self.sigchain_fileobj_get(1))
         self.sigchain_fileobj_check_list(self.sigchain_fileobj_get(None))
 
-    def get_filelist_cs(self, filelist):
+    def get_filelist_cs(self, filelist, fill_archive=False):
         """
         Return set CollectionsStatus object from filelist
         """
         # Set up /tmp/testfiles/output with files from filelist
+
+        for filename in self.output_dir.listdir():
+            self.output_dir.append(filename).delete()
         for filename in filelist:
             p = self.output_dir.append(filename)
             p.touch()
+
+        if fill_archive:
+            for filename in config.archive_dir_path.listdir():
+                config.archive_dir_path.append(filename).delete()
+            for filename in filelist:
+                if b"vol" in filename:
+                    # don't add volumes to archive/cache
+                    continue
+                p = config.archive_dir_path.append(filename)
+                p.touch()
 
         cs = dup_collections.CollectionsStatus(self.output_dir_backend, config.archive_dir_path)
         cs.set_values()
@@ -293,6 +318,24 @@ class CollectionTest(UnitTestCase):
             oldset_times,
             right_times_required,
         ]
+
+    def test_get_olderthan_signatures(self):
+        cs = self.get_filelist_cs(remove_older_than, fill_archive=True)
+        first_backup_ts = dup_time.genstrtotime("2025-10-03T10:49:00")
+        second_backup_ts = dup_time.genstrtotime("2025-10-03T10:49:22")
+        newer_than_last_ts = dup_time.genstrtotime("2025-10-03T10:59:59")
+
+        # no older backups
+        oldsets = cs.get_signature_chains_older_than(first_backup_ts)
+        assert len(oldsets) == 0
+
+        # don't return signatures from latest backup
+        oldsets = cs.get_signature_chains_older_than(newer_than_last_ts)
+        assert len(oldsets) == 2, f"Expected 2 sets, got {len(oldsets)}"  # local and remote sig
+        assert all(
+            x.end_time == first_backup_ts for x in oldsets
+        ), f"Wrong sets, timestam doesn't match {first_backup_ts}"
+        assert len([x for x in oldsets if x.islocal() is True]) == 1, "There should be one local and one remote set"
 
     @pytest.mark.usefixtures("mock_manifest")
     def test_missing_first_volume(self):

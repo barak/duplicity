@@ -1210,7 +1210,9 @@ class CollectionsStatus(object):
         assert self.values_set
         old_chains = []
         for chain in self.all_backup_chains:
-            if chain.end_time < t and (not self.matched_chain_pair or chain is not self.matched_chain_pair[1]):
+            if chain.end_time < t and (
+                not self.matched_chain_pair or chain.end_time != self.matched_chain_pair[1].end_time
+            ):
                 # don't delete the active (matched) chain
                 old_chains.append(chain)
         return old_chains
@@ -1228,7 +1230,9 @@ class CollectionsStatus(object):
         assert self.values_set
         old_chains = []
         for chain in self.all_sig_chains:
-            if chain.end_time < t and (not self.matched_chain_pair or chain is not self.matched_chain_pair[0]):
+            if chain.end_time < t and (
+                not self.matched_chain_pair or chain.end_time != self.matched_chain_pair[0].end_time
+            ):
                 # don't delete the active (matched) chain
                 old_chains.append(chain)
         return old_chains
