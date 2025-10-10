@@ -87,6 +87,10 @@ class BackupSet(object):
         """
         check that we have a complete set of volumes.
         """
+        if not config.check_remote:
+            self.mf_missing = {}
+            self.cs_missing = {}
+            return
         try:
             mf = self.get_manifest()
         except Exception as e:
@@ -300,16 +304,21 @@ class BackupSet(object):
         """
         assert self.local_manifest_path
         manifest_buffer = self.local_manifest_path.get_data()
-        log.Info(_("Processing local manifest %s (%s)") % (self.local_manifest_path.uc_name, len(manifest_buffer)))
+        log.Info(_(f"Processing local manifest {self.local_manifest_path.uc_name} ({len(manifest_buffer)})"))
         return manifest.Manifest().from_string(manifest_buffer)
 
     def get_remote_manifest(self):
         """
         Return manifest by reading remote manifest on backend
         """
-        assert self.remote_manifest_name
-        manifest_buffer = self.get_remote_file(self.remote_manifest_name)
-        log.Info(_(f"Processing remote manifest {self.remote_manifest_name} ({len(manifest_buffer)})"))
+        if config.check_remote:
+            assert self.remote_manifest_name, "No remote manifest name"
+            manifest_buffer = self.get_remote_file(self.remote_manifest_name)
+            log.Info(_(f"Processing remote manifest {self.remote_manifest_name} ({len(manifest_buffer)})"))
+        else:
+            assert self.local_manifest_path, "No local manifest path"
+            manifest_buffer = self.local_manifest_path.get_data()
+            log.Info(_(f"Using local manifest as remote {self.local_manifest_path.uc_name} ({len(manifest_buffer)})"))
         return manifest.Manifest().from_string(manifest_buffer)
 
     def get_remote_file(self, remote_file):
@@ -333,10 +342,10 @@ class BackupSet(object):
     def get_jsonstat(self):
         if self.local_jsonstat_path:
             json_stat_bytes = gzip.decompress(self.local_jsonstat_path.get_data())
-        elif self.remote_jsonstat_name:
+        elif self.remote_jsonstat_name and config.check_remote:
             json_stat_bytes = self.get_remote_file(self.remote_jsonstat_name)
         else:
-            log.Info(_("No Jsonstat file found, return empty."))
+            log.Info(_("No jsonstat file found, return empty."))
             return {}
         return json.loads(json_stat_bytes)
 
@@ -791,13 +800,16 @@ class CollectionsStatus(object):
         """
         self.values_set = True
 
-        # get remote filename list
-        backend_filename_list = self.backend.list()
-        log.Debug(_("%d file(s) exists on backend") % len(backend_filename_list))
-
         # get local filename list
         local_filename_list = self.archive_dir_path.listdir()
         log.Debug(_("%d file(s) exist in cache") % len(local_filename_list))
+
+        # get remote filename list
+        if config.check_remote:
+            backend_filename_list = self.backend.list()
+        else:
+            backend_filename_list = local_filename_list
+        log.Debug(_("%d file(s) exists on backend") % len(backend_filename_list))
 
         # check for partial backups
         partials = []

@@ -365,7 +365,7 @@ mf_purge = False
 # Fake root directory path for iDrived backend
 idr_fakeroot = None
 
-# whether to check remote manifest (requires private key)
+# whether to check remote metadata (requires private key)
 check_remote = True
 
 # log verbosity.

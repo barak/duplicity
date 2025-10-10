@@ -465,6 +465,7 @@ OptionKwargs = dict(
     ),
     metadata_sync_mode=dict(
         choices=("full", "partial"),
+        dest="metadata_sync_mode",
         help="Only sync required metadata not all",
         default=dflt(config.metadata_sync_mode),
     ),
@@ -484,6 +485,12 @@ OptionKwargs = dict(
         dest="backup_name",
         help="Custom backup name instead of hash",
         default=dflt(config.backup_name),
+    ),
+    no_check_remote=dict(
+        action="store_false",
+        dest="check_remote",
+        help="If supplied do not check remote metadata",
+        default=dflt(config.check_remote),
     ),
     no_compression=dict(
         action="store_false",

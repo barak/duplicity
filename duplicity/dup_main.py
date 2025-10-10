@@ -1369,6 +1369,10 @@ def sync_archive(col_stats):
         tdp.setdata()
         tdp.move(config.archive_dir_path.append(loc_name))
 
+    # skip if remote access is not configured
+    if not config.check_remote:
+        return
+
     # get remote metafile list
     remlist = config.backend.list()
     remote_metafiles, ignored, rem_needpass = get_metafiles(remlist)
@@ -1447,8 +1451,7 @@ def check_last_manifest(col_stats):
     assert col_stats.all_backup_chains
     last_backup_set = col_stats.all_backup_chains[-1].get_last()
     # check remote manifest only if we can decrypt it (see #1729796)
-    check_remote = not config.encryption or config.gpg_profile.passphrase
-    last_backup_set.check_manifests(check_remote=check_remote)
+    last_backup_set.check_manifests(check_remote=config.check_remote)
 
 
 def check_resources(action):
@@ -1790,7 +1793,7 @@ def do_backup(action):
                         check_last_manifest(col_stats)  # not needed for full backups
                 incremental_backup(sig_chain, col_stats)
 
-        if action in ["full", "inc"]:
+        if action in ["full", "inc"] and not config.check_remote:
             dup_collections.CollectionsStatus(
                 config.backend,
                 config.archive_dir_path,
