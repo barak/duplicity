@@ -160,10 +160,10 @@ archs = [
 #    "s390x",
 ]
 build = [
-    "cp{39,310,311,312,313}-manylinux_aarch64",
-    "cp{39,310,311,312,313}-manylinux_x86_64",
-#    "cp{39,310,311,312,313}-manylinux_ppc64le",
-#    "cp{39,310,311,312,313}-manylinux_s390x",
+    "cp{39,310,311,312,313,314}-manylinux_aarch64",
+    "cp{39,310,311,312,313,314}-manylinux_x86_64",
+#    "cp{39,310,311,312,313,314}-manylinux_ppc64le",
+#    "cp{39,310,311,312,313,314}-manylinux_s390x",
 ]
 
 #[tool.cibuildwheel.macos.environment]
@@ -175,8 +175,8 @@ build = [
 #    "arm64",
 #]
 #build = [
-#    "cp{39,310,311,312,313}-macosx_arm64",
-#    "cp{39,310,311,312,313}-macosx_x86_64",
+#    "cp{39,310,311,312,313,314}-macosx_arm64",
+#    "cp{39,310,311,312,313,314}-macosx_x86_64",
 #]
 
 
