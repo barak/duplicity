@@ -173,6 +173,7 @@ class BuildExtCommand(build_ext):
 
 
 setup(
+    version=Version,
     packages=[
         "duplicity",
         "duplicity.backends",
