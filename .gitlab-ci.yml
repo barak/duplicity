@@ -106,7 +106,7 @@ py313:
 
 py314:
     <<: *test-template
-    image: python:3.14-rc
+    image: python:3.14
     script:
         - pytest testing/unit testing/functional
     allow_failure: true
