@@ -27,15 +27,17 @@ import os
 from urllib.parse import quote_plus
 
 import duplicity.backend
-from duplicity import config
-from duplicity import log
-from duplicity import progress
-from duplicity import util
-from duplicity import config
+from duplicity import (
+    config,
+    log,
+    progress,
+)
 from duplicity.errors import (
     BackendException,
     FatalBackendException,
 )
+
+global DownloadDestLocalFile, FileVersionInfoFactory
 
 
 class B2ProgressListener(object):
@@ -166,7 +168,7 @@ class B2Backend(duplicity.backend.Backend):
         if self.v_num < [1, 11, 0]:
             self.bucket.download_file_by_name(
                 quote_plus(self.path + os.fsdecode(remote_filename), "/"),
-                DownloadDestLocalFile(local_path.name),
+                DownloadDestLocalFile(local_path.name),  # pylint: disable=used-before-assignment
             )
         else:
             df = self.bucket.download_file_by_name(quote_plus(self.path + os.fsdecode(remote_filename), "/"))
