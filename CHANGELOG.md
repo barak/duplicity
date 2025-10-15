@@ -3,15 +3,34 @@
 
 ## (unreleased)
 
-### New
+### Changes
 
-* Set black>=24.8.0. [Kenneth Loafman]
+* Add py314 to wheels build. [Kenneth Loafman]
+
+* Better assert error message. [Thomas Laubrock]
+
+### Fix
+
+* 'duplicity incremental' attempts to fetch remote manifest which is not
+needed for the current backup. [Kenneth Loafman]
+
+    - extended option --no-check-remote
+    - faked collection-status out with local metadata
+    - neutered the check for missing difftar volumes
+    - Fixes #891
+
+* Fix removal of signature from latest backup. [Thomas Laubrock]
+
+
+## rel.3.0.6.dev10 (2025-10-01)
 
 ### Changes
 
 * Fix chdir() in tools/setversion. [Kenneth Loafman]
 
 * Move SetVersionCommand to tools/setversion. [Kenneth Loafman]
+
+* Set black>=24.8.0. [Kenneth Loafman]
 
 * Don't check versions under pytest. [Kenneth Loafman]
 
@@ -23,38 +42,33 @@
 
 * Only run on py39 thru py314. [Kenneth Loafman]
 
-* Change version max to 3.13. [Kenneth Loafman]
-
-* Updates to wheels build. [Kenneth Loafman]
-
-* Upload manylinux wheels to PyPi. [Kenneth Loafman]
-
-    - supports python 39,310,311,312,313 arches x86_64, aarch64 on Linux
-    - supports python 39,310,311,312,313 arches x86_64, arm64 on macOS
-
-* More changes for Docker testing. [Kenneth Loafman]
-
-* Boto3 1.36+ breaks Duplicity...but there is a workaround. [ede]
-
-* Add regression test for #881. [Catalin Patulea]
-
-* Docker changes ported from issue815. [Kenneth Loafman]
-
-    A number of changes to `testing/docker` in issue815 that need to be released separately.
-
 ### Fix
 
 * Fix test\_out\_of\_order\_volume() in concurrency. [Thomas Laubrock]
 
 * Black to run on py314. [Kenneth Loafman]
 
-* Fix check for optimization. [Kenneth Loafman]
-
 * Isolate .pytest\_cache using volumes. [Kenneth Loafman]
 
 * Minor s3 clarification. [ede]
 
+
+## rel.3.0.6.dev9 (2025-09-25)
+
+### Changes
+
+* Change version max to 3.13. [Kenneth Loafman]
+
+* Updates to wheels build. [Kenneth Loafman]
+
+### Fix
+
 * Fix check for optimization. [Kenneth Loafman]
+
+
+## rel.3.0.6.dev8 (2025-09-14)
+
+### Fix
 
 * Collection-status with a specific file fails with TypeError. [Kenneth Loafman]
 
@@ -70,6 +84,39 @@ related to #111. [Kenneth Loafman]
 * Add gpg to install lists. [Kenneth Loafman]
 
 * GPG test fixes from issue815. [Kenneth Loafman]
+
+
+## rel.3.0.6.dev7 (2025-08-02)
+
+### Changes
+
+* Upload manylinux wheels to PyPi. [Kenneth Loafman]
+
+    - supports python 39,310,311,312,313 arches x86_64, aarch64 on Linux
+    - supports python 39,310,311,312,313 arches x86_64, arm64 on macOS
+
+* More changes for Docker testing. [Kenneth Loafman]
+
+* Boto3 1.36+ breaks Duplicity...but there is a workaround. [ede]
+
+
+## rel.3.0.6.dev6 (2025-07-24)
+
+### Changes
+
+* Add regression test for #881. [Catalin Patulea]
+
+* Remove 'are\_errors\_fatal' mechanism, no longer needed. [Catalin Patulea]
+
+    Since the recent commit to raise @retry final errors as exceptions,
+    are_errors_fatal mechanism is no longer needed, we can use a normal 'except'
+    block.
+
+* Docker changes ported from issue815. [Kenneth Loafman]
+
+    A number of changes to `testing/docker` in issue815 that need to be released separately.
+
+### Fix
 
 * Make swiftbackend imports global. [Kenneth Loafman]
 
@@ -103,9 +150,19 @@ related to #111. [Kenneth Loafman]
 
 * Fix typo in collection-status --jsonstat example. [Catalin Patulea]
 
+
+## rel.3.0.6.dev5 (2025-07-05)
+
+### Fix
+
 * Revert "use pyproject plugin for ppa" [Kenneth Loafman]
 
     This reverts commit 4dc57cc0
+
+
+## rel.3.0.6.dev4 (2025-07-05)
+
+### Fix
 
 * Use pyproject plugin for ppa. [Branch Vincent]
 
@@ -125,14 +182,6 @@ related to #111. [Kenneth Loafman]
     Fix it by stripping only a single `/` from parsed_url.path.
 
     Fixes #879.
-
-### Other
-
-* Chr:usr: remove 'are\_errors\_fatal' mechanism, no longer needed. [Catalin Patulea]
-
-    Since the recent commit to raise @retry final errors as exceptions,
-    are_errors_fatal mechanism is no longer needed, we can use a normal 'except'
-    block.
 
 
 ## rel.3.0.5.1 (2025-06-25)
@@ -578,17 +627,7 @@ n+1 volumes, switch to "spawn". [Thomas Laubrock]
 
     - See https://gitlab.com/duplicity/duplicity/-/merge_requests/233
 
-
-## rel.2.2.4rc3 (2024-05-19)
-
-### Changes
-
 * Use pip-compile to build requirements.txt. [Kenneth Loafman]
-
-
-## rel.2.2.4rc2 (2024-05-18)
-
-### Changes
 
 * Adjust since twine does not do wildcards. [Kenneth Loafman]
 
@@ -601,27 +640,6 @@ n+1 volumes, switch to "spawn". [Thomas Laubrock]
 * Split requirements.txt into .txt and .dev. [Kenneth Loafman]
 
 * Add missing fasteners install dependency. [Michael Terry]
-
-* Run po/update-pot. [Kenneth Loafman]
-
-* Fix typo in ignore new pylint warning. [Kenneth Loafman]
-
-* Ignore new pylint warning E0606 (possibly-used-before-assignment). [Kenneth Loafman]
-
-### Fix
-
-* Onedrive: fix "unauthorized" upload error by not passing auth. [Michael Terry]
-
-    After the initial createUploadSession, apparently OneDrive actively dislikes it if you send Authorization headers on the subsequent PUT calls.
-
-    See their docs: https://learn.microsoft.com/en-us/graph/api/driveitem-createuploadsession?view=graph-rest-1.0#remarks
-
-    If you do include the Authorization header, you get 401 responses.
-
-
-## rel.2.2.4rc1 (2024-05-15)
-
-### Changes
 
 * Run po/update-pot. [Kenneth Loafman]
 
@@ -663,6 +681,14 @@ n+1 volumes, switch to "spawn". [Thomas Laubrock]
 * Adjust debian/control for focal builds. [Kenneth Loafman]
 
 ### Fix
+
+* Onedrive: fix "unauthorized" upload error by not passing auth. [Michael Terry]
+
+    After the initial createUploadSession, apparently OneDrive actively dislikes it if you send Authorization headers on the subsequent PUT calls.
+
+    See their docs: https://learn.microsoft.com/en-us/graph/api/driveitem-createuploadsession?view=graph-rest-1.0#remarks
+
+    If you do include the Authorization header, you get 401 responses.
 
 * Don't drop args when restarting with execve. [Michael Terry]
 
@@ -1097,240 +1123,6 @@ flow. [Christopher Haglund]
 
 ## rel.2.0.1 (2023-08-08)
 
-### Fix
-
-* Adjust regex for 2.0.0x. [Kenneth Loafman]
-
-* Restore pre-parser. Fixes #727. [Kenneth Loafman]
-
-    Revert "chg:usr: Remove implied command support for now."
-
-    This reverts commit afbeb4082a87e2073b5ccdcd624cf5e6f4465608.
-
-* Add missing import to cli\_util.py. Fixes #730. [Kenneth Loafman]
-
-* Add missing import to b2backend.py.  Fixes #729. [Kenneth Loafman]
-
-* Adjust version to build under LP. [Kenneth Loafman]
-
-* Adjust to build under LP Mantic. [Kenneth Loafman]
-
-    fix:pkg: Adjust to build under LP Mantic.
-
-* Fix PEP8 issue. [Kenneth Loafman]
-
-
-## rel.2.0.0x (2023-08-07)
-
-### Changes
-
-* Remove boto related doc. some reformatting. [ede]
-
-* Add missing user options to manpage. [Kenneth Loafman]
-
-* Improve --verbosity help. [Kenneth Loafman]
-
-* Remove implied command support for now. [Kenneth Loafman]
-
-* Remove --s3-european-buckets used by boto. [Kenneth Loafman]
-
-* Fix short filenames use in new s3 files. [Kenneth Loafman]
-
-### Fix
-
-* Cannot run CLI tests on Launchpad. [Kenneth Loafman]
-
-* S3 backend issues. Fixes #31. [Kenneth Loafman]
-
-* Fix Exception Type for verbosity level. [Thomas Laubrock]
-
-* Remove tests for py27 and py35. [Kenneth Loafman]
-
-
-## rel.2.0.0rc2 (2023-07-24)
-
-### Changes
-
-* Fix format strings in idrivedbackend.py. [Kenneth Loafman]
-
-* Add additional CLI checks. [Kenneth Loafman]
-
-* Fix format strings in idrivedbackend.py. [Kenneth Loafman]
-
-* Fix format string in statistics.py. [Kenneth Loafman]
-
-* Remove kerberos from snap builds. [Kenneth Loafman]
-
-    kerberos will not build in snapcraft.
-
-* Changes to allow building snaps. [Kenneth Loafman]
-
-    Found another bug in snapcraft, see:
-    https://bugs.launchpad.net/snapcraft/+bug/2028303
-
-
-## rel.2.0.0rc1 (2023-07-17)
-
-### Changes
-
-* Update CHANGELOG.md. [Kenneth Loafman]
-
-* Fix implied command handling. [Kenneth Loafman]
-
-* Create regression test dir from old scripts. [Kenneth Loafman]
-
-
-## rel.2.0.0rc0 (2023-07-10)
-
-### Changes
-
-* Update CHANGELOG.md. [Kenneth Loafman]
-
-### Fix
-
-* Finish conversions to f-strings. [Kenneth Loafman]
-
-    See https://github.com/ikamensh/flynt/issues/185
-
-* Convert to f-strings via 'flynt -tc -tj'. [Kenneth Loafman]
-
-* With py2 gone remove unicode string adornments. [Kenneth Loafman]
-
-* Fix implied command when target is empty. [Kenneth Loafman]
-
-
-## rel.2.0.0b2 (2023-07-02)
-
-### Changes
-
-* Update CHANGELOG.md. [Kenneth Loafman]
-
-* Fix syntax error in .gitlab-ci.yml. [Kenneth Loafman]
-
-* Fix website to only run with WEBSITE\_TRIGGER\_TOKEN. [Kenneth Loafman]
-
-* Fix PEP8 issue.  Update CHANGELOG.md. [Kenneth Loafman]
-
-* Resolve some minor merge issues. [Kenneth Loafman]
-
-* Whoops, used f-string to fix #716. Fixed. [Kenneth Loafman]
-
-* Fix #716.  Print filename on read error. [Kenneth Loafman]
-
-* Fix #709.  Add docs on passphrase encryption used. [Kenneth Loafman]
-
-* Fixes for handling snaps again. [Kenneth Loafman]
-
-    Use requirements.txt instead of internal list.
-
-* Fix #707 for test\_get\_stats\_string. [Kenneth Loafman]
-
-    Move UTC set/unset to testing.__init__.
-
-* Fix #707 for test\_get\_stats\_string. [Kenneth Loafman]
-
-    Base time on UTC rather than where the test is run.
-
-* Fix #707 for test\_get\_stats\_string. [Kenneth Loafman]
-
-    Base time on UTC rather than where the test is run.
-
-* Fix #707 for rclone backend testing. [Kenneth Loafman]
-
-    Create 'duptest' config if needed, then remove after
-    tests are complete.
-
-    Add some more pytest options to tox.ini.
-
-* Comment out test\_path:test\_compare, flaky. [Kenneth Loafman]
-
-    Fixes #707 - 1.2.3 test failure
-
-* Force cryptography<3.4 for py2 support. [Kenneth Loafman]
-
-* Test if requirements.txt changes. [Kenneth Loafman]
-
-* Revert back to tox < 4.0. [Kenneth Loafman]
-
-### Fix
-
-* Fix #710. Missing Content-Type header on webdav. [Kenneth Loafman]
-
-* S3 filename encoding. [Thomas Laubrock]
-
-* Fix #712 "if cache lost. `*.sigtar.gpg` files not accessible" [Thomas Laubrock]
-
-    solution, do not add signature files to glacier
-
-* Handle read-only remote parent folder better in gio backend. [Michael Terry]
-
-
-## rel.2.0.0b1 (2023-06-30)
-
-### Changes
-
-* Update CHANGELOG.md. [Kenneth Loafman]
-
-* Some basic PEP8 and code cleanup. [Kenneth Loafman]
-
-* Set socket default timeout in CLI. [Kenneth Loafman]
-
-* Fixes for deprecated/changed options. [Kenneth Loafman]
-
-
-## rel.2.0.0b0 (2023-06-24)
-
-### Changes
-
-* Misc changes for compatibility. [Kenneth Loafman]
-
-* Fix #24.  Allow users to tune copy block size. [Kenneth Loafman]
-
-    - Added --copy-blocksize, default 128k to options.
-    - Added tests for same and improved other testss.
-
-* Fix .gitlab-ci.yml to skip website step if no token. [Kenneth Loafman]
-
-
-## rel.2.0.0a2 (2023-06-14)
-
-### Changes
-
-* Remove pathvalidate from use.  Fixes #27. [Kenneth Loafman]
-
-
-## rel.2.0.0a1 (2023-06-14)
-
-### Changes
-
-* More CLI improvements. [Kenneth Loafman]
-
-    - Improve error message for implied commands.
-    - Code and testing clean up.
-    - Remove deprecated option handling.
-
-* Add implied backup/restore back. [Kenneth Loafman]
-
-* CLI improvements and cleanup. [Kenneth Loafman]
-
-    - Remove 'backup' command.
-    - Preparse options for config.
-
-* Minor cleanup, rm dead code. [Kenneth Loafman]
-
-* RcloneBackendTest now creates its own config. [Kenneth Loafman]
-
-* "--ignore-errors" gets proper handling in CLI. [Kenneth Loafman]
-
-### Fix
-
-* Fix #22, “--no-compression” doesn't have effect. [Kenneth Loafman]
-
-* Fix .gitlab-ci.yml file syntax error. [Kenneth Loafman]
-
-
-## rel.2.0.0a0 (2023-06-01)
-
 ### New
 
 * Add --webdav-headers to webdavbackend.  Fixes #94. [Kenneth Loafman]
@@ -1430,6 +1222,91 @@ flow. [Christopher Haglund]
     Restore fails with "Invalid data - SHA1 hash mismatch"
 
 ### Changes
+
+* Remove boto related doc. some reformatting. [ede]
+
+* Add missing user options to manpage. [Kenneth Loafman]
+
+* Improve --verbosity help. [Kenneth Loafman]
+
+* Remove implied command support for now. [Kenneth Loafman]
+
+* Remove --s3-european-buckets used by boto. [Kenneth Loafman]
+
+* Fix short filenames use in new s3 files. [Kenneth Loafman]
+
+* Fix format strings in idrivedbackend.py. [Kenneth Loafman]
+
+* Add additional CLI checks. [Kenneth Loafman]
+
+* Fix format strings in idrivedbackend.py. [Kenneth Loafman]
+
+* Fix format string in statistics.py. [Kenneth Loafman]
+
+* Remove kerberos from snap builds. [Kenneth Loafman]
+
+    kerberos will not build in snapcraft.
+
+* Changes to allow building snaps. [Kenneth Loafman]
+
+    Found another bug in snapcraft, see:
+    https://bugs.launchpad.net/snapcraft/+bug/2028303
+
+* Update CHANGELOG.md. [Kenneth Loafman]
+
+* Fix implied command handling. [Kenneth Loafman]
+
+* Create regression test dir from old scripts. [Kenneth Loafman]
+
+* Update CHANGELOG.md. [Kenneth Loafman]
+
+* Update CHANGELOG.md. [Kenneth Loafman]
+
+* Fix syntax error in .gitlab-ci.yml. [Kenneth Loafman]
+
+* Fix website to only run with WEBSITE\_TRIGGER\_TOKEN. [Kenneth Loafman]
+
+* Fix PEP8 issue.  Update CHANGELOG.md. [Kenneth Loafman]
+
+* Resolve some minor merge issues. [Kenneth Loafman]
+
+* Update CHANGELOG.md. [Kenneth Loafman]
+
+* Some basic PEP8 and code cleanup. [Kenneth Loafman]
+
+* Set socket default timeout in CLI. [Kenneth Loafman]
+
+* Fixes for deprecated/changed options. [Kenneth Loafman]
+
+* Misc changes for compatibility. [Kenneth Loafman]
+
+* Fix #24.  Allow users to tune copy block size. [Kenneth Loafman]
+
+    - Added --copy-blocksize, default 128k to options.
+    - Added tests for same and improved other testss.
+
+* Fix .gitlab-ci.yml to skip website step if no token. [Kenneth Loafman]
+
+* Remove pathvalidate from use.  Fixes #27. [Kenneth Loafman]
+
+* More CLI improvements. [Kenneth Loafman]
+
+    - Improve error message for implied commands.
+    - Code and testing clean up.
+    - Remove deprecated option handling.
+
+* Add implied backup/restore back. [Kenneth Loafman]
+
+* CLI improvements and cleanup. [Kenneth Loafman]
+
+    - Remove 'backup' command.
+    - Preparse options for config.
+
+* Minor cleanup, rm dead code. [Kenneth Loafman]
+
+* RcloneBackendTest now creates its own config. [Kenneth Loafman]
+
+* "--ignore-errors" gets proper handling in CLI. [Kenneth Loafman]
 
 * Fix initial version. [Kenneth Loafman]
 
@@ -2186,7 +2063,86 @@ flow. [Christopher Haglund]
 
 * Remove installs common between before\_script: and script: [Kenneth Loafman]
 
+* Whoops, used f-string to fix #716. Fixed. [Kenneth Loafman]
+
+* Fix #716.  Print filename on read error. [Kenneth Loafman]
+
+* Fix #709.  Add docs on passphrase encryption used. [Kenneth Loafman]
+
+* Fixes for handling snaps again. [Kenneth Loafman]
+
+    Use requirements.txt instead of internal list.
+
+* Fix #707 for test\_get\_stats\_string. [Kenneth Loafman]
+
+    Move UTC set/unset to testing.__init__.
+
+* Fix #707 for test\_get\_stats\_string. [Kenneth Loafman]
+
+    Base time on UTC rather than where the test is run.
+
+* Fix #707 for test\_get\_stats\_string. [Kenneth Loafman]
+
+    Base time on UTC rather than where the test is run.
+
+* Fix #707 for rclone backend testing. [Kenneth Loafman]
+
+    Create 'duptest' config if needed, then remove after
+    tests are complete.
+
+    Add some more pytest options to tox.ini.
+
+* Comment out test\_path:test\_compare, flaky. [Kenneth Loafman]
+
+    Fixes #707 - 1.2.3 test failure
+
+* Force cryptography<3.4 for py2 support. [Kenneth Loafman]
+
+* Test if requirements.txt changes. [Kenneth Loafman]
+
+* Revert back to tox < 4.0. [Kenneth Loafman]
+
 ### Fix
+
+* Adjust regex for 2.0.0x. [Kenneth Loafman]
+
+* Restore pre-parser. Fixes #727. [Kenneth Loafman]
+
+    Revert "chg:usr: Remove implied command support for now."
+
+    This reverts commit afbeb4082a87e2073b5ccdcd624cf5e6f4465608.
+
+* Add missing import to cli\_util.py. Fixes #730. [Kenneth Loafman]
+
+* Add missing import to b2backend.py.  Fixes #729. [Kenneth Loafman]
+
+* Adjust version to build under LP. [Kenneth Loafman]
+
+* Adjust to build under LP Mantic. [Kenneth Loafman]
+
+    fix:pkg: Adjust to build under LP Mantic.
+
+* Fix PEP8 issue. [Kenneth Loafman]
+
+* Cannot run CLI tests on Launchpad. [Kenneth Loafman]
+
+* S3 backend issues. Fixes #31. [Kenneth Loafman]
+
+* Fix Exception Type for verbosity level. [Thomas Laubrock]
+
+* Finish conversions to f-strings. [Kenneth Loafman]
+
+    See https://github.com/ikamensh/flynt/issues/185
+
+* Convert to f-strings via 'flynt -tc -tj'. [Kenneth Loafman]
+
+* With py2 gone remove unicode string adornments. [Kenneth Loafman]
+
+* Fix implied command when target is empty. [Kenneth Loafman]
+
+* Fix #22, “--no-compression” doesn't have effect. [Kenneth Loafman]
+
+* Fix .gitlab-ci.yml file syntax error. [Kenneth Loafman]
 
 * Add a missing super() call in path.py. [Kenneth Loafman]
 
@@ -2585,6 +2541,18 @@ flow. [Christopher Haglund]
 * Fix setup.py to handle Python 2 properly. [Kenneth Loafman]
 
 * Fixes #41 - par2+rsync (non-ssh) fails. [Kenneth Loafman]
+
+* Remove tests for py27 and py35. [Kenneth Loafman]
+
+* Fix #710. Missing Content-Type header on webdav. [Kenneth Loafman]
+
+* S3 filename encoding. [Thomas Laubrock]
+
+* Fix #712 "if cache lost. `*.sigtar.gpg` files not accessible" [Thomas Laubrock]
+
+    solution, do not add signature files to glacier
+
+* Handle read-only remote parent folder better in gio backend. [Michael Terry]
 
 ### Other
 
