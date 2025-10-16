@@ -109,7 +109,6 @@ py314:
     image: python:3.14
     script:
         - pytest testing/unit testing/functional
-    allow_failure: true
 
 pages:
     stage: deploy
