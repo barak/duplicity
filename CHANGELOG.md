@@ -1,15 +1,60 @@
 # Changelog
 
 
-## (unreleased)
+## rel.3.0.6.dev11 (2025-10-16)
+
+### New
+
+* Set black>=24.8.0. [Kenneth Loafman]
 
 ### Changes
+
+* Remove may fail py3.14. [Kenneth Loafman]
+
+* Use python:314 not -rc. [Kenneth Loafman]
+
+* Use python -m build --sdist. [Kenneth Loafman]
+
+* Add recent .dev versions to CHANGELOG.md. [Kenneth Loafman]
 
 * Add py314 to wheels build. [Kenneth Loafman]
 
 * Better assert error message. [Thomas Laubrock]
 
+* Fix chdir() in tools/setversion. [Kenneth Loafman]
+
+* Move SetVersionCommand to tools/setversion. [Kenneth Loafman]
+
+* Don't check versions under pytest. [Kenneth Loafman]
+
+* Fix/add TODO's for argparse311. [Kenneth Loafman]
+
+* Mark test\_GzipWriteFile as xfail, may fail. [Kenneth Loafman]
+
+    - xfail because random data may cause Compression Failure
+
+* Only run on py39 thru py314. [Kenneth Loafman]
+
+* Change version max to 3.13. [Kenneth Loafman]
+
+* Updates to wheels build. [Kenneth Loafman]
+
+* Upload manylinux wheels to PyPi. [Kenneth Loafman]
+
+    - supports python 39,310,311,312,313 arches x86_64, aarch64 on Linux
+    - supports python 39,310,311,312,313 arches x86_64, arm64 on macOS
+
+* More changes for Docker testing. [Kenneth Loafman]
+
+* Boto3 1.36+ breaks Duplicity...but there is a workaround. [ede]
+
+* Add regression test for #881. [Catalin Patulea]
+
 ### Fix
+
+* If using authentication, send warmup OPTIONS request. [Catalin Patulea]
+
+    This avoids an edge case with --no-check-remote, HTTP authentication and a cpython bug (https://github.com/python/cpython/issues/70107) which can cause ConnectionResetError -- see details in: https://gitlab.com/duplicity/duplicity/-/merge_requests/320#note_2818250084
 
 * 'duplicity incremental' attempts to fetch remote manifest which is not
 needed for the current backup. [Kenneth Loafman]
@@ -20,6 +65,45 @@ needed for the current backup. [Kenneth Loafman]
     - Fixes #891
 
 * Fix removal of signature from latest backup. [Thomas Laubrock]
+
+* Fix test\_out\_of\_order\_volume() in concurrency. [Thomas Laubrock]
+
+* Black to run on py314. [Kenneth Loafman]
+
+* Fix check for optimization. [Kenneth Loafman]
+
+* Isolate .pytest\_cache using volumes. [Kenneth Loafman]
+
+* Minor s3 clarification. [ede]
+
+* Fix check for optimization. [Kenneth Loafman]
+
+* Collection-status with a specific file fails with TypeError. [Kenneth Loafman]
+
+* Duplicity verify fails with KeyError. [Kenneth Loafman]
+
+    - Fixes #815
+    - Optimizes imports
+    - Misc. test/doc fixes
+
+* Restore a file to directory fails and empties target directory -
+related to #111. [Kenneth Loafman]
+
+* Add gpg to install lists. [Kenneth Loafman]
+
+* GPG test fixes from issue815. [Kenneth Loafman]
+
+* Make swiftbackend imports global. [Kenneth Loafman]
+
+    Fixes #886
+
+### Other
+
+* Chr:usr: remove 'are\_errors\_fatal' mechanism, no longer needed. [Catalin Patulea]
+
+    Since the recent commit to raise @retry final errors as exceptions,
+    are_errors_fatal mechanism is no longer needed, we can use a normal 'except'
+    block.
 
 
 ## rel.3.0.6.dev10 (2025-10-01)
