@@ -317,7 +317,7 @@ def process_command_line(cmdline_list):
                     log.ErrorCode.verify_dir_doesnt_exist,
                 )
         else:
-            assert config.action in ("full", "inc")
+            assert config.action in ("full", "inc"), "action must be full or inc"
             if not local_path.exists():
                 log.FatalError(
                     _(f"Backup source directory {local_path.uc_name} does not exist."),

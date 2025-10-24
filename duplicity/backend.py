@@ -677,7 +677,9 @@ class BackendWrapper(object):
         """
         Delete each filename in filename_list, in order if possible.
         """
-        assert not isinstance(filename_list, bytes)
+        assert not isinstance(
+            filename_list, bytes
+        ), "filename_list must be an iterable of filenames (not a byte string)"
         if hasattr(self.backend, "_delete_list"):
             self._do_delete_list(filename_list)
         elif hasattr(self.backend, "_delete"):
@@ -777,5 +779,5 @@ class BackendWrapper(object):
         """
         fin = self.get_fileobj_read(filename, parseresults)
         buf = fin.read()
-        assert not fin.close()
+        assert not fin.close(), "fin failed to close"
         return buf

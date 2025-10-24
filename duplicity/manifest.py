@@ -290,10 +290,10 @@ class Manifest(object):
         """
         Write string version of manifest to given path
         """
-        assert not path.exists()
+        assert not path.exists(), "Destination path already exists; refusing to overwrite manifest"
         fout = path.open("wb")
         fout.write(self.to_string())
-        assert not fout.close()
+        assert not fout.close(), "fout failed to close"
         path.setdata()
 
     def get_containing_volumes(self, index_prefix):
@@ -530,14 +530,14 @@ def Unquote(quoted_string):
     """
     if not maybe_chr(quoted_string[0]) == '"' or maybe_chr(quoted_string[0]) == "'":
         return quoted_string
-    assert quoted_string[0] == quoted_string[-1]
+    assert quoted_string[0] == quoted_string[-1], "Quoted string must start and end with the same quote character"
     return_list = []
     i = 1  # skip initial char
     while i < len(quoted_string) - 1:
         char = quoted_string[i : i + 1]
         if char == b"\\":
             # quoted section
-            assert maybe_chr(quoted_string[i + 1]) == "x"
+            assert maybe_chr(quoted_string[i + 1]) == "x", "Escape sequence must be of the form \\xNN (hex)"
             return_list.append(int(quoted_string[i + 2 : i + 4].decode(), 16).to_bytes(1, byteorder="big"))
             i += 4
         else:

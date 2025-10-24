@@ -428,7 +428,7 @@ class WebDAVBackend(duplicity.backend.Backend):
             response = self.request("GET", url)
             if response.status == 200:
                 shutil.copyfileobj(response, target_file)
-                assert not target_file.close()
+                assert not target_file.close(), "target_file failed to close"
                 response.close()
             else:
                 status = response.status
