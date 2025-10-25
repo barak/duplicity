@@ -193,7 +193,9 @@ wheels:
         - python -m build --sdist --outdir wheelhouse .
         # upload to pypi
         - python -m pip install twine
-        - TWINE_USERNAME=__token__ TWINE_PASSWORD=$PYPI_ID_TOKEN twine upload --skip-existing wheelhouse/*
+        - resp="$(curl -X POST "https://pypi.org/_/oidc/mint-token" -d "{\"token\":\"${PYPI_ID_TOKEN}\"}")"
+        - publish_token="$(python -c "import json; print(json.loads('${resp}')['token'])")"
+        - TWINE_USERNAME=__token__ TWINE_PASSWORD=${publish_token} twine upload --skip-existing wheelhouse/*
     artifacts:
         paths:
             - wheelhouse/
