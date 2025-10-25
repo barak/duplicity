@@ -1,13 +1,31 @@
 # Changelog
 
 
-## rel.3.0.6.dev11 (2025-10-16)
+## (unreleased)
+
+### Changes
+
+* Misc build tools upgrades. [Kenneth Loafman]
+
+* Add error message to raw assert statements. [Kenneth Loafman]
+
+### Fix
+
+* 'duplicity incremental' attempts to fetch remote manifest which is not
+needed for the current backup. [Kenneth Loafman]
+
+    Fixes #891
+
+
+## rel.3.0.6.dev11 (2025-10-19)
 
 ### New
 
 * Set black>=24.8.0. [Kenneth Loafman]
 
 ### Changes
+
+* Update CHANGELOG.md. [Kenneth Loafman]
 
 * Remove may fail py3.14. [Kenneth Loafman]
 
