@@ -72,7 +72,7 @@ ignore_regexps = [
     r"^.*New Crowdin updates.*$",
     r"^.*version for LP.*$",
     r"^.*Bump version to .*$",
-    r"^.*Update changelog..*$",
+    r"(?i)^.*Update changelog(.md)?.*$",
     r"^.*Prep for .*$",
     r"^$",  ## ignore commits with empty messages
 ]

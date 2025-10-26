@@ -5,6 +5,13 @@
 
 ### Changes
 
+* Fix wheels publish. [Kenneth Loafman]
+
+
+## rel.3.0.6.dev12 (2025-10-25)
+
+### Changes
+
 * Misc build tools upgrades. [Kenneth Loafman]
 
 * Add error message to raw assert statements. [Kenneth Loafman]
@@ -24,8 +31,6 @@ needed for the current backup. [Kenneth Loafman]
 * Set black>=24.8.0. [Kenneth Loafman]
 
 ### Changes
-
-* Update CHANGELOG.md. [Kenneth Loafman]
 
 * Remove may fail py3.14. [Kenneth Loafman]
 
@@ -1354,25 +1359,15 @@ flow. [Christopher Haglund]
     Found another bug in snapcraft, see:
     https://bugs.launchpad.net/snapcraft/+bug/2028303
 
-* Update CHANGELOG.md. [Kenneth Loafman]
-
 * Fix implied command handling. [Kenneth Loafman]
 
 * Create regression test dir from old scripts. [Kenneth Loafman]
-
-* Update CHANGELOG.md. [Kenneth Loafman]
-
-* Update CHANGELOG.md. [Kenneth Loafman]
 
 * Fix syntax error in .gitlab-ci.yml. [Kenneth Loafman]
 
 * Fix website to only run with WEBSITE\_TRIGGER\_TOKEN. [Kenneth Loafman]
 
-* Fix PEP8 issue.  Update CHANGELOG.md. [Kenneth Loafman]
-
 * Resolve some minor merge issues. [Kenneth Loafman]
-
-* Update CHANGELOG.md. [Kenneth Loafman]
 
 * Some basic PEP8 and code cleanup. [Kenneth Loafman]
 
@@ -3847,8 +3842,6 @@ integer division. [kenneth@loafman.com]
 * Fix unadorned string. [kenneth@loafman.com]
 
 * Fix unadorned string. [kenneth@loafman.com]
-
-* Update changelogs. [Adam Jacobs]
 
 * In version 1 of the B2sdk, the list\_file\_names method is removed
 from the B2Bucket class. [Adam Jacobs]
@@ -6779,9 +6772,6 @@ tracker.debian.org/package/duplicity/0.6.22-2. [ede]
 
 * Remove obsolete cfpyrax+http:// scheme from manpage. [ede]
 
-* Update Changelog.GNU fix "Import of duplicity.backends.dpbxbackend
-Failed: No module named dropbox" [ede]
-
 * Add mega documentation. [ede]
 
 * Some formatting fixes to rman issues on website display. [ede]
@@ -7164,26 +7154,18 @@ the bug keeping them on the remote side. [Michael Terry]
     see
     http://lists.nongnu.org/archive/html/duplicity-talk/2012-10/msg00027.html
 
-* Update CHANGELOG to reflect all bugs fixed. [Kenneth Loafman]
-
 * Remove dist/mkGNUchangelog script.     * Prep files for 0.6.20
 release. [Kenneth Loafman]
 
 * Applied patch from az for bug #1066625 u1backend   + add delay between
 retries. [Kenneth Loafman]
 
-* Update Changelog.GNU. [Kenneth Loafman]
-
 * U1backend: interpret http code 402 as no-space-left rather than 507. [Michael Terry]
-
-* Update CHANGELOG and Changelog.GNU. [Kenneth Loafman]
 
 * 1039001 --exclude-if-present and --exclude-other-filesystems causes
 crash with inaccessible other fs. [Kenneth Loafman]
 
 * 995851 doc improvement for --encrypt-key, --sign-key. [Kenneth Loafman]
-
-* Update Changelog.GNU. [Kenneth Loafman]
 
 * 1066625 ubuntu one backend does not work without gnome/dbus/x11
 session. [Kenneth Loafman]
@@ -7202,14 +7184,10 @@ session. [Kenneth Loafman]
 
 * Some clarifications mostly for ssh pexpect backend. [ede]
 
-* Update Changelog.GNU. [Kenneth Loafman]
-
 * Some clarifications in README. [ede]
 
 * Refactor GnuPGInterface to gpginterface.py reasoning can be found in
 README. [ede]
-
-* Update Changelog.GNU. [Kenneth Loafman]
 
 * Place gpg.py tempfiles in duplicity's tmp subfolder which is cleaned
 whatever happens. [ede]
@@ -7227,16 +7205,12 @@ Python 2.7. [Michael Terry]
 * Don't use unittest.TestCase.assertSetEqual, which isn't supported in
 older Python versions. [Michael Terry]
 
-* Update Changelog.GNU. [Kenneth Loafman]
-
 * Probably fix. [ede]
 
     File "/usr/local/lib/python2.7/dist-packages/duplicity/backends/_ssh_pexpect.py", line 223, in run_sftp_command
         log.Warn("Running '%s' with commands:\n %s\n failed (attempt #%d): %s" % (commandline, "\n ".join(commands), n, msg))
 
 * Wrap CHANGELOG to col 80. [Kenneth Loafman]
-
-* Update Changelog.GNU. [Kenneth Loafman]
 
 * Gracefully handle multiple duplicate base dir entries in the sigtar;
 avoid writing such entries out. [Michael Terry]
@@ -7257,14 +7231,9 @@ hopefully better online rendering - minor clarifications. [ede]
 
 * Ssh: actually delete all the requested files, not just the first one. [Michael Terry]
 
-* Update Changelog.GNU and CHANGELOG. [Kenneth Loafman]
-
 * Make sure translations are in utf-8. [Michael Terry]
 
 * Fix dates. [Kenneth Loafman]
-
-* Update CHANGELOG and Changelog.GNU to reflect recent changes. Update
-location path in mkGNUChangelog.sh. [Kenneth Loafman]
 
 * Use tempfile.TemporaryFile() so unused temp files are deleted
 automagically. [edso]
@@ -7305,8 +7274,6 @@ broke otherwise working verify run. [edso]
 parameter to switch between paramiko,pexpect - manpage -- update to
 reflect above changes -- added more backend requirements -
 Changelog.GNU removed double entries. [edso]
-
-* Update Changelog.GNU. [Kenneth Loafman]
 
 * Changelog entry. [edso]
 
@@ -8297,8 +8264,6 @@ perfect but it won't hang on a fifo copy like "cp -pr". [Larry Gilbert]
 * Change readthedocs.yaml. [Kenneth Loafman]
 
 * Change readthedocs.yaml. [Kenneth Loafman]
-
-* Update CHANGELOG.md. [Kenneth Loafman]
 
 * Fix spelling errors. [Barak A. Pearlmutter]
 
@@ -10615,8 +10580,6 @@ integer division. [kenneth@loafman.com]
 * Fix unadorned string. [kenneth@loafman.com]
 
 * Fix unadorned string. [kenneth@loafman.com]
-
-* Update changelogs. [Adam Jacobs]
 
 * In version 1 of the B2sdk, the list\_file\_names method is removed
 from the B2Bucket class. [Adam Jacobs]
@@ -13577,9 +13540,6 @@ tracker.debian.org/package/duplicity/0.6.22-2. [ede]
 
 * Remove obsolete cfpyrax+http:// scheme from manpage. [ede]
 
-* Update Changelog.GNU fix "Import of duplicity.backends.dpbxbackend
-Failed: No module named dropbox" [ede]
-
 * Add mega documentation. [ede]
 
 * Some formatting fixes to rman issues on website display. [ede]
@@ -13962,26 +13922,18 @@ the bug keeping them on the remote side. [Michael Terry]
     see
     http://lists.nongnu.org/archive/html/duplicity-talk/2012-10/msg00027.html
 
-* Update CHANGELOG to reflect all bugs fixed. [Kenneth Loafman]
-
 * Remove dist/mkGNUchangelog script.     * Prep files for 0.6.20
 release. [Kenneth Loafman]
 
 * Applied patch from az for bug #1066625 u1backend   + add delay between
 retries. [Kenneth Loafman]
 
-* Update Changelog.GNU. [Kenneth Loafman]
-
 * U1backend: interpret http code 402 as no-space-left rather than 507. [Michael Terry]
-
-* Update CHANGELOG and Changelog.GNU. [Kenneth Loafman]
 
 * 1039001 --exclude-if-present and --exclude-other-filesystems causes
 crash with inaccessible other fs. [Kenneth Loafman]
 
 * 995851 doc improvement for --encrypt-key, --sign-key. [Kenneth Loafman]
-
-* Update Changelog.GNU. [Kenneth Loafman]
 
 * 1066625 ubuntu one backend does not work without gnome/dbus/x11
 session. [Kenneth Loafman]
@@ -14000,14 +13952,10 @@ session. [Kenneth Loafman]
 
 * Some clarifications mostly for ssh pexpect backend. [ede]
 
-* Update Changelog.GNU. [Kenneth Loafman]
-
 * Some clarifications in README. [ede]
 
 * Refactor GnuPGInterface to gpginterface.py reasoning can be found in
 README. [ede]
-
-* Update Changelog.GNU. [Kenneth Loafman]
 
 * Place gpg.py tempfiles in duplicity's tmp subfolder which is cleaned
 whatever happens. [ede]
@@ -14025,16 +13973,12 @@ Python 2.7. [Michael Terry]
 * Don't use unittest.TestCase.assertSetEqual, which isn't supported in
 older Python versions. [Michael Terry]
 
-* Update Changelog.GNU. [Kenneth Loafman]
-
 * Probably fix. [ede]
 
     File "/usr/local/lib/python2.7/dist-packages/duplicity/backends/_ssh_pexpect.py", line 223, in run_sftp_command
         log.Warn("Running '%s' with commands:\n %s\n failed (attempt #%d): %s" % (commandline, "\n ".join(commands), n, msg))
 
 * Wrap CHANGELOG to col 80. [Kenneth Loafman]
-
-* Update Changelog.GNU. [Kenneth Loafman]
 
 * Gracefully handle multiple duplicate base dir entries in the sigtar;
 avoid writing such entries out. [Michael Terry]
@@ -14055,14 +13999,9 @@ hopefully better online rendering - minor clarifications. [ede]
 
 * Ssh: actually delete all the requested files, not just the first one. [Michael Terry]
 
-* Update Changelog.GNU and CHANGELOG. [Kenneth Loafman]
-
 * Make sure translations are in utf-8. [Michael Terry]
 
 * Fix dates. [Kenneth Loafman]
-
-* Update CHANGELOG and Changelog.GNU to reflect recent changes. Update
-location path in mkGNUChangelog.sh. [Kenneth Loafman]
 
 * Use tempfile.TemporaryFile() so unused temp files are deleted
 automagically. [edso]
@@ -14103,8 +14042,6 @@ broke otherwise working verify run. [edso]
 parameter to switch between paramiko,pexpect - manpage -- update to
 reflect above changes -- added more backend requirements -
 Changelog.GNU removed double entries. [edso]
-
-* Update Changelog.GNU. [Kenneth Loafman]
 
 * Changelog entry. [edso]
 
