@@ -234,9 +234,9 @@ class TestInnerFuncs(UnitTestCase):
 
     def get_delta(self, old_buf, new_buf):
         """Return delta buffer from old to new"""
-        sigfile = librsync.SigFile(io.BytesIO(old_buf))
-        sig = sigfile.read()
-        assert not sigfile.close()
+        sig = librsync.SigGenerator()
+        sig.update(old_buf)
+        sig = sig.getsig()
 
         deltafile = librsync.DeltaFile(sig, io.BytesIO(new_buf))
         deltabuf = deltafile.read()
