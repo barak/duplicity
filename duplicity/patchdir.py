@@ -298,56 +298,6 @@ def collate_iters(iter_list):
     return yield_tuples(iter_num, overflow, elems)
 
 
-class IndexedTuple(object):
-    """Like a tuple, but has .index (used previously by collate_iters)"""
-
-    def __init__(self, index, sequence):
-        self.index = index
-        self.data = tuple(sequence)
-
-    def __len__(self):
-        return len(self.data)
-
-    def __getitem__(self, key):
-        """This only works for numerical keys (easier this way)"""
-        return self.data[key]
-
-    def __lt__(self, other):
-        return self.__cmp__(other) == -1
-
-    def __le__(self, other):
-        return self.__cmp__(other) != 1
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    def __gt__(self, other):
-        return self.__cmp__(other) == 1
-
-    def __ge__(self, other):
-        return self.__cmp__(other) != -1
-
-    def __cmp__(self, other):
-        assert isinstance(other, IndexedTuple), f"Comparison target must be IndexedTuple, got {type(other).__name__}"
-        if self.index < other.index:
-            return -1
-        elif self.index == other.index:
-            return 0
-        else:
-            return 1
-
-    def __eq__(self, other):
-        if isinstance(other, IndexedTuple):
-            return self.index == other.index and self.data == other.data
-        elif isinstance(other, tuple):
-            return self.data == other
-        else:
-            return False
-
-    def __str__(self):
-        return f"({', '.join(map(str, self.data))}).{self.index}"
-
-
 def normalize_ps(patch_sequence):
     """Given an sequence of ROPath deltas, remove blank and unnecessary
 

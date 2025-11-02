@@ -206,23 +206,6 @@ class CollateItersTest(UnitTestCase):
             patchdir.collate_iters([makeiter1(), iter([])]),
         )
 
-    def test_tuple(self):
-        """Test indexed tuple"""
-        i = patchdir.IndexedTuple((1, 2, 3), ("a", "b"))
-        i2 = patchdir.IndexedTuple((), ("hello", "there", "how are you"))
-
-        assert i[0] == "a"
-        assert i[1] == "b"
-        assert i2[1] == "there"
-        assert len(i) == 2 and len(i2) == 3
-        assert i2 < i, i2 < i
-
-    def test_tuple_assignment(self):
-        a, b, c = patchdir.IndexedTuple((), (1, 2, 3))
-        assert a == 1
-        assert b == 2
-        assert c == 3
-
 
 class TestInnerFuncs(UnitTestCase):
     """Test some other functions involved in patching"""
