@@ -1,11 +1,29 @@
 # Changelog
 
 
-## (unreleased)
+## rel.3.0.6 (2025-11-02)
 
 ### Changes
 
+* Run po/update-pot. [Kenneth Loafman]
+
+* Cleanup the build system. [Kenneth Loafman]
+
+    - Manually apply fixes from @branchv MR 301.
+    - Leave ./setup.py build_ext as is.
+    - setuptools needs to be in requirements.txt not .dev for cibuildwheel to set up his environment.
+
+* Fix .gitchangelog.rc. [Kenneth Loafman]
+
 * Fix wheels publish. [Kenneth Loafman]
+
+### Fix
+
+* Fix so readthedocs.io builds. [Kenneth Loafman]
+
+* Gdrive dies with 503 during init. [ede]
+
+    fixes #895
 
 
 ## rel.3.0.6.dev12 (2025-10-25)
