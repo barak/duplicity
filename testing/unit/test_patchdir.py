@@ -68,24 +68,36 @@ class PatchingTest(UnitTestCase):
         """Test signatures, diffing, and patching on directory list"""
         assert len(filelist) >= 2
         sig = Path(f"{_runtest_dir}/testfiles/output/sig.tar")
-        diff = Path(f"{_runtest_dir}/testfiles/output/diff.tar")
+        new_sig = Path(f"{_runtest_dir}/testfiles/output/new-sig.tar")
+        diffs = []
         seq_path = Path(f"{_runtest_dir}/testfiles/output/sequence")
         new_path, old_path = None, None  # set below in for loop
 
         # Write initial full backup to diff.tar
-        for dirname in filelist:
+        # import pytest; pytest.set_trace()
+        for i, dirname in enumerate(filelist, start=1):
+            diff = Path(f"{_runtest_dir}/testfiles/output/diff{i}.tar")
             old_path, new_path = new_path, Path(dirname)
             if old_path:
-                sigblock = diffdir.DirSig(self.get_sel(seq_path))
-                diffdir.write_block_iter(sigblock, sig)
-                deltablock = diffdir.DirDelta(self.get_sel(new_path), sig.open("rb"))
+                deltablock = diffdir.DirDelta_WriteSig(self.get_sel(new_path), [sig.open("rb")], new_sig.open("wb"))
             else:
-                deltablock = diffdir.DirFull(self.get_sel(new_path))
+                deltablock = diffdir.DirFull_WriteSig(self.get_sel(new_path), new_sig.open("wb"))
+            new_sig.rename(sig)
             diffdir.write_block_iter(deltablock, diff)
+            diffs.append(diff)
 
-            patchdir.Patch(seq_path, diff.open("rb"))
+            assert not os.system(f"rm -fr {_runtest_dir}/testfiles/output/sequence")
+
+            tarfiles = [patchdir.TarFile_FromFileobjs(iter([diff.open("rb")])) for diff in diffs]
+            rop_iter = patchdir.tarfiles2rop_iter(tarfiles)
+
+            patchdir.Write_ROPaths(
+                seq_path,
+                rop_iter,
+            )
+
             # print "#########", seq_path, new_path
-            assert seq_path.compare_recursive(new_path, 1)
+            assert seq_path.compare_recursive(new_path, verbose=1)
 
     def test_block_tar(self):
         """Test building block tar from a number of files"""
@@ -126,11 +138,14 @@ class PatchingTest(UnitTestCase):
         make_bad_tar(f"{_runtest_dir}/testfiles/output/bad.tar")
         os.mkdir(f"{_runtest_dir}/testfiles/output/temp")
 
+        tarfiles = [patchdir.TarFile_FromFileobjs(iter([open(f"{_runtest_dir}/testfiles/output/bad.tar", "rb")]))]
+        rop_iter = patchdir.tarfiles2rop_iter(tarfiles)
+
         self.assertRaises(
             patchdir.PatchDirException,
-            patchdir.Patch,
+            patchdir.Write_ROPaths,
             Path(f"{_runtest_dir}/testfiles/output/temp"),
-            open(f"{_runtest_dir}/testfiles/output/bad.tar", "rb"),
+            rop_iter,
         )
         assert not Path(f"{_runtest_dir}/testfiles/output/warning-security-error").exists()
 
