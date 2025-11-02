@@ -43,12 +43,6 @@ def Patch(base_path, difftar_fileobj):
     assert not difftar_fileobj.close(), "difftar_fileobj failed to close"
 
 
-def Patch_from_iter(base_path, fileobj_iter, restrict_index=()):
-    """Patch given base_path and iterator of delta file objects"""
-    diff_tarfile = TarFile_FromFileobjs(fileobj_iter)
-    patch_diff_tarfile(base_path, diff_tarfile, restrict_index)
-
-
 def patch_diff_tarfile(base_path, diff_tarfile, restrict_index=()):
     """Patch given Path object using delta dup_tarfile (as in dup_tarfile.TarFile)
 
