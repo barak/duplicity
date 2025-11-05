@@ -15,7 +15,8 @@ dropbox
 gdata-python3
 google-api-python-client
 google-auth-oauthlib
-httplib2<=0.22.0 # newer breaks HTTP(S)_PROXY env var support, not fixed albeit 0.30.1 states so
+httplib2
+pysocks # optional httplib2 dep, needed for proxy support
 jottalib
 keyring
 lxml<=5.4.0  # newer vers do not build on Ubuntu < 24.04
