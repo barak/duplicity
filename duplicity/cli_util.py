@@ -124,7 +124,7 @@ class IgnoreErrorsAction(DuplicityAction):
     def __call__(self, parser, namespace, values, option_string=None):
         var = opt2var(option_string)
         log.Warn(
-            _("Running in 'ignore errors' mode due to --ignore-errors.\nPlease reconsider if this was not intended")
+            _("Running in 'ignore errors' mode due to --ignore-errors.\n" "Please reconsider if this was not intended")
         )
         setattr(namespace, var, True)
 

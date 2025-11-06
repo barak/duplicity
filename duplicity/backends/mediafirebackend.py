@@ -65,7 +65,7 @@ Exception: {str(e)}"""
         try:
             folder = self.client.get_resource_by_uri(uri)
             if not isinstance(folder, self._folder_res):
-                raise BackendException("target_url already exists and is not a folder")
+                raise BackendException("target_url already exists " "and is not a folder")
         except mediafire.client.ResourceNotFoundError:
             # force folder to be private
             folder = self.client.create_folder(uri, recursive=True)

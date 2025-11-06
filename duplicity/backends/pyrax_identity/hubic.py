@@ -189,7 +189,7 @@ class HubicIdentity(BaseIdentity):
 
         if not success:
             raise exc.AuthenticationFailed(
-                "All the attempts failed to get the refresh token: status_code = 509: Bandwidth Limit Exceeded"
+                "All the attempts failed to get the refresh token: " "status_code = 509: Bandwidth Limit Exceeded"
             )
 
         oauth_token = r.json()
@@ -235,7 +235,7 @@ class HubicIdentity(BaseIdentity):
 
             if self._email is None or self._password is None:
                 raise exc.AuthenticationFailed(
-                    "Cannot retrieve email and/or password. Please run expresslane-hubic-setup.sh"
+                    "Cannot retrieve email and/or password. " "Please run expresslane-hubic-setup.sh"
                 )
 
             r = requests.post(
@@ -255,7 +255,7 @@ class HubicIdentity(BaseIdentity):
                 query = urllib.parse.urlsplit(r.headers["location"]).query
                 code = dict(urllib.parse.parse_qsl(query))["code"]
             except Exception as e:
-                raise exc.AuthenticationFailed("Unable to authorize client_id, invalid login/password ?")
+                raise exc.AuthenticationFailed("Unable to authorize client_id, " "invalid login/password ?")
 
             oauth_token = self._get_access_token(code)
 

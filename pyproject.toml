@@ -97,7 +97,6 @@ filterwarnings = [
 ]
 addopts = [
     "--capture=fd",
-    "--color=yes",
     "--failed-first",
     "--showlocals",
     "--verbose",

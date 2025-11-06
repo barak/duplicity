@@ -93,7 +93,7 @@ class Manifest(object):
         # manifest, so we want to keep comparing against that)
         if self.hostname and self.hostname != config.hostname and self.hostname != config.fqdn:
             errmsg = _(
-                "Fatal Error: Backup source host has changed.\n" "Current hostname: %s\nPrevious hostname: %s"
+                "Fatal Error: Backup source host has changed.\n" "Current hostname: %s\n" "Previous hostname: %s"
             ) % (config.hostname, self.hostname)
             code = log.ErrorCode.hostname_mismatch
             code_extra = f"{util.escape(config.hostname)} {util.escape(self.hostname)}"

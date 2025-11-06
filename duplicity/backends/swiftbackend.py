@@ -60,13 +60,13 @@ Exception: {str(e)}"""
 
         else:
             if "SWIFT_USERNAME" not in os.environ:
-                raise BackendException("SWIFT_USERNAME environment variable not set.")
+                raise BackendException("SWIFT_USERNAME environment variable " "not set.")
 
             if "SWIFT_PASSWORD" not in os.environ:
-                raise BackendException("SWIFT_PASSWORD environment variable not set.")
+                raise BackendException("SWIFT_PASSWORD environment variable " "not set.")
 
             if "SWIFT_AUTHURL" not in os.environ:
-                raise BackendException("SWIFT_AUTHURL environment variable not set.")
+                raise BackendException("SWIFT_AUTHURL environment variable " "not set.")
 
             svc_options["os_username"] = conn_kwargs["user"] = os.environ["SWIFT_USERNAME"]
             svc_options["os_password"] = conn_kwargs["key"] = os.environ["SWIFT_PASSWORD"]
