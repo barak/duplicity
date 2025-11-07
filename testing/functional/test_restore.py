@@ -62,8 +62,8 @@ class RestoreTest(FunctionalTestCase):
         self.backup("full", f"{_runtest_dir}/testfiles/dir1")
         self.restore()
         self.assertEqual(
-            os.listdir(f"{_runtest_dir}/testfiles/dir1"),
-            os.listdir(f"{_runtest_dir}/testfiles/restore_out"),
+            sorted(os.listdir(f"{_runtest_dir}/testfiles/dir1")),
+            sorted(os.listdir(f"{_runtest_dir}/testfiles/restore_out")),
         )
 
     def test_restore_path_to_nonexisting_dir(self):
