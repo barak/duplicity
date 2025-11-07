@@ -185,10 +185,10 @@ wheels:
             aud: pypi
     script:
         # install cibuildwheel and build wheels
-        - python -m pip install build setuptools
         - curl -sSL https://get.docker.com/ | sh
         - python -m pip install cibuildwheel>=3.1.4
         - cibuildwheel --output-dir wheelhouse --platform linux
+        - python -m pip install build
         - apt -y update ; apt -y install intltool
         - python -m build --sdist --outdir wheelhouse .
         # upload to pypi
