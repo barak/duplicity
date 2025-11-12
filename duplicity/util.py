@@ -26,20 +26,21 @@ Miscellaneous utilities.
 import atexit
 import csv
 import errno
-import time
-
-import fasteners
-import multiprocessing
 import json
+import multiprocessing
 import os
 import socket
 import sys
 import traceback
 from io import StringIO
 
-from duplicity import config
-from duplicity import log
-from duplicity import dup_tarfile
+import fasteners
+
+from duplicity import (
+    config,
+    dup_tarfile,
+    log,
+)
 
 
 def exception_traceback(limit=50):

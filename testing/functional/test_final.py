@@ -23,6 +23,7 @@
 import os
 import re
 import sys
+import time
 import unittest
 
 import pytest
@@ -266,12 +267,17 @@ class FinalTest(FunctionalTestCase):
         backup_options = ["--concurrency=2", "--skip-if-no-change"]
         self.run_with_no_change(backup_options=backup_options)
 
+
+class RegressionTest(FunctionalTestCase):
+    """
+    Test regression issues
+    """
+
     # TODO: Collect regression issues into a separate test suite.
-    def test_regression_issues(self):
+    def test_issue888(self):
         """
-        test regression issues.
+        Test issue 888 - collection_status --file-changed="foo bar" fails with type error
         """
-        # Issue 888 - collection_status --file-changed="foo\ bar" fails with type error
         filenames = ["foo", "bar", "foo bar"]
         os.mkdir(f"{_runtest_dir}/testfiles/issue888")
         for filename in filenames:
@@ -317,6 +323,36 @@ class FinalTest(FunctionalTestCase):
                 patt,
                 f"filename {filename} not found in collection-status output",
             )
+
+    def test_issue901(self):
+        """
+        Test issue 901 - Upgrade to 3.0.6 on Archlinux gives gcry_kdf_derive failed
+        """
+        # self.set_environ("TESTDEBUG", "1")
+        self.set_environ("PASSPHRASE", "issue901")
+
+        self.backup(
+            "full",
+            f"{_runtest_dir}/testfiles/various_file_types",
+            options=["--name=issue901"],
+        )
+
+        self.backup(
+            "inc",
+            f"{_runtest_dir}/testfiles/various_file_types",
+            options=["--name=issue901"],
+        )
+
+        assert not os.system(f"rm {_runtest_dir}/testfiles/cache/issue901/*")
+        self.set_environ("PASSPHRASE", None)
+
+        self.run_duplicity(
+            options=[
+                "collection-status",
+                f"file://{_runtest_dir}/testfiles/output",
+                "--name=issue901",
+            ]
+        )
 
 
 if __name__ == "__main__":

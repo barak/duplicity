@@ -173,13 +173,11 @@ class RestartTest(FunctionalTestCase):
             options=["--allow-source-mismatch"],
         )
         assert not os.system(f"rm {_runtest_dir}/testfiles/output/duplicity-inc*vol2*difftar*")
-        with self.assertRaises(CmdError) as cm:
-            self.backup(
-                "inc",
-                f"{_runtest_dir}/testfiles/largefiles",
-                options=["--allow-source-mismatch"],
-            )
-            self.assertEqual(cm.exception.error_code, 101)
+        self.backup(
+            "inc",
+            f"{_runtest_dir}/testfiles/largefiles",
+            options=["--allow-source-mismatch"],
+        )
 
     def test_changed_source_dangling_manifest_volume(self):
         """

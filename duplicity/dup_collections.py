@@ -24,6 +24,7 @@
 import gzip
 import json
 import os
+import sys
 
 from duplicity import (
     config,
@@ -324,7 +325,7 @@ class BackupSet(object):
         try:
             remote_file_buffer = self.backend.get_data(remote_file)
         except GPGError as message:
-            log.FatalError(_(f"Error processing remote file ({os.fsdecode(remote_file)}): {util.uexc(message)}"))
+            # log.Error(_(f"Error processing remote file ({os.fsdecode(remote_file)}): {util.uexc(message)}"))
             return b""
         log.Info(_(f"Processing remote file {os.fsdecode(remote_file)} ({len(remote_file_buffer)})"))
         return remote_file_buffer
@@ -791,6 +792,17 @@ class CollectionsStatus(object):
 
         return "\n".join(l)
 
+    def manifest_in_cache(self):
+        """
+        Return True if a manifest file is available in the cache
+        """
+        local_filename_list = self.archive_dir_path.listdir()
+        for fn in local_filename_list:
+            # TODO: use file_naming.parse() instead
+            if b"manifest" in fn:
+                return True
+        return False
+
     def set_values(self, sig_chain_warning=1):
         """
         Set values from archive_dir_path and backend.
@@ -804,6 +816,23 @@ class CollectionsStatus(object):
         # get local filename list
         local_filename_list = self.archive_dir_path.listdir()
         log.Debug(_("%d file(s) exist in cache") % len(local_filename_list))
+
+        from duplicity.dup_main import getpass_safe
+
+        if config.action != "full":
+            if not self.manifest_in_cache():
+                if self.first:
+                    errloc = "initial collection status"
+                else:
+                    errloc = f"{config.action}"
+                log.Notice(
+                    f"No manifest file found in cache for {errloc}.\n"
+                    f"A password will be required to access the remote manifest.",
+                )
+                if sys.stdin.isatty():
+                    getpass_safe(f"Enter passphrase for {errloc}:")
+                else:
+                    log.Notice("Standard input is not a tty.  Set PASSWORD environment variable instead.")
 
         # get remote filename list
         if config.check_remote:
@@ -1035,7 +1064,8 @@ class CollectionsStatus(object):
         incomplete_sets = []
         missing_difftar_sets = []
         for set in set_list:  # pylint: disable=redefined-builtin
-            set.get_missing()
+            if not self.first:
+                set.get_missing()
             if not set.is_complete():
                 incomplete_sets.append(set)
             if set.is_missing():

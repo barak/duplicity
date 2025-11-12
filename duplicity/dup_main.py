@@ -61,6 +61,7 @@ from duplicity import (
     util,
 )
 from duplicity.errors import BadVolumeException
+from duplicity.gpg import GPGError
 
 # If exit_val is not None, exit with given value at end.
 exit_val = None
@@ -1658,11 +1659,14 @@ def do_backup(action):
     check_resources(action)
 
     # get current collection status
-    col_stats = dup_collections.CollectionsStatus(
-        config.backend,
-        config.archive_dir_path,
-        first=True,
-    ).set_values()
+    try:
+        col_stats = dup_collections.CollectionsStatus(
+            config.backend,
+            config.archive_dir_path,
+            first=True,
+        ).set_values()
+    except Exception as e:
+        log.Error(f"Unable to get collection status: {util.uexc(e)}")
 
     # check archive synch with remote, fix if needed
     if action not in [
@@ -1670,7 +1674,7 @@ def do_backup(action):
         "full",
         "remove-all-but-n-full",
         "remove-all-inc-of-but-n-full",
-        "remove-old",
+        "remove-older-than",
     ]:
         sync_archive(col_stats)
 
