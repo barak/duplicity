@@ -1,7 +1,7 @@
 [project]
 name = "duplicity"
-version = "3.0.6.dev4"
-dynamic = ["dependencies", "optional-dependencies"]
+version = "3.0.6.dev5"
+dynamic = ["dependencies"]
 description = "Encrypted backup using rsync algorithm"
 authors = [
     { name = "Kenneth Loafman", email = "kenneth@loafman.com" },
@@ -12,8 +12,8 @@ maintainers = [
 ]
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">= 3.8, < 3.15"
-# TODO: switch to PEP 639 string after dropping 3.8 support
-license = { text = "GPL-2.0-or-later" }
+# not all LP builders will take license=
+#license = "GPL-2.0-or-later"
 classifiers = [
     "Development Status :: 6 - Mature",
     "Environment :: Console",
@@ -32,7 +32,14 @@ classifiers = [
 
 
 [build-system]
-requires = ["setuptools>=68.1.0"]
+requires = [
+    "build>=1.1",
+    "pip>=24.0",
+    "pipx>=1.5",
+    "packaging>=20.0",
+    "setuptools>=78.1.0",
+    "wheel>=0.42.0",
+]
 build-backend = "setuptools.build_meta"
 
 
@@ -50,13 +57,37 @@ Repository = "https://gitlab.com/duplicity/duplicity"
 Changelog = "https://gitlab.com/duplicity/duplicity/-/blob/main/CHANGELOG.md"
 
 
+[tool.setuptools]
+platforms = [
+    "any"
+]
+
+
 [tool.setuptools.dynamic]
-dependencies = { file = "requirements.txt" }
-optional-dependencies.dev = { file = "requirements.dev" }
+dependencies = {file = ["requirements.txt"]}
 
 
 [tool.setuptools.packages.find]
-include = ["duplicity*"]
+where = [
+    ".",
+]
+include = [
+    "duplicity",
+    "duplicity.backends",
+    "duplicity.backends.pyrax_identity",
+]
+exclude = [
+    ".*",
+    "Makefile",
+    "crowdin.yml",
+    "debian*",
+    "docs*",
+    "readthedocs.yaml",
+    "snap*",
+    "testing*",
+    "tools*",
+    "venv*",
+]
 
 
 [tool.black]
