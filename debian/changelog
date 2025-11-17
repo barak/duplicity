@@ -5,8 +5,9 @@ duplicity (3.0.6.1-0.1) UNRELEASED; urgency=medium
   * add optional runtime dependency on python3-socks aka pysocks
   * bump policy version
   * tweak debian/watch to skip *.dev* upstream version tags
+  * quilt patch man page typos
 
- -- Barak A. Pearlmutter <bap@debian.org>  Mon, 17 Nov 2025 10:00:12 +0000
+ -- Barak A. Pearlmutter <bap@debian.org>  Mon, 17 Nov 2025 10:22:24 +0000
 
 duplicity (3.0.5.1-2) unstable; urgency=medium
 
