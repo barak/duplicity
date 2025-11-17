@@ -1,6 +1,6 @@
 [project]
 name = "duplicity"
-version = "3.0.6.dev11"
+version = "3.0.6.dev12"
 dynamic = ["dependencies"]
 description = "Encrypted backup using rsync algorithm"
 authors = [
@@ -156,28 +156,11 @@ build-option = "--use-pep517"
 archs = [
     "x86_64",
     "aarch64",
-#    "ppc64le",
-#    "s390x",
 ]
 build = [
     "cp{39,310,311,312,313,314}-manylinux_aarch64",
     "cp{39,310,311,312,313,314}-manylinux_x86_64",
-#    "cp{39,310,311,312,313,314}-manylinux_ppc64le",
-#    "cp{39,310,311,312,313,314}-manylinux_s390x",
 ]
-
-#[tool.cibuildwheel.macos.environment]
-#MACOSX_DEPLOYMENT_TARGET="15.0"
-#
-#[tool.cibuildwheel.macos]
-#archs = [
-#    "x86_64",
-#    "arm64",
-#]
-#build = [
-#    "cp{39,310,311,312,313,314}-macosx_arm64",
-#    "cp{39,310,311,312,313,314}-macosx_x86_64",
-#]
 
 
 [tool.pylint]

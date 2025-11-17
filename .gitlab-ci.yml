@@ -180,11 +180,20 @@ wheels:
         DOCKER_DRIVER: overlay2
         # See https://github.com/docker-library/docker/pull/166
         DOCKER_TLS_CERTDIR: ""
+    id_tokens:
+        PYPI_ID_TOKEN:
+            aud: pypi
     script:
+        # install cibuildwheel and build wheels
         - curl -sSL https://get.docker.com/ | sh
-        - python -m pip install cibuildwheel==3.1.4
+        - python -m pip install cibuildwheel>=3.1.4
         - cibuildwheel --output-dir wheelhouse --platform linux
-#        - cibuildwheel --output-dir wheelhouse --platform macos
+        - python -m pip install build
+        - apt -y update ; apt -y install intltool
+        - python -m build --sdist --outdir wheelhouse .
+        # upload to pypi
+        - python -m pip install twine
+        - TWINE_USERNAME=__token__ TWINE_PASSWORD=$PYPI_ID_TOKEN twine upload --skip-existing wheelhouse/*
     artifacts:
         paths:
             - wheelhouse/

@@ -580,7 +580,7 @@ def get_man_fileobj(backup_type):
     @rtype: fileobj
     @return: fileobj opened for writing
     """
-    assert backup_type == "full" or backup_type == "inc"
+    assert backup_type == "full" or backup_type == "inc", f"backup_type must be 'full' or 'inc', got {backup_type!r}"
 
     part_man_filename = file_naming.get(backup_type, manifest=True, partial=True)
     perm_man_filename = file_naming.get(backup_type, manifest=True)
@@ -605,7 +605,7 @@ def get_sig_fileobj(sig_type):
     @rtype: fileobj
     @return: fileobj opened for writing
     """
-    assert sig_type in ["full-sig", "new-sig"]
+    assert sig_type in ["full-sig", "new-sig"], f"sig_type must be 'full-sig' or 'new-sig', got {sig_type!r}"
 
     part_sig_filename = file_naming.get(sig_type, gzipped=False, partial=True)
     perm_sig_filename = file_naming.get(sig_type, gzipped=True)
@@ -630,7 +630,7 @@ def get_stat_fileobj(stat_type):
     @rtype: fileobj
     @return: fileobj opened for writing
     """
-    assert stat_type in ["full-stat", "inc-stat"]
+    assert stat_type in ["full-stat", "inc-stat"], f"stat_type must be 'full-stat' or 'inc-stat', got {stat_type!r}"
 
     part_stat_filename = file_naming.get(stat_type, gzipped=False, partial=True)
     perm_stat_filename = file_naming.get(stat_type, gzipped=True)
@@ -894,7 +894,10 @@ def restore_get_patched_rop_iter(col_stats):
         index = ()
     time = config.restore_time or dup_time.curtime
     backup_chain = col_stats.get_backup_chain_at_time(time)
-    assert backup_chain, col_stats.all_backup_chains
+    assert backup_chain, (
+        f"No backup chain found for restore time {dup_time.timetostring(time)}; "
+        f"available chains: {col_stats.all_backup_chains}"
+    )
     backup_setlist = backup_chain.get_sets_at_time(time)
     num_vols = 0
     for s in backup_setlist:
@@ -1113,7 +1116,9 @@ def remove_all_but_n_full(col_stats):
     @rtype: void
     @return: void
     """
-    assert config.keep_chains is not None
+    assert (
+        config.keep_chains is not None
+    ), "config.keep_chains (from --keep-chains) must be set before removing old backups"
 
     config.remove_time = col_stats.get_nth_last_full_backup_time(config.keep_chains)
 
@@ -1130,7 +1135,7 @@ def remove_old(col_stats):
     @rtype: void
     @return: void
     """
-    assert config.remove_time is not None
+    assert config.remove_time is not None, "config.remove_time must be set before removing old backups"
 
     def set_times_str(setlist):
         """Return string listing times of sets in setlist"""
@@ -1227,7 +1232,7 @@ def sync_archive(col_stats):
         """
         if config.metadata_sync_mode == "full":
             return True
-        assert config.metadata_sync_mode == "partial"
+        assert config.metadata_sync_mode == "partial", "metadata_sync_mode must be 'partial' when not in full sync mode"
         parsed = file_naming.parse(filename)
         try:
             target_chain = col_stats.get_backup_chain_at_time(config.restore_time or dup_time.curtime)
@@ -1448,7 +1453,7 @@ def check_last_manifest(col_stats):
     @rtype: void
     @return: void
     """
-    assert col_stats.all_backup_chains
+    assert col_stats.all_backup_chains, "No backup chains found; cannot check last manifest without any chains present"
     last_backup_set = col_stats.all_backup_chains[-1].get_last()
     # check remote manifest only if we can decrypt it (see #1729796)
     last_backup_set.check_manifests(check_remote=config.check_remote)

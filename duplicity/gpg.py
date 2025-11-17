@@ -70,20 +70,26 @@ class GPGProfile(object):
         indicated, and recipients should be a list of keys.  For all
         keys, the format should be an hex key like 'AA0E73D2'.
         """
-        assert passphrase is None or isinstance(passphrase, str)
+        assert passphrase is None or isinstance(
+            passphrase, str
+        ), f"passphrase must be a string or None, got {type(passphrase).__name__}"
 
         self.passphrase = passphrase
         self.signing_passphrase = passphrase
         self.sign_key = sign_key
         self.encrypt_secring = None
         if recipients is not None:
-            assert isinstance(recipients, list)  # must be list, not tuple
+            assert isinstance(
+                recipients, list
+            ), f"recipients must be a list (not tuple), got {type(recipients).__name__}"  # must be list, not tuple
             self.recipients = recipients
         else:
             self.recipients = []
 
         if hidden_recipients is not None:
-            assert isinstance(hidden_recipients, list)  # must be list, not tuple
+            assert isinstance(
+                hidden_recipients, list
+            ), f"hidden_recipients must be a list (not tuple), got {type(hidden_recipients).__name__}"
             self.hidden_recipients = hidden_recipients
         else:
             self.hidden_recipients = []
@@ -268,7 +274,7 @@ class GPGFile(object):
         return self.byte_count
 
     def seek(self, offset):
-        assert not self.encrypt
+        assert not self.encrypt, "seek() is only supported when decrypting (encrypt=False)"
         assert offset >= self.byte_count, f"{int(offset)} < {int(self.byte_count)}"
         if offset > self.byte_count:
             self.read(offset - self.byte_count)
@@ -334,14 +340,16 @@ class GPGFile(object):
         if not match:
             self.signature = None
         else:
-            assert len(match.group(1)) >= 8
+            assert (
+                len(match.group(1)) >= 8
+            ), f"Signature keyID should be at least 8 hex chars, got {len(match.group(1))}"
             self.signature = match.group(1).decode()
 
     def get_signature(self):
         """
         Return  keyID of signature, or None if none
         """
-        assert self.closed
+        assert self.closed, "file not closed yet"
         return self.signature
 
 
@@ -378,7 +386,7 @@ def GPGWriteFile(block_iter, filename, profile, size=200 * 1024 * 1024, max_foot
         >> largest block size).
         """
         incompressible_fp = open(filename, "rb")
-        assert util.copyfileobj(incompressible_fp, file.gpg_input, bytelen) == bytelen
+        assert util.copyfileobj(incompressible_fp, file.gpg_input, bytelen) == bytelen, "copyfileobj failed"
         incompressible_fp.close()
 
     def get_current_size():
@@ -465,7 +473,8 @@ def GzipWriteFile(block_iter, filename, size=200 * 1024 * 1024, gzipped=True):
             break
         outfile.write(new_block.data)
 
-    assert not outfile.close() and not file_counted.close()
+    assert not outfile.close(), "outfile failed to close"
+    assert not file_counted.close(), "file_counted failed to close"
     return at_end_of_blockiter
 
 
@@ -505,7 +514,7 @@ def get_hash(hash, path, hex=1):  # pylint: disable=redefined-builtin
         if not buf:
             break
         hash_obj.update(buf)
-    assert not fp.close()
+    assert not fp.close(), "fp failed to close"
     if hex:
         return hash_obj.hexdigest()
     else:

@@ -138,7 +138,9 @@ class BackupSet(object):
         elif pr.manifest:
             self.set_manifest(filename)
         else:
-            assert pr.volume_number is not None
+            assert (
+                pr.volume_number is not None
+            ), f"Missing volume_number in ParseResults for file {os.fsdecode(filename)}"
             assert pr.volume_number not in self.volume_name_dict, (
                 f"Volume {int(pr.volume_number)} is already in the volume list as "
                 f"{os.fsdecode(self.volume_name_dict[pr.volume_number])}. "
@@ -156,7 +158,7 @@ class BackupSet(object):
         @param pr: parse results
         @type pr: ParseResults
         """
-        assert not self.info_set
+        assert not self.info_set, "BackupSet info already set; cannot set twice"
         self.type = pr.type
         self.time = pr.time
         self.start_time = pr.start_time
@@ -198,9 +200,6 @@ class BackupSet(object):
         """
         Add local and remote manifest filenames to backup set
         """
-        assert (
-            not self.remote_manifest_name
-        ), f"Cannot set filename of remote manifest to {remote_filename}; already set to {self.remote_manifest_name}."
         self.remote_manifest_name = remote_filename
 
         local_filename_list = config.archive_dir_path.listdir()
@@ -302,7 +301,7 @@ class BackupSet(object):
         """
         Return manifest object by reading local manifest file
         """
-        assert self.local_manifest_path
+        assert self.local_manifest_path, "Local manifest path is not set for this BackupSet"
         manifest_buffer = self.local_manifest_path.get_data()
         log.Info(_(f"Processing local manifest {self.local_manifest_path.uc_name} ({len(manifest_buffer)})"))
         return manifest.Manifest().from_string(manifest_buffer)
@@ -353,7 +352,7 @@ class BackupSet(object):
         """
         Return sorted list of (remote) filenames of files in set
         """
-        assert self.info_set
+        assert self.info_set, "BackupSet info must be set before retrieving filenames"
         volume_num_list = sorted(self.volume_name_dict.keys())
         volume_filenames = [self.volume_name_dict[x] for x in volume_num_list]
         if self.remote_manifest_name:
@@ -421,9 +420,11 @@ class BackupChain(object):
         """
         Add full backup set
         """
-        assert not self.fullset and isinstance(fullset, BackupSet)
+        assert not self.fullset and isinstance(
+            fullset, BackupSet
+        ), "Full backup set must be unset and argument must be a BackupSet instance"
         self.fullset = fullset
-        assert fullset.time
+        assert fullset.time, "Full backup set must have a valid 'time' attribute"
         self.start_time, self.end_time = fullset.time, fullset.time
 
     def add_inc(self, incset):
@@ -457,7 +458,7 @@ class BackupChain(object):
                 dup_time.timetopretty(incset.end_time),
             )
         )
-        assert self.end_time
+        assert self.end_time, "BackupChain end_time must be set after adding an incremental set"
         return True
 
     def delete(self, keep_full=False):
@@ -654,7 +655,7 @@ class SignatureChain(object):
         Return ordered list of signature fileobjs opened for reading,
         optionally at a certain time
         """
-        assert self.fullsig
+        assert self.fullsig, "SignatureChain fullsig must be set before accessing related data"
         if self.archive_dir_path:  # local
 
             def filename_to_fileobj(filename):
@@ -677,7 +678,7 @@ class SignatureChain(object):
             if not keep_full:
                 self.archive_dir_path.append(self.fullsig).delete()
         else:
-            assert self.backend
+            assert self.backend, "Backend must be set before performing this operation"
             inclist_copy = self.inclist[:]
             inclist_copy.reverse()
             if not keep_full:
@@ -883,7 +884,7 @@ class CollectionsStatus(object):
         """
         Log various error messages if find incomplete/orphaned files
         """
-        assert self.values_set
+        assert self.values_set, "CollectionsStatus values must be set (call set_values) before warning/reporting"
 
         def missing_to_log_info(s):
             """
@@ -1013,7 +1014,7 @@ class CollectionsStatus(object):
                 chains.append(new_chain)
                 log.Debug(_("Found backup chain %s") % (new_chain.short_desc()))
             else:
-                assert set.type == "inc"
+                assert set.type == "inc", f"Expected incremental set type 'inc', got {set.type!r} for set {set}"
                 for chain in chains:
                     if chain.add_inc(set):
                         log.Debug(_("Added set %s to pre-existing chain %s") % (set.get_timestr(), chain.short_desc()))
@@ -1079,7 +1080,9 @@ class CollectionsStatus(object):
             if pr:
                 if pr.type == "full-sig":
                     new_chain = get_new_sigchain()
-                    assert new_chain.add_filename(filename, pr)
+                    assert new_chain.add_filename(
+                        filename, pr
+                    ), f"Failed to add signature file {os.fsdecode(filename)} to new signature chain"
                     chains.append(new_chain)
                 elif pr.type == "new-sig":
                     new_sig_filenames.append(filename)
@@ -1116,7 +1119,7 @@ class CollectionsStatus(object):
             if len(chain_list) == 1:
                 sorted_chain_list.append(chain_list[0])
             else:
-                assert len(chain_list) == 2
+                assert len(chain_list) == 2, f"Expected exactly 2 chains with equal end_time, got {len(chain_list)}"
                 if chain_list[0].backend:  # is remote, goes first
                     sorted_chain_list.append(chain_list[0])
                     sorted_chain_list.append(chain_list[1])
@@ -1190,7 +1193,9 @@ class CollectionsStatus(object):
         recognizable as a duplicity file, but isn't part of some
         complete backup set, or current signature chain.
         """
-        assert self.values_set
+        assert (
+            self.values_set
+        ), "CollectionsStatus values must be initialized via set_values() before calling get_extraneous()"
         local_filenames = []
         remote_filenames = []
         ext_containers = self.orphaned_backup_sets + self.incomplete_backup_sets + self.missing_difftar_sets
@@ -1219,7 +1224,7 @@ class CollectionsStatus(object):
         than t, and set B is an incremental based on A which is newer
         than t, then the time of set A will not be returned.
         """
-        assert self.values_set
+        assert self.values_set, "CollectionsStatus values must be set before calling get_chains_older_than()"
         old_chains = []
         for chain in self.all_backup_chains:
             if chain.end_time < t and (
@@ -1239,7 +1244,7 @@ class CollectionsStatus(object):
         than t, and set B is an incremental based on A which is newer
         than t, then the time of set A will not be returned.
         """
-        assert self.values_set
+        assert self.values_set, "CollectionsStatus values must be set before calling get_signature_chains_older_than()"
         old_chains = []
         for chain in self.all_sig_chains:
             if chain.end_time < t and (
@@ -1283,8 +1288,8 @@ class CollectionsStatus(object):
         a valid input). Thus the second-to-last is obtained with n=2
         rather than n=1.
         """
-        assert self.values_set
-        assert n > 0
+        assert self.values_set, "CollectionsStatus values must be set before calling get_nth_last_backup_chain()"
+        assert n > 0, f"n must be > 0 (1 = latest chain); got n={n}"
 
         if len(self.all_backup_chains) < n:
             return None
@@ -1318,7 +1323,7 @@ class CollectionsStatus(object):
         returns the times of sets which are old but part of the chains
         where the newer end of the chain is newer than t.
         """
-        assert self.values_set
+        assert self.values_set, "CollectionsStatus values must be set before calling get_older_than_required()"
         new_chains = [c for c in self.all_backup_chains if c.end_time >= t]
         result_sets = []
         for chain in new_chains:

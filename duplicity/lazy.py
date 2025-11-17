@@ -195,7 +195,7 @@ class Iter(object):
             blen = len(buffer)
             if not (blen - 1) in forkposition:
                 # Last position in buffer no longer needed
-                assert forkposition[fork_num] == blen - 2
+                assert forkposition[fork_num] == blen - 2, "wrong forkposition"
                 final_func(buffer[blen - 1])
                 del buffer[blen - 1]
             return return_val
@@ -400,7 +400,7 @@ class ITRBranch(object):
 
     def branch_process(self, branch):
         """Process a branch right after it is finished (stub)"""
-        assert branch.finished
+        assert branch.finished, "previous branch not finished"
         pass
 
     def can_fast_process(self, *args):  # pylint: disable=unused-argument
