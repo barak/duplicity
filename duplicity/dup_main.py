@@ -376,7 +376,8 @@ def write_multivol(backup_type, tarblock_iter, man_outfp, sig_outfp, backend):
         transfer_success = False
         manifest_written = False
 
-    def collect_put_results(bytes_written: int, backend_pooler, command2vol_map: Dict[int, CommandMetaData]):
+    def collect_put_results(backend_pooler, command2vol_map: Dict[int, CommandMetaData]):
+        bytes_written = 0
         for result in backend_pooler.results_since_last_call():
             track_id = result.track_id
             size = result.result
@@ -392,6 +393,7 @@ def write_multivol(backup_type, tarblock_iter, man_outfp, sig_outfp, backend):
                 f"Transfer of {command2vol_map[track_id].path_obj.get_filename()} with id {track_id} and size "
                 f"{size} took {result.get_runtime()}"
             )
+        return bytes_written
 
     def write_manifest_in_sequence(mf, mf_file, command2vol_map: Dict[int, CommandMetaData]):
         """
@@ -499,7 +501,7 @@ def write_multivol(backup_type, tarblock_iter, man_outfp, sig_outfp, backend):
                 progress.report_transfer(0, tdp.getsize())
                 track_id = backend_pooler.command_throttled(backend.put_validated.__name__, args=(tdp, dest_filename))
                 command2vol_map[track_id] = CommandMetaData(vol_num, tdp, vi)
-                collect_put_results(bytes_written, backend_pooler, command2vol_map)
+                bytes_written += collect_put_results(backend_pooler, command2vol_map)
                 write_manifest_in_sequence(mf, man_outfp, command2vol_map)
             except (Exception, SystemExit) as e:
                 # ensure pool processes terminate clean
@@ -529,7 +531,7 @@ def write_multivol(backup_type, tarblock_iter, man_outfp, sig_outfp, backend):
             # wait for background commands, collect some stats and shutdown clean.
             log.Debug("Collecting remaining results from backend pool.")
             while True and backend_pooler:
-                collect_put_results(bytes_written, backend_pooler, command2vol_map)
+                bytes_written += collect_put_results(backend_pooler, command2vol_map)
                 write_manifest_in_sequence(mf, man_outfp, command2vol_map)
                 if backend_pooler.get_queue_length() == 0:
                     break

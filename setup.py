@@ -42,7 +42,7 @@ if not ((3, 8) <= sys.version_info[:2]):
     print("Sorry, duplicity requires version 3.8 thru 3.13 of Python.", file=sys.stderr)
     sys.exit(1)
 
-Version: str = "3.0.6.dev3"
+Version: str = "3.0.6.dev4"
 reldate: str = time.strftime("%B %d, %Y", time.gmtime(int(os.environ.get("SOURCE_DATE_EPOCH", time.time()))))
 
 # READTHEDOCS uses setup.py sdist but can't handle extensions
@@ -279,15 +279,6 @@ class SetVersionCommand(Command):
 
 
 setup(
-    packages=[
-        "duplicity",
-        "duplicity.backends",
-        "duplicity.backends.pyrax_identity",
-    ],
-    package_dir={
-        "duplicity": "duplicity",
-        "duplicity.backends": "duplicity/backends",
-    },
     ext_modules=ext_modules,
     data_files=get_data_files(),
     include_package_data=True,
