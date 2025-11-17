@@ -185,15 +185,17 @@ wheels:
             aud: pypi
     script:
         # install cibuildwheel and build wheels
+        - python -m pip install build setuptools
         - curl -sSL https://get.docker.com/ | sh
         - python -m pip install cibuildwheel>=3.1.4
         - cibuildwheel --output-dir wheelhouse --platform linux
-        - python -m pip install build
         - apt -y update ; apt -y install intltool
         - python -m build --sdist --outdir wheelhouse .
         # upload to pypi
         - python -m pip install twine
-        - TWINE_USERNAME=__token__ TWINE_PASSWORD=$PYPI_ID_TOKEN twine upload --skip-existing wheelhouse/*
+        - resp="$(curl -X POST "https://pypi.org/_/oidc/mint-token" -d "{\"token\":\"${PYPI_ID_TOKEN}\"}")"
+        - publish_token="$(python -c "import json; print(json.loads('${resp}')['token'])")"
+        - TWINE_USERNAME=__token__ TWINE_PASSWORD=${publish_token} twine upload --skip-existing wheelhouse/*
     artifacts:
         paths:
             - wheelhouse/
