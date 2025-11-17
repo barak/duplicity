@@ -336,7 +336,7 @@ class TestFilesFrom(IncludeExcludeFunctionalTest):
     def test_files_from_no_selections(self):
         """Simplest use case, with no additional selection functions"""
         with io.open("testfiles/files_from.txt", "w") as f:
-            f.write("1.doc\n" "1.py")
+            f.write("1.doc\n1.py")
         self.backup(
             "full",
             "testfiles/select2",
@@ -650,7 +650,7 @@ class TestIncludeExcludeOptions(IncludeExcludeFunctionalTest):
             "testfiles/select2",
             options=[
                 "--include",
-                "testfiles/select2/trailing_space /trailing_space " "sub2/trailing_space sub2_file.txt",
+                "testfiles/select2/trailing_space /trailing_space sub2/trailing_space sub2_file.txt",
                 "--exclude",
                 "testfiles/select2/trailing_space /trailing_space sub2",
                 "--include",
@@ -822,7 +822,7 @@ class TestIncludeExcludeFilterModes(IncludeExcludeFunctionalTest):
             options=[
                 "--filter-literal",
                 "--include",
-                "testfiles/select2/trailing_space /trailing_space sub2/trailing_space " "sub2_file.txt",
+                "testfiles/select2/trailing_space /trailing_space sub2/trailing_space sub2_file.txt",
                 "--exclude",
                 "testfiles/select2/trailing_space /trailing_space sub2",
                 "--include",
@@ -900,7 +900,7 @@ class TestIncludeExcludeFilterModes(IncludeExcludeFunctionalTest):
                 "testfiles/select2/2/2sub1/2sub1sub[12]",
                 "--filter-literal",
                 "--include",
-                "testfiles/select2/trailing_space /trailing_space sub2/trailing_space " "sub2_file.txt",
+                "testfiles/select2/trailing_space /trailing_space sub2/trailing_space sub2_file.txt",
                 "--include",
                 "testfiles/select2/3/3sub3/3sub3sub2/3sub3sub2_file.txt",
                 "--filter-globbing",
@@ -953,7 +953,7 @@ class TestIncludeExcludeFilterModes(IncludeExcludeFunctionalTest):
                 "testfiles/select2/2/2sub1/2sub1sub[12]",
                 "--filter-literal",
                 "--include",
-                "testfiles/select2/trailing_space /trailing_space " "sub2/trailing_space sub2_file.txt",
+                "testfiles/select2/trailing_space /trailing_space sub2/trailing_space sub2_file.txt",
                 "--include",
                 "testfiles/select2/3/3sub3/3sub3sub2/3sub3sub2_file.txt",
                 "--filter-globbing",
@@ -1006,7 +1006,7 @@ class TestIncludeExcludeFilterModes(IncludeExcludeFunctionalTest):
                 "testfiles/select2/2/2sub1/2SUB1SUB[12]",
                 "--filter-literal",
                 "--include",
-                "TESTFILES/select2/trailing_space /trailing_space sub2/trailing_space " "sub2_file.txt",
+                "TESTFILES/select2/trailing_space /trailing_space sub2/trailing_space sub2_file.txt",
                 "--include",
                 "TestFiles/select2/3/3sub3/3sub3sub2/3sub3sub2_file.txt",
                 "--filter-globbing",
@@ -1583,7 +1583,7 @@ class TestAsterisks(IncludeExcludeFunctionalTest):
         """Exclude filelist with asterisks replacing folders."""
         # Regression test for Bug #884371 (https://bugs.launchpad.net/duplicity/+bug/884371)
         with io.open("testfiles/filelist.txt", "w") as f:
-            f.write("+ */select/1/2/1\n" "- */select/1/2\n" "- testfiles/*/1/1\n" "- */*/1/3")
+            f.write("+ */select/1/2/1\n" "- */select/1/2\n" "- testfiles/*/1/1\n- */*/1/3")
         self.backup(
             "full",
             "testfiles/select/1",
@@ -1595,7 +1595,7 @@ class TestAsterisks(IncludeExcludeFunctionalTest):
         """Exclude filelist with double asterisks replacing folders."""
         # Regression test for Bug #884371 (https://bugs.launchpad.net/duplicity/+bug/884371)
         with io.open("testfiles/filelist.txt", "w") as f:
-            f.write("+ **/1/2/1\n" "- **/1/2\n" "- **/select/1/1\n" "- testfiles/select/1/3")
+            f.write("+ **/1/2/1\n" "- **/1/2\n" "- **/select/1/1\n- testfiles/select/1/3")
         self.backup(
             "full",
             "testfiles/select/1",
@@ -1740,7 +1740,7 @@ class TestTrailingSlash(IncludeExcludeFunctionalTest):
         """test_exclude_filelist_trailing_slashes with single wildcards in excludes."""
         # Regression test for Bug #932482 (https://bugs.launchpad.net/duplicity/+bug/932482)
         with io.open("testfiles/filelist.txt", "w") as f:
-            f.write("+ testfiles/select/1/2/1/\n" "- */select/1/2/\n" "- testfiles/*/1/1/\n" "- */*/1/3/")
+            f.write("+ testfiles/select/1/2/1/\n" "- */select/1/2/\n" "- testfiles/*/1/1/\n- */*/1/3/")
         self.backup(
             "full",
             "testfiles/select/1",
@@ -1752,7 +1752,7 @@ class TestTrailingSlash(IncludeExcludeFunctionalTest):
         """test_exclude_filelist_trailing_slashes with double wildcards in excludes."""
         # Regression test for Bug #932482 (https://bugs.launchpad.net/duplicity/+bug/932482)
         with io.open("testfiles/filelist.txt", "w") as f:
-            f.write("+ testfiles/select/1/2/1/\n" "- **/1/2/\n" "- **/1/1/\n" "- **/1/3/")
+            f.write("+ testfiles/select/1/2/1/\n" "- **/1/2/\n" "- **/1/1/\n- **/1/3/")
         self.backup(
             "full",
             "testfiles/select/1",
@@ -1765,7 +1765,7 @@ class TestTrailingSlash(IncludeExcludeFunctionalTest):
         # Regression test for Bug #932482 (https://bugs.launchpad.net/duplicity/+bug/932482) and
         # Regression test for Bug #884371 (https://bugs.launchpad.net/duplicity/+bug/884371)
         with io.open("testfiles/filelist.txt", "w") as f:
-            f.write("+ **/1/2/1/\n" "- **/1/2/\n" "- **/1/1/\n" "- **/1/3/")
+            f.write("+ **/1/2/1/\n" "- **/1/2/\n" "- **/1/1/\n- **/1/3/")
         self.backup(
             "full",
             "testfiles/select/1",
@@ -2273,8 +2273,6 @@ class TestAbsolutePaths(IncludeExcludeFunctionalTest):
 
 
 @unittest.skipUnless(platform.platform().startswith("Linux"), "Skip on non-Linux systems")
-@unittest.skipUnless(sys.getfilesystemencoding().upper() == "UTF-8", "Skip on non-UTF-8 systems")
-@unittest.skipIf(sys.version_info[:2] < (3, 7), "Skip on bad unicode handling")
 class TestUnicode(IncludeExcludeFunctionalTest):
     """Tests include/exclude options with unicode paths"""
 

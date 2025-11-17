@@ -494,17 +494,9 @@ def get_hash(hash, path, hex=1):  # pylint: disable=redefined-builtin
     # assert path.isreg()
     fp = path.open("rb")
     if hash == "SHA1":
-        # TODO: Remove when py38 goes EOL
-        if sys.version_info[:2] == (3, 8):
-            hash_obj = sha1()
-        else:
-            hash_obj = sha1(usedforsecurity=False)
+        hash_obj = sha1(usedforsecurity=False)
     elif hash == "MD5":
-        # TODO: Remove when py38 goes EOL
-        if sys.version_info[:2] == (3, 8):
-            hash_obj = md5()
-        else:
-            hash_obj = md5(usedforsecurity=False)
+        hash_obj = md5(usedforsecurity=False)
     else:
         assert 0, f"Unknown hash {hash}"
 

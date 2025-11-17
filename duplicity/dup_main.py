@@ -36,27 +36,30 @@ import platform
 import resource
 import sys
 import time
+from dataclasses import dataclass
 from textwrap import dedent
 from typing import Dict
 
-from duplicity import __version__
-from duplicity import backend
-from duplicity import backend_pool
-from duplicity import cli_main
-from duplicity import config
-from duplicity import diffdir
-from duplicity import dup_collections
-from duplicity import dup_temp
-from duplicity import dup_time
-from duplicity import file_naming
-from duplicity import gpg
-from duplicity import log
-from duplicity import manifest
-from duplicity import patchdir
-from duplicity import path
-from duplicity import progress
-from duplicity import tempdir
-from duplicity import util
+from duplicity import (
+    __version__,
+    backend,
+    backend_pool,
+    cli_main,
+    config,
+    diffdir,
+    dup_collections,
+    dup_temp,
+    dup_time,
+    file_naming,
+    gpg,
+    log,
+    manifest,
+    patchdir,
+    path,
+    progress,
+    tempdir,
+    util,
+)
 from duplicity.errors import BadVolumeException
 
 # If exit_val is not None, exit with given value at end.
@@ -139,7 +142,7 @@ def get_passphrase(n, action, for_signing=False):
         "list-current-files",
         "remove-all-but-n-full",
         "remove-all-inc-of-but-n-full",
-        "remove-old",
+        "remove-older-than",
     ]:
         return ""
 
@@ -264,7 +267,7 @@ def restart_position_iterator(tarblock_iter):
                     break
             if tarblock_iter.previous_index > last_index:
                 log.Warn(
-                    _("File %s complete in backup set.\n" "Continuing restart on file %s.")
+                    _("File %s complete in backup set.\nContinuing restart on file %s.")
                     % (util.uindex(last_index), util.uindex(tarblock_iter.previous_index)),
                     log.ErrorCode.restart_file_not_found,
                 )
@@ -274,7 +277,7 @@ def restart_position_iterator(tarblock_iter):
             iter_result = next(tarblock_iter)
     except StopIteration:
         log.Warn(
-            _("File %s missing in backup set.\n" "Continuing restart on file %s.")
+            _("File %s missing in backup set.\nContinuing restart on file %s.")
             % (util.uindex(last_index), util.uindex(tarblock_iter.previous_index)),
             log.ErrorCode.restart_file_not_found,
         )
@@ -359,7 +362,7 @@ def write_multivol(backup_type, tarblock_iter, man_outfp, sig_outfp, backend):
         vol1_filename = file_naming.get(backup_type, 1, encrypted=config.encryption, gzipped=config.compression)
         if vol1_filename != backup_set.volume_name_dict[1]:
             log.FatalError(
-                _("Restarting backup, but current encryption " "settings do not match original settings"),
+                _("Restarting backup, but current encryption settings do not match original settings"),
                 log.ErrorCode.enryption_mismatch,
             )
 
@@ -490,7 +493,7 @@ def write_multivol(backup_type, tarblock_iter, man_outfp, sig_outfp, backend):
             # if nothing changed, skip upload if configured.
             msg = _("Skipped volume upload, as effectivly nothing has changed")
             log.Progress(msg, diffdir.stats.SourceFileSize)
-            log.Notice(_(msg))
+            log.Notice(msg)
             config.skipped_inc = True
             tdp.delete()
             continue
@@ -685,7 +688,7 @@ def full_backup(col_stats):
             # Terminate the background thread now, if any
             progress.progress_thread.finished = True
             progress.progress_thread.join()
-            log.TransferProgress(
+            progress.TransferProgress(
                 100.0,
                 0,
                 progress.tracker.total_bytecount,
@@ -795,7 +798,7 @@ def incremental_backup(sig_chain, col_stats=None):
             # Terminate the background thread now, if any
             progress.progress_thread.finished = True
             progress.progress_thread.join()
-            log.TransferProgress(
+            progress.TransferProgress(
                 100.0,
                 0,
                 progress.tracker.total_bytecount,
@@ -899,13 +902,17 @@ def restore_get_patched_rop_iter(col_stats):
     cur_vol = [0]
 
     def get_fileobj_iter(backup_set):
-        """Get file object iterator from backup_set contain given index"""
+        """
+        Get file object iterator from backup_set contain given index
+        """
         manifest = backup_set.get_manifest()
         volumes = manifest.get_containing_volumes(index)
         for vol_num in volumes:
             try:
                 fobj = restore_get_enc_fileobj(
-                    backup_set.backend, backup_set.volume_name_dict[vol_num], manifest.volume_info_dict[vol_num]
+                    backup_set.backend,
+                    backup_set.volume_name_dict[vol_num],
+                    manifest.volume_info_dict[vol_num],
                 )
                 if fobj is not None:
                     yield fobj
@@ -921,7 +928,18 @@ def restore_get_patched_rop_iter(col_stats):
             manifest = backup_set.get_manifest()
             volumes = manifest.get_containing_volumes(index)
             for vol_num in volumes:
-                file_names.append(backup_set.volume_name_dict[vol_num])
+                try:
+                    file_names.append(backup_set.volume_name_dict[vol_num])
+                except KeyError as e:
+                    if config.ignore_errors:
+                        log.Warn(f"difftar volume {vol_num} not found, ignoring per --ignore-errors.")
+                    else:
+                        log.FatalError(
+                            f"difftar volume {vol_num} not found in backup.\n"
+                            f"Please check your archive and try again.\n"
+                            f"Or use --ignore-errors to ignore this error.\n"
+                            f"Error: {e}"
+                        )
         if config.dry_run:
             log.Notice("Required volumes to restore:\n\t" + "\n\t".join(file_name.decode() for file_name in file_names))
             return None
@@ -966,7 +984,7 @@ def restore_get_enc_fileobj(backend, filename, volume_info):
         if config.ignore_errors:
             exc = BadVolumeException(f"Hash mismatch for: {os.fsdecode(filename)}")
             log.Warn(
-                _("IGNORED_ERROR: Warning: ignoring error as requested: %s: %s")
+                _("IGNORED_ERROR: WARNING: ignoring error as requested: %s: %s")
                 % (exc.__class__.__name__, util.uexc(exc))
             )
             # Do not try to actually read it as it is corrupted!
@@ -1080,11 +1098,8 @@ def cleanup(col_stats):
                     pass
     else:
         log.Notice(
-            _("Found the following file(s) to delete:")
-            + "\n"
-            + filestr
-            + "\n"
-            + _("Run duplicity again with the --force option to actually delete.")
+            f"{_('Found the following file(s) to delete:')}\n{filestr}\n"
+            "Run duplicity again with the --force option to actually delete."
         )
 
 
@@ -1354,6 +1369,10 @@ def sync_archive(col_stats):
         tdp.setdata()
         tdp.move(config.archive_dir_path.append(loc_name))
 
+    # skip if remote access is not configured
+    if not config.check_remote:
+        return
+
     # get remote metafile list
     remlist = config.backend.list()
     remote_metafiles, ignored, rem_needpass = get_metafiles(remlist)
@@ -1432,8 +1451,7 @@ def check_last_manifest(col_stats):
     assert col_stats.all_backup_chains
     last_backup_set = col_stats.all_backup_chains[-1].get_last()
     # check remote manifest only if we can decrypt it (see #1729796)
-    check_remote = not config.encryption or config.gpg_profile.passphrase
-    last_backup_set.check_manifests(check_remote=check_remote)
+    last_backup_set.check_manifests(check_remote=config.check_remote)
 
 
 def check_resources(action):
@@ -1509,6 +1527,7 @@ class Restart(object):
     """
 
     def __init__(self, last_backup):
+        self.time = None
         self.type = None
         self.start_time = None
         self.end_time = None
@@ -1579,29 +1598,23 @@ def main():
     Start/end here
     """
     # per bug https://bugs.launchpad.net/duplicity/+bug/931175
-    # duplicity crashes when PYTHONOPTIMIZE is set, so check
+    # duplicity crashes when python optimization is set, so check
     # and refuse to run if it is set.
-    if "PYTHONOPTIMIZE" in os.environ:
+    if sys.flags.optimize:
         log.FatalError(
             dedent(
                 _(
                     """\
-                PYTHONOPTIMIZE in the environment causes duplicity to fail to
-                recognize its own backups.  Please remove PYTHONOPTIMIZE from
-                the environment and rerun the backup.
+                    Setting python optimization causes duplicity to fail to
+                    recognize its own backups.  Please remove PYTHONOPTIMIZE
+                    from the environment or -O and -OO from the commandline,
+                    then rerun the backup.
 
-                See https://bugs.launchpad.net/duplicity/+bug/931175
-                """
+                    See https://bugs.launchpad.net/duplicity/+bug/931175
+                    """
                 )
             ),
             log.ErrorCode.pythonoptimize_set,
-        )
-
-    # TODO: remove when 3.8 is deprecated.
-    if sys.version_info[:2] == (3, 8) and not os.environ.get("SNAP", False):
-        log.Warn(
-            "Starting deprecation of python 3.8 support. Support for python 3.8. will finally removed with the "
-            "release of 3.14.  For details see https://devguide.python.org/versions/"
         )
 
     # if python is run setuid, it's only partway set,
@@ -1640,7 +1653,11 @@ def do_backup(action):
     check_resources(action)
 
     # get current collection status
-    col_stats = dup_collections.CollectionsStatus(config.backend, config.archive_dir_path).set_values()
+    col_stats = dup_collections.CollectionsStatus(
+        config.backend,
+        config.archive_dir_path,
+        first=True,
+    ).set_values()
 
     # check archive synch with remote, fix if needed
     if action not in [
@@ -1679,7 +1696,10 @@ def do_backup(action):
                     # remove last partial backup and get new collection status
                     log.Notice(_(f"Cleaning up previous partial {action} backup set, restarting."))
                     last_backup.delete()
-                    col_stats = dup_collections.CollectionsStatus(config.backend, config.archive_dir_path).set_values()
+                    col_stats = dup_collections.CollectionsStatus(
+                        config.backend,
+                        config.archive_dir_path,
+                    ).set_values()
                     continue
             break
         break
@@ -1698,7 +1718,7 @@ def do_backup(action):
     ):
         log.Notice(_("Last full backup is too old, forcing full backup"))
         action = "full"
-    log.PrintCollectionStatus(col_stats)
+    dup_collections.PrintCollectionStatus(col_stats)
 
     # get the passphrase if we need to based on action/options
     config.gpg_profile.passphrase = get_passphrase(1, action)
@@ -1713,20 +1733,20 @@ def do_backup(action):
         if config.show_changes_in_set is not None:
             if not config.jsonstat:
                 # print classic stats
-                log.PrintCollectionChangesInSet(col_stats, config.show_changes_in_set, True)
+                dup_collections.PrintCollectionChangesInSet(col_stats, config.show_changes_in_set, True)
             else:
                 # print json stat
                 json_stat = col_stats.get_changes_in_set_json(config.show_changes_in_set)
                 log.Log(str(json_stat), 8, log.InfoCode.collection_status, None, True)
         elif not config.file_changed:
-            log.PrintCollectionStatus(col_stats, True)
+            dup_collections.PrintCollectionStatus(col_stats, True)
         else:
-            log.PrintCollectionFileChangedStatus(col_stats, config.file_changed, True)
+            dup_collections.PrintCollectionFileChangedStatus(col_stats, config.file_changed, True)
     elif action == "cleanup":
         cleanup(col_stats)
     elif action == "remove-older-than":
         remove_old(col_stats)
-    elif action == "remove-all-but-n-full" or action == "remove-all-inc-of-but-n-full":
+    elif action in ["remove-all-but-n-full", "remove-all-inc-of-but-n-full"]:
         remove_all_but_n_full(col_stats)
     elif action == "sync":
         sync_archive(col_stats)
@@ -1772,6 +1792,12 @@ def do_backup(action):
                         config.gpg_profile.passphrase = get_passphrase(1, action)
                         check_last_manifest(col_stats)  # not needed for full backups
                 incremental_backup(sig_chain, col_stats)
+
+        if action in ["full", "inc"] and not config.check_remote:
+            dup_collections.CollectionsStatus(
+                config.backend,
+                config.archive_dir_path,
+            ).set_values()
 
     config.backend.close()
     log.shutdown()

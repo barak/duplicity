@@ -52,6 +52,7 @@ class Manifest(object):
         @rtype: Manifest
         @return: manifest
         """
+        self.corrupt_filelist = False
         self.hostname = None
         self.local_dirname = None
         self.volume_info_dict = {}  # dictionary vol numbers -> vol infos
@@ -92,7 +93,7 @@ class Manifest(object):
         # manifest, so we want to keep comparing against that)
         if self.hostname and self.hostname != config.hostname and self.hostname != config.fqdn:
             errmsg = _(
-                "Fatal Error: Backup source host has changed.\n" "Current hostname: %s\n" "Previous hostname: %s"
+                "Fatal Error: Backup source host has changed.\n" "Current hostname: %s\nPrevious hostname: %s"
             ) % (config.hostname, self.hostname)
             code = log.ErrorCode.hostname_mismatch
             code_extra = f"{util.escape(config.hostname)} {util.escape(self.hostname)}"
@@ -435,7 +436,7 @@ class VolumeInfo(object):
             field_name = line_split[0].lower()
             other_fields = line_split[1:]
             if field_name == b"Volume":
-                log.Warn(_("Warning, found extra Volume identifier"))
+                log.Warn(_("WARNING. found extra Volume identifier"))
                 break
             elif field_name == b"startingpath":
                 self.start_index = string_to_index(other_fields[0])

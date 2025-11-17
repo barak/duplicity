@@ -153,7 +153,6 @@ class FunctionalTestCase(DuplicityTestCase):
             ["-f", "-c", cmdline],
             timeout=timeout,
             env=dup_env,  # type: ignore
-            encoding=config.fsencoding,
         )
 
         for passphrase in passphrase_input:

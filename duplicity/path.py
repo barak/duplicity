@@ -106,7 +106,7 @@ class ROPath(object):
                 )
             except Exception as e:
                 log.Warn(
-                    _("Warning: %s invalid devnums (0x%X), treating as (0, 0).")
+                    _("WARNING: %s invalid devnums (0x%X), treating as (0, 0).")
                     % (os.fsdecode(self.get_relative_path()), self.stat.st_rdev)
                 )
                 self.devnums = (0, 0)
@@ -232,7 +232,7 @@ class ROPath(object):
 
         self.stat.st_mtime = int(tarinfo.mtime)
         if self.stat.st_mtime < 0:
-            log.Warn(_("Warning: %s has negative mtime, treating as 0.") % tarinfo.uc_name)
+            log.Warn(_("WARNING: %s has negative mtime, treating as 0.") % tarinfo.uc_name)
             self.stat.st_mtime = 0
         self.stat.st_size = tarinfo.size
 
@@ -292,7 +292,7 @@ class ROPath(object):
             ti.mode = self.mode
             ti.uid, ti.gid = self.stat.st_uid, self.stat.st_gid
             if self.stat.st_mtime < 0:
-                log.Warn(_("Warning: %s has negative mtime, treating as 0.") % (os.fsdecode(self.get_relative_path())))
+                log.Warn(_("WARNING: %s has negative mtime, treating as 0.") % (os.fsdecode(self.get_relative_path())))
                 ti.mtime = 0
             else:
                 ti.mtime = int(self.stat.st_mtime)

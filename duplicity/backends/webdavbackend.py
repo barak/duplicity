@@ -191,6 +191,14 @@ class WebDAVBackend(duplicity.backend.Backend):
         else:
             raise FatalBackendException(_("WebDAV Unknown URI scheme: %s") % self.parsed_url.scheme)
 
+        if self.username or self.password:
+            # Workaround cpython http.client issue
+            # https://github.com/python/cpython/issues/70107
+            self.conn.request("OPTIONS", self.directory, None)
+            response = self.conn.getresponse()
+            response.read()
+            response.close()
+
     def _close(self):
         if self.conn:
             self.conn.close()
@@ -390,7 +398,7 @@ class WebDAVBackend(duplicity.backend.Backend):
         raw_filename = self.getText(href.childNodes).strip()
         parsed_url = urllib.parse.urlparse(urllib.parse.unquote(raw_filename))
         filename = parsed_url.path
-        log.Debug(_("WebDAV path decoding and translation: " "%s -> %s") % (raw_filename, filename))
+        log.Debug(_("WebDAV path decoding and translation: %s -> %s") % (raw_filename, filename))
 
         # at least one WebDAV server returns files in the form
         # of full URL:s. this may or may not be

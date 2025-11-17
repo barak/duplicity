@@ -316,7 +316,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/select/1/1/1\n" "testfiles/select/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["- testfiles/select/1/1/1\n" "testfiles/select/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_files_from_no_selections(self):
@@ -332,7 +332,7 @@ class ParseArgsTest(UnitTestCase):
                 ("foobar",),
                 ("foobar", "pong"),
             ],
-            ["1.doc\n" "1.py\n" "efools/ping\n" "foobar/pong"],
+            ["1.doc\n" "1.py\n" "efools/ping\nfoobar/pong"],
         )
 
     def test_files_from_implicit_parents(self):
@@ -340,7 +340,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--files-from", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "1"), ("2",)],
-            ["1/1/1\n" "2"],
+            ["1/1/1\n2"],
         )
 
     def test_files_from_with_exclusions(self):
@@ -363,7 +363,7 @@ class ParseArgsTest(UnitTestCase):
                 ("3",),
                 ("3", "3"),
             ],
-            ["1.doc\n" "1.py\n" "1/1/1\n" "2/2/2\n" "3/3/3"],
+            ["1.doc\n" "1.py\n" "1/1/1\n" "2/2/2\n3/3/3"],
         )
 
     def test_files_from_with_inclusions(self):
@@ -375,7 +375,7 @@ class ParseArgsTest(UnitTestCase):
                 ("--exclude", "**"),
             ],
             [(), ("1.doc",), ("1.py",)],
-            ["1.doc\n" "1.py\n" "1\n" "2\n" "3"],
+            ["1.doc\n" "1.py\n" "1\n" "2\n3"],
         )
 
     def test_files_from_multiple_filelists(self):
@@ -396,7 +396,7 @@ class ParseArgsTest(UnitTestCase):
                 "1/3/2\n"
                 "1/3/3\n"
                 "2",
-                "+ testfiles/select/*.doc\n" "+ testfiles/select/1/2/3\n" "- **",  # --include-filelist
+                "+ testfiles/select/*.doc\n" "+ testfiles/select/1/2/3\n- **",  # --include-filelist
             ],
         )
 
@@ -432,7 +432,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/select/1/1/1\n" "testfiles/select/1/1 \n" "- testfiles/select/1\n" "- **"],
+            ["- testfiles/select/1/1/1\n" "testfiles/select/1/1 \n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_2_trailing_whitespaces(self):
@@ -440,7 +440,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/select/1/1/1\n" "testfiles/select/1/1  \n" "- testfiles/select/1\n" "- **"],
+            ["- testfiles/select/1/1/1\n" "testfiles/select/1/1  \n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_1_leading_whitespace(self):
@@ -448,7 +448,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/select/1/1/1\n" " testfiles/select/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["- testfiles/select/1/1/1\n" " testfiles/select/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_2_leading_whitespaces(self):
@@ -456,7 +456,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/select/1/1/1\n" "  testfiles/select/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["- testfiles/select/1/1/1\n" "  testfiles/select/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_1_trailing_whitespace_exclude(self):
@@ -464,7 +464,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/select/1/1/1 \n" "testfiles/select/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["- testfiles/select/1/1/1 \n" "testfiles/select/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_2_trailing_whitespace_exclude(self):
@@ -472,7 +472,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/select/1/1/1  \n" "testfiles/select/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["- testfiles/select/1/1/1  \n" "testfiles/select/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_1_leading_whitespace_exclude(self):
@@ -480,7 +480,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            [" - testfiles/select/1/1/1\n" "testfiles/select/1/1\n" "- testfiles/select/1\n" "- **"],
+            [" - testfiles/select/1/1/1\n" "testfiles/select/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_2_leading_whitespaces_exclude(self):
@@ -488,7 +488,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["  - testfiles/select/1/1/1\n" "testfiles/select/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["  - testfiles/select/1/1/1\n" "testfiles/select/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_check_excluded_folder_included_for_contents(self):
@@ -509,7 +509,7 @@ class ParseArgsTest(UnitTestCase):
                 ("1", "3", "2"),
                 ("1", "3", "3"),
             ],
-            ["+ testfiles/select/1/2/1\n" "- testfiles/select/1/2\n" "testfiles/select/1\n" "- **"],
+            ["+ testfiles/select/1/2/1\n" "- testfiles/select/1/2\n" "testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_with_unnecessary_quotes(self):
@@ -517,7 +517,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- 'testfiles/select/1/1/1'\n" "testfiles/select/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["- 'testfiles/select/1/1/1'\n" "testfiles/select/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_with_unnecessary_double_quotes(self):
@@ -525,7 +525,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ['- "testfiles/select/1/1/1"\n' "testfiles/select/1/1\n" "- testfiles/select/1\n" "- **"],
+            ['- "testfiles/select/1/1/1"\n' "testfiles/select/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_with_full_line_comment(self):
@@ -547,7 +547,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/select/1/1/1\n" "\n" "testfiles/select/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["- testfiles/select/1/1/1\n" "\n" "testfiles/select/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_with_blank_line_and_whitespace(self):
@@ -555,7 +555,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/select/1/1/1\n" "  \n" "testfiles/select/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["- testfiles/select/1/1/1\n" "  \n" "testfiles/select/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_asterisk(self):
@@ -565,7 +565,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["*/select/1/1\n" "- **"],
+            ["*/select/1/1\n- **"],
         )
 
     def test_include_filelist_asterisk_2(self):
@@ -573,7 +573,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/*/1/1/1\n" "testfiles/select/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["- testfiles/*/1/1/1\n" "testfiles/select/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_asterisk_3(self):
@@ -582,7 +582,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/select/1/1/1\n" "testfiles/*/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["- testfiles/select/1/1/1\n" "testfiles/*/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_asterisk_4(self):
@@ -591,7 +591,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/select/1/1/1\n" "+ testfiles/*/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["- testfiles/select/1/1/1\n" "+ testfiles/*/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_asterisk_5(self):
@@ -600,7 +600,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/*/1/1/1\n" "+ testfiles/*/1/1\n" "- testfiles/*/1\n" "- **"],
+            ["- testfiles/*/1/1/1\n" "+ testfiles/*/1/1\n" "- testfiles/*/1\n- **"],
         )
 
     def test_include_filelist_asterisk_6(self):
@@ -608,7 +608,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- */*/1/1/1\n" "+ testfiles/select/1/1\n" "- */*/1\n" "- **"],
+            ["- */*/1/1/1\n" "+ testfiles/select/1/1\n" "- */*/1\n- **"],
         )
 
     def test_include_filelist_asterisk_7(self):
@@ -617,7 +617,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- */*/1/1/1\n" "+ */*/1/1\n" "- */*/1\n" "- **"],
+            ["- */*/1/1/1\n" "+ */*/1/1\n" "- */*/1\n- **"],
         )
 
     def test_include_filelist_double_asterisk_1(self):
@@ -625,7 +625,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/**/1/1/1\n" "testfiles/select/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["- testfiles/**/1/1/1\n" "testfiles/select/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_double_asterisk_2(self):
@@ -634,7 +634,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/select/1/1/1\n" "**ct/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["- testfiles/select/1/1/1\n" "**ct/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_double_asterisk_3(self):
@@ -642,7 +642,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- **/1/1/1\n" "testfiles/select/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["- **/1/1/1\n" "testfiles/select/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_double_asterisk_4(self):
@@ -651,7 +651,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/select/1/1/1\n" "**t/1/1\n" "- testfiles/select/1\n" "- **"],
+            ["- testfiles/select/1/1/1\n" "**t/1/1\n" "- testfiles/select/1\n- **"],
         )
 
     def test_include_filelist_double_asterisk_5(self):
@@ -660,7 +660,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- **/1/1/1\n" "**t/1/1\n" "- **t/1\n" "- **"],
+            ["- **/1/1/1\n" "**t/1/1\n" "- **t/1\n- **"],
         )
 
     def test_include_filelist_trailing_slashes(self):
@@ -668,7 +668,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- testfiles/select/1/1/1/\n" "testfiles/select/1/1/\n" "- testfiles/select/1/\n" "- **"],
+            ["- testfiles/select/1/1/1/\n" "testfiles/select/1/1/\n" "- testfiles/select/1/\n- **"],
         )
 
     def test_include_filelist_trailing_slashes_and_single_asterisks(self):
@@ -677,7 +677,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- */select/1/1/1/\n" "testfiles/select/1/1/\n" "- testfiles/*/1/\n" "- **"],
+            ["- */select/1/1/1/\n" "testfiles/select/1/1/\n" "- testfiles/*/1/\n- **"],
         )
 
     def test_include_filelist_trailing_slashes_and_double_asterisks(self):
@@ -686,7 +686,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--include-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["- **/1/1/1/\n" "testfiles/select/1/1/\n" "- **t/1/\n" "- **"],
+            ["- **/1/1/1/\n" "testfiles/select/1/1/\n" "- **t/1/\n- **"],
         )
 
     def test_filelist_null_separator(self):
@@ -703,7 +703,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--exclude-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["testfiles/select/1/1/1\n" "+ testfiles/select/1/1\n" "testfiles/select/1\n" "- **"],
+            ["testfiles/select/1/1/1\n" "+ testfiles/select/1/1\n" "testfiles/select/1\n- **"],
         )
 
     def test_exclude_filelist_asterisk_1(self):
@@ -711,7 +711,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--exclude-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["+ */select/1/1\n" "- **"],
+            ["+ */select/1/1\n- **"],
         )
 
     def test_exclude_filelist_asterisk_2(self):
@@ -719,7 +719,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--exclude-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["testfiles/*/1/1/1\n" "+ testfiles/select/1/1\n" "testfiles/select/1\n" "- **"],
+            ["testfiles/*/1/1/1\n" "+ testfiles/select/1/1\n" "testfiles/select/1\n- **"],
         )
 
     def test_exclude_filelist_asterisk_3(self):
@@ -728,7 +728,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--exclude-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["testfiles/select/1/1/1\n" "+ testfiles/*/1/1\n" "testfiles/select/1\n" "- **"],
+            ["testfiles/select/1/1/1\n" "+ testfiles/*/1/1\n" "testfiles/select/1\n- **"],
         )
 
     def test_exclude_filelist_asterisk_4(self):
@@ -736,7 +736,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--exclude-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["*/select/1/1/1\n" "+ testfiles/select/1/1\n" "*/*/1\n" "- **"],
+            ["*/select/1/1/1\n" "+ testfiles/select/1/1\n" "*/*/1\n- **"],
         )
 
     def test_exclude_filelist_asterisk_5(self):
@@ -745,7 +745,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--exclude-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["*/select/1/1/1\n" "+ */*/1/1\n" "*/*/1\n" "- **"],
+            ["*/select/1/1/1\n" "+ */*/1/1\n" "*/*/1\n- **"],
         )
 
     def test_exclude_filelist_double_asterisk(self):
@@ -754,7 +754,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--exclude-filelist", "file")],
             [(), ("1",), ("1", "1"), ("1", "1", "2"), ("1", "1", "3")],
-            ["**/1/1/1\n" "+ **t/1/1\n" "**t/1\n" "- **"],
+            ["**/1/1/1\n" "+ **t/1/1\n" "**t/1\n- **"],
         )
 
     def test_exclude_filelist_single_asterisk_at_beginning(self):
@@ -764,7 +764,7 @@ class ParseArgsTest(UnitTestCase):
         self.ParseTest(
             [("--exclude-filelist", "file")],
             [(), ("2",), ("2", "1")],
-            ["+ */select/1/2/1\n" "- testfiles/select/1/2\n" "- testfiles/*/1/1\n" "- testfiles/select/1/3"],
+            ["+ */select/1/2/1\n" "- testfiles/select/1/2\n" "- testfiles/*/1/1\n- testfiles/select/1/3"],
         )
 
     def test_commandline_asterisks_double_both(self):
