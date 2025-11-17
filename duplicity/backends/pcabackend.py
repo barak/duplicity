@@ -55,13 +55,13 @@ Exception: {str(e)}"""
 
         else:
             if "PCA_USERNAME" not in os.environ:
-                raise BackendException("PCA_USERNAME environment variable not set.")
+                raise BackendException("PCA_USERNAME environment variable " "not set.")
 
             if "PCA_PASSWORD" not in os.environ:
-                raise BackendException("PCA_PASSWORD environment variable not set.")
+                raise BackendException("PCA_PASSWORD environment variable " "not set.")
 
             if "PCA_AUTHURL" not in os.environ:
-                raise BackendException("PCA_AUTHURL environment variable not set.")
+                raise BackendException("PCA_AUTHURL environment variable " "not set.")
 
             conn_kwargs["user"] = os.environ["PCA_USERNAME"]
             conn_kwargs["key"] = os.environ["PCA_PASSWORD"]

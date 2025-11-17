@@ -42,7 +42,7 @@ elif not ((3, 9) <= sys.version_info[:2] <= (3, 14)):
     print("Sorry, duplicity requires version 3.9 thru 3.14 of Python.", file=sys.stderr)
     sys.exit(1)
 
-Version: str = "3.0.6"
+Version: str = "3.0.6.1"
 
 # READTHEDOCS uses setup.py sdist but can't handle extensions
 ext_modules = list()
@@ -174,6 +174,15 @@ class BuildExtCommand(build_ext):
 
 setup(
     version=Version,
+    packages=[
+        "duplicity",
+        "duplicity.backends",
+        "duplicity.backends.pyrax_identity",
+    ],
+    package_dir={
+        "duplicity": "duplicity",
+        "duplicity.backends": "duplicity/backends",
+    },
     ext_modules=ext_modules,
     data_files=get_data_files(),
     include_package_data=True,

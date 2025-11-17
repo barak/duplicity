@@ -1,7 +1,7 @@
 [project]
 name = "duplicity"
-version = "3.0.6"
-dynamic = ["dependencies", "optional-dependencies"]
+version = "3.0.6.1"
+dynamic = ["dependencies"]
 description = "Encrypted backup using rsync algorithm"
 authors = [
     { name = "Kenneth Loafman", email = "kenneth@loafman.com" },
@@ -35,6 +35,8 @@ classifiers = [
 requires = [
     "build>=1.1",
     "pip>=24.0",
+    "pipx>=1.5",
+    "packaging>=20.0",
     "setuptools>=78.1.0",
     "wheel>=0.42.0",
 ]
@@ -55,14 +57,36 @@ Repository = "https://gitlab.com/duplicity/duplicity"
 Changelog = "https://gitlab.com/duplicity/duplicity/-/blob/main/CHANGELOG.md"
 
 
+[tool.setuptools]
+platforms = [
+    "any"
+]
+
+
 [tool.setuptools.dynamic]
-dependencies = { file = "requirements.txt" }
-optional-dependencies.dev = { file = "requirements.dev" }
+dependencies = {file = ["requirements.txt"]}
 
 
 [tool.setuptools.packages.find]
+where = [
+    ".",
+]
 include = [
-    "duplicity*",
+    "duplicity",
+    "duplicity.backends",
+    "duplicity.backends.pyrax_identity",
+]
+exclude = [
+    ".*",
+    "Makefile",
+    "crowdin.yml",
+    "debian*",
+    "docs*",
+    "readthedocs.yaml",
+    "snap*",
+    "testing*",
+    "tools*",
+    "venv*",
 ]
 
 
@@ -84,9 +108,7 @@ dry-run = true
 aggressive = true
 transform-joins = true
 # TODO: Remove duplicity.argparse311 when py310 goes EOL
-exclude = [
-    "argparse311"
-]
+exclude = ["argparse311"]
 
 
 [tool.pytest.ini_options]
@@ -97,7 +119,6 @@ filterwarnings = [
 ]
 addopts = [
     "--capture=fd",
-    "--color=yes",
     "--failed-first",
     "--showlocals",
     "--verbose",

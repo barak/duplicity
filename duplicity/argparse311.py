@@ -1374,7 +1374,7 @@ class _ActionsContainer(object):
             raise ValueError("%r is not callable" % (type_func,))
 
         if type_func is FileType:
-            raise ValueError("%r is a FileType class object, instance of it must be passed" % (type_func,))
+            raise ValueError("%r is a FileType class object, instance of it" " must be passed" % (type_func,))
 
         # raise an error if the metavar does not match the type
         if hasattr(self, "_get_formatter"):
@@ -1480,7 +1480,7 @@ class _ActionsContainer(object):
             # error on strings that don't start with an appropriate prefix
             if not option_string[0] in self.prefix_chars:
                 args = {"option": option_string, "prefix_chars": self.prefix_chars}
-                msg = _("invalid option string %(option)r: must start with a character %(prefix_chars)r")
+                msg = _("invalid option string %(option)r: " "must start with a character %(prefix_chars)r")
                 raise ValueError(msg % args)
 
             # strings starting with two prefix characters are long options
@@ -2281,7 +2281,7 @@ class ArgumentParser(_AttributeHolder, _ActionsContainer):
         positionals = self._get_positional_actions()
         a = [action for action in positionals if action.nargs in [PARSER, REMAINDER]]
         if a:
-            raise TypeError("parse_intermixed_args: positional arg with nargs=%s" % a[0].nargs)
+            raise TypeError("parse_intermixed_args: positional arg" " with nargs=%s" % a[0].nargs)
 
         if [
             action.dest
@@ -2289,7 +2289,7 @@ class ArgumentParser(_AttributeHolder, _ActionsContainer):
             for action in group._group_actions
             if action in positionals
         ]:
-            raise TypeError("parse_intermixed_args: positional in mutuallyExclusiveGroup")
+            raise TypeError("parse_intermixed_args: positional in" " mutuallyExclusiveGroup")
 
         try:
             save_usage = self.usage

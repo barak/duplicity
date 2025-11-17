@@ -63,7 +63,7 @@ class OneDriveBackend(duplicity.backend.Backend):
         self.directory_onedrive_path = f"{self.drive_root + '/root'}:/{self.directory}/"
         if self.directory == "":
             raise BackendException(
-                "You did not specify a path. Please specify a path, e.g. onedrive://duplicity_backups"
+                "You did not specify a path. " "Please specify a path, e.g. onedrive://duplicity_backups"
             )
 
         if config.volsize > (10 * 1024 * 1024 * 1024):
