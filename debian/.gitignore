@@ -1,0 +1,6 @@
+/.debhelper
+/files
+/debhelper-build-stamp
+/duplicity.*.debhelper
+/duplicity.substvars
+/duplicity
