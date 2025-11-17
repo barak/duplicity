@@ -21,7 +21,7 @@ Standards-Version: 4.6.2
 Homepage: https://duplicity.us/
 Vcs-Git: https://github.com/az143/duplicity.git
 Vcs-Browser: https://github.com/az143/duplicity
-X-Python3-Version: >= 3.7
+X-Python3-Version: >= 3.9
 
 Package: duplicity
 Architecture: any
