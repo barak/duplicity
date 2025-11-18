@@ -97,23 +97,34 @@ class RegressionTest(FunctionalTestCase):
         """
         Test issue 901 - Upgrade to 3.0.6 on Archlinux gives gcry_kdf_derive failed
         """
+        self.set_environ("SIGN_PASSPHRASE", None)
+        self.set_environ("FTP_PASSWORD", None)
 
+        self.set_environ("TESTDEBUG", "1")
+        self.set_environ("PASSPHRASE", "issue901")
+
+        # make sure we test with a clean cache and clean output
         shutil.rmtree(f"{_runtest_dir}/testfiles/cache/issue901", ignore_errors=True)
+        shutil.rmtree(f"{_runtest_dir}/testfiles/output", ignore_errors=True)
 
+        # do initial full backup
         self.backup(
             "full",
             f"{_runtest_dir}/testfiles/various_file_types",
             options=["--name=issue901"],
         )
 
+        # make sure inc has somthing to do
         os.unlink(f"{_runtest_dir}/testfiles/various_file_types/executable")
 
+        # do incremental backup
         self.backup(
             "inc",
             f"{_runtest_dir}/testfiles/various_file_types",
             options=["--name=issue901"],
         )
 
+        # list current files
         self.run_duplicity(
             options=[
                 "list-current-files",
@@ -122,17 +133,36 @@ class RegressionTest(FunctionalTestCase):
             ]
         )
 
-        shutil.rmtree(f"{_runtest_dir}/testfiles/cache/issue901")
-
-        self.backup(
-            "full",
-            f"{_runtest_dir}/testfiles/various_file_types",
-            options=["--name=issue901"],
+        # make sure we test with a clean cache
+        os.rename(
+            f"{_runtest_dir}/testfiles/cache/issue901",
+            f"{_runtest_dir}/testfiles/cache/issue901.bak",
         )
 
-        self.verify(
-            f"{_runtest_dir}/testfiles/various_file_types",
-            options=["--name=issue901"],
+        # fails with no cache
+        with self.assertRaises(CmdError) as cm:
+            self.run_duplicity(
+                options=[
+                    "list-current-files",
+                    f"file://{_runtest_dir}/testfiles/output",
+                    "--name=issue901",
+                ]
+            )
+        assert cm.exception.exit_status == 4
+
+        # restore cache
+        os.rename(
+            f"{_runtest_dir}/testfiles/cache/issue901.bak",
+            f"{_runtest_dir}/testfiles/cache/issue901",
+        )
+
+        # should work now
+        self.run_duplicity(
+            options=[
+                "list-current-files",
+                f"file://{_runtest_dir}/testfiles/output",
+                "--name=issue901",
+            ]
         )
 
 
