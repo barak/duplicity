@@ -822,17 +822,14 @@ class CollectionsStatus(object):
         if config.action != "full":
             if not self.manifest_in_cache():
                 if self.first:
-                    errloc = "initial collection status"
+                    errloc = f"initial collection status doing {config.action}"
                 else:
                     errloc = f"{config.action}"
-                log.Notice(
+                log.FatalError(
                     f"No manifest file found in cache for {errloc}.\n"
-                    f"A password will be required to access the remote manifest.",
+                    f"A passphrase will be required to access the remote manifest.",
+                    log.ErrorCode.no_manifests,
                 )
-                if sys.stdin.isatty():
-                    getpass_safe(f"Enter passphrase for {errloc}:")
-                else:
-                    log.Notice("Standard input is not a tty.  Set PASSWORD environment variable instead.")
 
         # get remote filename list
         if config.check_remote:
