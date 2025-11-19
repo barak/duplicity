@@ -166,7 +166,7 @@ class CollectionTest(UnitTestCase):
         assert chain.fullset.time == 1029626221
 
     def test_collections_status(self):
-        """Test CollectionStatus object's set_values()"""
+        """Test CollectionsStatus object's set_values()"""
 
         def check_cs(cs):
             """Check values of collections status"""
