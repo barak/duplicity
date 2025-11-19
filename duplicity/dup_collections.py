@@ -88,7 +88,7 @@ class BackupSet(object):
         """
         check that we have a complete set of volumes.
         """
-        if not config.check_remote:
+        if CollectionsStatus.first_colstats and not config.check_remote:
             self.mf_missing = {}
             self.cs_missing = {}
             return
@@ -708,13 +708,15 @@ class CollectionsStatus(object):
     Hold information about available chains and sets
     """
 
+    first_colstats = False
+
     def __init__(self, backend, archive_dir_path, first=False):
         """
         Make new object.  Does not set values
         """
         self.backend = backend
         self.archive_dir_path = archive_dir_path
-        self.first = first
+        self.first_colstats = first
 
         # Will hold (signature chain, backup chain) pair of active
         # (most recent) chains
@@ -816,20 +818,6 @@ class CollectionsStatus(object):
         # get local filename list
         local_filename_list = self.archive_dir_path.listdir()
         log.Debug(_("%d file(s) exist in cache") % len(local_filename_list))
-
-        from duplicity.dup_main import getpass_safe
-
-        if config.action != "full":
-            if not self.manifest_in_cache():
-                if self.first:
-                    errloc = f"initial collection status doing {config.action}"
-                else:
-                    errloc = f"{config.action}"
-                log.FatalError(
-                    f"No manifest file found in cache for {errloc}.\n"
-                    f"A passphrase will be required to access the remote manifest.",
-                    log.ErrorCode.no_manifests,
-                )
 
         # get remote filename list
         if config.check_remote:
@@ -982,7 +970,7 @@ class CollectionsStatus(object):
                     self.last_chain_missing_difftars = True
 
             if config.action == "inc" and self.last_chain_missing_difftars:
-                if self.first:
+                if CollectionsStatus.first_colstats:
                     log.FatalError(
                         "ERROR, the last backup chain has missing difftar volumes as above.\n"
                         "You must run a full backup as the next backup."
@@ -1061,7 +1049,7 @@ class CollectionsStatus(object):
         incomplete_sets = []
         missing_difftar_sets = []
         for set in set_list:  # pylint: disable=redefined-builtin
-            if not self.first:
+            if not CollectionsStatus.first_colstats:
                 set.get_missing()
             if not set.is_complete():
                 incomplete_sets.append(set)

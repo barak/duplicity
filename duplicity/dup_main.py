@@ -647,7 +647,7 @@ def full_backup(col_stats):
     """
     Do full backup of directory to backend, using archive_dir_path
 
-    @type col_stats: CollectionStatus object
+    @type col_stats: CollectionsStatus object
     @param col_stats: collection status
 
     @rtype: void
@@ -708,7 +708,7 @@ def check_sig_chain(col_stats):
     """
     Get last signature chain for inc backup, or None if none available
 
-    @type col_stats: CollectionStatus object
+    @type col_stats: CollectionsStatus object
     @param col_stats: collection status
     """
     if not col_stats.matched_chain_pair:
@@ -820,7 +820,7 @@ def write_json_stat(stat_type, bytes_written, col_stats):
     @param stat_type: Name of the json_stat should be full-stat or inc-stat
     @type bytes_written: int
     @param bytes_written: no of bytes written, in this run
-    @type col_stats: CollectionStatus object
+    @type col_stats: CollectionsStatus object
     @param col_stats: collection status
     """
     if config.jsonstat:
@@ -842,7 +842,7 @@ def list_current(col_stats):
     """
     List the files current in the archive (examining signature only)
 
-    @type col_stats: CollectionStatus object
+    @type col_stats: CollectionsStatus object
     @param col_stats: collection status
 
     @rtype: void
@@ -862,7 +862,7 @@ def restore(col_stats):
     """
     Restore archive in config.backend to config.local_path
 
-    @type col_stats: CollectionStatus object
+    @type col_stats: CollectionsStatus object
     @param col_stats: collection status
 
     @rtype: void
@@ -886,7 +886,7 @@ def restore_get_patched_rop_iter(col_stats):
     """
     Return iterator of patched ROPaths of desired restore data
 
-    @type col_stats: CollectionStatus object
+    @type col_stats: CollectionsStatus object
     @param col_stats: collection status
     """
     if config.restore_path:
@@ -1046,7 +1046,7 @@ def verify(col_stats):
     """
     Verify files, logging differences
 
-    @type col_stats: CollectionStatus object
+    @type col_stats: CollectionsStatus object
     @param col_stats: collection status
 
     @rtype: void
@@ -1078,7 +1078,7 @@ def cleanup(col_stats):
     """
     Delete the extraneous files in the current backend
 
-    @type col_stats: CollectionStatus object
+    @type col_stats: CollectionsStatus object
     @param col_stats: collection status
 
     @rtype: void
@@ -1111,7 +1111,7 @@ def remove_all_but_n_full(col_stats):
     """
     Remove backup files older than the last n full backups.
 
-    @type col_stats: CollectionStatus object
+    @type col_stats: CollectionsStatus object
     @param col_stats: collection status
 
     @rtype: void
@@ -1130,7 +1130,7 @@ def remove_old(col_stats):
     """
     Remove backup files older than config.remove_time from backend
 
-    @type col_stats: CollectionStatus object
+    @type col_stats: CollectionsStatus object
     @param col_stats: collection status
 
     @rtype: void
@@ -1448,7 +1448,7 @@ def check_last_manifest(col_stats):
     """
     Check consistency and hostname/directory of last manifest
 
-    @type col_stats: CollectionStatus object
+    @type col_stats: CollectionsStatus object
     @param col_stats: collection status
 
     @rtype: void
@@ -1659,14 +1659,11 @@ def do_backup(action):
     check_resources(action)
 
     # get current collection status
-    try:
-        col_stats = dup_collections.CollectionsStatus(
-            config.backend,
-            config.archive_dir_path,
-            first=True,
-        ).set_values()
-    except Exception as e:
-        log.Error(f"Unable to get collection status: {util.uexc(e)}")
+    col_stats = dup_collections.CollectionsStatus(
+        config.backend,
+        config.archive_dir_path,
+        first=True,
+    ).set_values()
 
     # check archive synch with remote, fix if needed
     if action not in [

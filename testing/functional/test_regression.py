@@ -24,15 +24,9 @@ import re
 import shutil
 import sys
 import unittest
-from unittest import mock
 
-from duplicity import (
-    dup_main,
-    log,
-)
 from testing.functional import (
     _runtest_dir,
-    CmdError,
     FunctionalTestCase,
 )
 
@@ -97,10 +91,28 @@ class RegressionTest(FunctionalTestCase):
         """
         Test issue 901 - Upgrade to 3.0.6 on Archlinux gives gcry_kdf_derive failed
         """
+        import signal
+        import contextlib
+
+        class TimeoutException(Exception):
+            pass
+
+        @contextlib.contextmanager
+        def timeout(seconds):
+            def _handler(signum, frame):
+                raise TimeoutException(f"Timeout after {seconds} seconds")
+
+            signal.signal(signal.SIGALRM, _handler)
+            signal.alarm(seconds)
+            try:
+                yield
+            finally:
+                signal.alarm(0)  # Disable the alarm
+
         self.set_environ("SIGN_PASSPHRASE", None)
         self.set_environ("FTP_PASSWORD", None)
 
-        self.set_environ("TESTDEBUG", "1")
+        # self.set_environ("TESTDEBUG", "1")
         self.set_environ("PASSPHRASE", "issue901")
 
         # make sure we test with a clean cache and clean output
@@ -133,30 +145,33 @@ class RegressionTest(FunctionalTestCase):
             ]
         )
 
-        # make sure we test with a clean cache
+        # make sure we test with a clean cache and no passphrase
         os.rename(
             f"{_runtest_dir}/testfiles/cache/issue901",
             f"{_runtest_dir}/testfiles/cache/issue901.bak",
         )
+        self.set_environ("PASSPHRASE", None)
 
-        # fails with no cache
-        with self.assertRaises(CmdError) as cm:
-            self.run_duplicity(
-                options=[
-                    "list-current-files",
-                    f"file://{_runtest_dir}/testfiles/output",
-                    "--name=issue901",
-                ]
-            )
-        assert cm.exception.exit_status == 4
+        # times out with no cache and no passphrase (running as child process)
+        with self.assertRaises(TimeoutException) as cm:
+            with timeout(3):
+                self.run_duplicity(
+                    options=[
+                        "list-current-files",
+                        f"file://{_runtest_dir}/testfiles/output",
+                        "--name=issue901",
+                    ]
+                )
 
-        # restore cache
+        # restore cache and passphrase
+        shutil.rmtree(f"{_runtest_dir}/testfiles/cache/issue901")
         os.rename(
             f"{_runtest_dir}/testfiles/cache/issue901.bak",
             f"{_runtest_dir}/testfiles/cache/issue901",
         )
+        self.set_environ("PASSPHRASE", "issue901")
 
-        # should work now
+        # with cache and passphrase
         self.run_duplicity(
             options=[
                 "list-current-files",
