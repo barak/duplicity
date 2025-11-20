@@ -187,6 +187,7 @@ class SSHPExpectBackend(duplicity.backend.Backend):
             commandline,
             timeout=None,
             maxread=maxread,
+            encoding=config.fsencoding,
             use_poll=True,
         )
         cmdloc = 0

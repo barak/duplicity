@@ -57,9 +57,7 @@ class GPGProfile(object):
     Just hold some GPG settings, avoid passing tons of arguments
     """
 
-    _version_re = re.compile(
-        b"^gpg.*\\(GnuPG(?:/MacGPG2)?\\) (?P<maj>[0-9]+)\\.(?P<min>[0-9]+)\\.(?P<bug>[0-9]+)(-.+)?$"
-    )
+    _version_re = re.compile(b"^gpg(sm)?( \\([^\\)]+\\))? (?P<maj>[0-9]+)\\.(?P<min>[0-9]+)\\.(?P<bug>[0-9]+)(-.+)?$")
 
     def __init__(self, passphrase=None, sign_key=None, recipients=None, hidden_recipients=None):
         """
