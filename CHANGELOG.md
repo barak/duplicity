@@ -1,6 +1,47 @@
 # Changelog
 
 
+## rel.3.0.6.2 (2025-11-20)
+
+### Changes
+
+* Fix merge conflict resolution error. [Kenneth Loafman]
+
+* Add tty to Docker images for colored output. [Kenneth Loafman]
+
+* Changes from Thomas's review.  See MR 318. [Kenneth Loafman]
+
+### Fix
+
+* Remove test not running under Docker. [Kenneth Loafman]
+
+* Don't check for missing in first CollectionStatus().set\_values(). [Kenneth Loafman]
+
+* Fix "full" not working.  Add more tests. [Kenneth Loafman]
+
+* Fix "Upgrade to 3.0.6 on Archlinux gives gcry\_kdf\_derive failed" (#901) [Kenneth Loafman]
+
+* Ssh\_pexpect\_backend: fix TypeError. [Martin Wilck]
+
+* Fix compilation with gcc 15. [Martin Wilck]
+
+* --files-from fails when backing up root. [Jindřich Makovička]
+
+* Crash with b2backend when b2sk isn't available, rather than proper error. [ede]
+
+  Fixes #905.
+
+* Parsing the gpg version failed when using Sequoia Chameleon. [ede]
+
+* Remove test not running under Docker. [Kenneth Loafman]
+
+* Don't check for missing in first CollectionStatus().set\_values(). [Kenneth Loafman]
+
+* Fix "full" not working.  Add more tests. [Kenneth Loafman]
+
+* Fix "Upgrade to 3.0.6 on Archlinux gives gcry\_kdf\_derive failed" (#901) [Kenneth Loafman]
+
+
 ## rel.3.0.6.1 (2025-11-13)
 
 ### Changes
