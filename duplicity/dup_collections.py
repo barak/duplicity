@@ -713,7 +713,7 @@ class CollectionsStatus(object):
         """
         self.backend = backend
         self.archive_dir_path = archive_dir_path
-        self.first_colstats = first
+        config.first_colstats = first
 
         # Will hold (signature chain, backup chain) pair of active
         # (most recent) chains
