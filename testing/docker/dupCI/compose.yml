@@ -30,6 +30,7 @@ services:
         image: dupci/py39
         container_name: py39
         hostname: py39
+        tty: true
         environment:
             - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
@@ -42,6 +43,7 @@ services:
         image: dupci/py310
         container_name: py310
         hostname: py310
+        tty: true
         environment:
             - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
@@ -54,6 +56,7 @@ services:
         image: dupci/py311
         container_name: py311
         hostname: py311
+        tty: true
         environment:
             - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
@@ -66,6 +69,7 @@ services:
         image: dupci/py312
         container_name: py312
         hostname: py312
+        tty: true
         environment:
             - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
@@ -78,6 +82,7 @@ services:
         image: dupci/py313
         container_name: py313
         hostname: py313
+        tty: true
         environment:
             - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
@@ -90,6 +95,7 @@ services:
         image: dupci/py314
         container_name: py314
         hostname: py314
+        tty: true
         environment:
             - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash

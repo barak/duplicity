@@ -30,6 +30,7 @@ services:
         image: distro/ub20
         container_name: ub20
         hostname: ub20
+        tty: true
         environment:
             - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
@@ -42,6 +43,7 @@ services:
         image: distro/ub22
         container_name: ub22
         hostname: ub22
+        tty: true
         environment:
             - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
@@ -54,6 +56,7 @@ services:
         image: distro/ub24
         container_name: ub24
         hostname: ub24
+        tty: true
         environment:
             - PYTEST_ARGS=${PYTEST_ARGS:-""}
         entrypoint: /bin/bash
