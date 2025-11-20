@@ -88,7 +88,7 @@ class BackupSet(object):
         """
         check that we have a complete set of volumes.
         """
-        if CollectionsStatus.first_colstats and not config.check_remote:
+        if config.first_colstats and not config.check_remote:
             self.mf_missing = {}
             self.cs_missing = {}
             return
@@ -325,8 +325,7 @@ class BackupSet(object):
         try:
             remote_file_buffer = self.backend.get_data(remote_file)
         except GPGError as message:
-            # log.Error(_(f"Error processing remote file ({os.fsdecode(remote_file)}): {util.uexc(message)}"))
-            return b""
+            log.Error(_(f"Error processing remote file ({os.fsdecode(remote_file)}): {util.uexc(message)}"))
         log.Info(_(f"Processing remote file {os.fsdecode(remote_file)} ({len(remote_file_buffer)})"))
         return remote_file_buffer
 
@@ -708,15 +707,13 @@ class CollectionsStatus(object):
     Hold information about available chains and sets
     """
 
-    first_colstats = False
-
     def __init__(self, backend, archive_dir_path, first=False):
         """
         Make new object.  Does not set values
         """
         self.backend = backend
         self.archive_dir_path = archive_dir_path
-        self.first_colstats = first
+        config.first_colstats = first
 
         # Will hold (signature chain, backup chain) pair of active
         # (most recent) chains
@@ -793,17 +790,6 @@ class CollectionsStatus(object):
             l.append(_("No orphaned or incomplete backup sets found."))
 
         return "\n".join(l)
-
-    def manifest_in_cache(self):
-        """
-        Return True if a manifest file is available in the cache
-        """
-        local_filename_list = self.archive_dir_path.listdir()
-        for fn in local_filename_list:
-            # TODO: use file_naming.parse() instead
-            if b"manifest" in fn:
-                return True
-        return False
 
     def set_values(self, sig_chain_warning=1):
         """
@@ -970,7 +956,7 @@ class CollectionsStatus(object):
                     self.last_chain_missing_difftars = True
 
             if config.action == "inc" and self.last_chain_missing_difftars:
-                if CollectionsStatus.first_colstats:
+                if config.first_colstats:
                     log.FatalError(
                         "ERROR, the last backup chain has missing difftar volumes as above.\n"
                         "You must run a full backup as the next backup."
@@ -1049,7 +1035,7 @@ class CollectionsStatus(object):
         incomplete_sets = []
         missing_difftar_sets = []
         for set in set_list:  # pylint: disable=redefined-builtin
-            if not CollectionsStatus.first_colstats:
+            if not config.first_colstats:
                 set.get_missing()
             if not set.is_complete():
                 incomplete_sets.append(set)

@@ -105,6 +105,10 @@ select = None
 select_opts = []
 select_files = []
 
+# true if missing difftars should be run
+# mmising difftar files fount in second call
+first_colstats = False
+
 # gpg binary to use
 gpg_binary = None
 
