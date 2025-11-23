@@ -337,14 +337,7 @@ class TarFile_FromFileobjs(object):
                 not self.current_fp.close()
             ), "Closing current file pointer returned a truthy value indicating an error"
 
-        while True:
-            x = next(self.fileobj_iter)
-            if isinstance(x, errors.BadVolumeException):
-                # continue with the next volume
-                continue
-            else:
-                self.current_fp = x
-                break
+        self.current_fp = next(self.fileobj_iter)
 
         self.dup_tarfile = util.make_tarfile("r", self.current_fp)
         self.tar_iter = iter(self.dup_tarfile)
