@@ -24,6 +24,7 @@
 import gzip
 import json
 import os
+import sys
 
 from duplicity import (
     config,
@@ -87,7 +88,7 @@ class BackupSet(object):
         """
         check that we have a complete set of volumes.
         """
-        if not config.check_remote:
+        if config.first_colstats and not config.check_remote:
             self.mf_missing = {}
             self.cs_missing = {}
             return
@@ -324,8 +325,7 @@ class BackupSet(object):
         try:
             remote_file_buffer = self.backend.get_data(remote_file)
         except GPGError as message:
-            log.FatalError(_(f"Error processing remote file ({os.fsdecode(remote_file)}): {util.uexc(message)}"))
-            return b""
+            log.Error(_(f"Error processing remote file ({os.fsdecode(remote_file)}): {util.uexc(message)}"))
         log.Info(_(f"Processing remote file {os.fsdecode(remote_file)} ({len(remote_file_buffer)})"))
         return remote_file_buffer
 
@@ -713,7 +713,7 @@ class CollectionsStatus(object):
         """
         self.backend = backend
         self.archive_dir_path = archive_dir_path
-        self.first = first
+        config.first_colstats = first
 
         # Will hold (signature chain, backup chain) pair of active
         # (most recent) chains
@@ -956,7 +956,7 @@ class CollectionsStatus(object):
                     self.last_chain_missing_difftars = True
 
             if config.action == "inc" and self.last_chain_missing_difftars:
-                if self.first:
+                if config.first_colstats:
                     log.FatalError(
                         "ERROR, the last backup chain has missing difftar volumes as above.\n"
                         "You must run a full backup as the next backup."
@@ -1035,7 +1035,8 @@ class CollectionsStatus(object):
         incomplete_sets = []
         missing_difftar_sets = []
         for set in set_list:  # pylint: disable=redefined-builtin
-            set.get_missing()
+            if not config.first_colstats:
+                set.get_missing()
             if not set.is_complete():
                 incomplete_sets.append(set)
             if set.is_missing():

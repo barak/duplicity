@@ -379,6 +379,7 @@ class Select(object):
         separator = config.null_separator and "\0" or "\n"
         filelist = {}
         absolute_path = None
+        is_root = self.rootpath.get_parent_dir() == self.rootpath
         for line in filelist_fp.read().split(separator):
             if not line:  # skip blanks
                 continue
@@ -387,7 +388,10 @@ class Select(object):
                 break
             while line:
                 dirname, basename = os.path.split(line)
-                path = os.path.join(self.rootpath.uc_name, dirname).rstrip(os.path.sep)
+                path = os.path.join(self.rootpath.uc_name, dirname)
+                # strip the trailing separator unless in root
+                if not is_root or len(dirname) > 0:
+                    path = path.rstrip(os.path.sep)
                 if path not in filelist:
                     filelist[path] = set()
                 if isinstance(basename, str):
