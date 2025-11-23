@@ -1,4 +1,4 @@
-duplicity (3.0.6.1-0.1) UNRELEASED; urgency=medium
+duplicity (3.0.6.2-0.1) UNRELEASED; urgency=medium
 
   * new upstream release (closes: #977546)
   * forward port quilt patches
@@ -7,7 +7,7 @@ duplicity (3.0.6.1-0.1) UNRELEASED; urgency=medium
   * tweak debian/watch to skip *.dev* upstream version tags
   * quilt patch man page typos
 
- -- Barak A. Pearlmutter <bap@debian.org>  Mon, 17 Nov 2025 10:22:24 +0000
+ -- Barak A. Pearlmutter <bap@debian.org>  Sun, 23 Nov 2025 15:41:19 +0000
 
 duplicity (3.0.5.1-2) unstable; urgency=medium
 
