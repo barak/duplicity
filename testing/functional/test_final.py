@@ -220,7 +220,7 @@ class FinalTest(FunctionalTestCase):
         self.backup(
             "full",
             f"{_runtest_dir}/testfiles/empty_dir",
-            passphrase_input=[self.sign_passphrase, self.s],
+            passphrase_input=[self.sign_passphrase, self.sign_passphrase],
         )
         self.restore(passphrase_input=[self.sign_passphrase])
 
