@@ -144,7 +144,6 @@ class RegressionTest(FunctionalTestCase):
             "full",
             f"{_runtest_dir}/testfiles/various_file_types",
             options=["--name=issue908", f"--encrypt-key={self.encrypt_key1}"],
-            passphrase_input=[self.sign_passphrase],
         )
 
         # make sure inc has somthing to do
