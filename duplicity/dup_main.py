@@ -30,7 +30,7 @@
 # any suggestions.
 
 
-from dataclasses import dataclass
+import copy
 import os
 import platform
 import resource
@@ -64,6 +64,15 @@ from duplicity import (
 # If exit_val is not None, exit with given value at end.
 exit_val = None
 
+# actions that skip archive_sync
+skips_sync_archive = [
+    "collection-status",
+    "full",
+    "remove-all-but-n-full",
+    "remove-all-inc-of-but-n-full",
+    "remove-older-than",
+]
+
 
 def getpass_safe(message):
     import getpass
@@ -71,7 +80,6 @@ def getpass_safe(message):
     return getpass.getpass(message)
 
 
-# TODO: Simplify and refactor: https://gitlab.com/duplicity/duplicity/-/merge_requests/288#note_2406527475
 def get_passphrase(n, action, for_signing=False):
     """
     Check to make sure passphrase is indeed needed, then get
@@ -110,7 +118,7 @@ def get_passphrase(n, action, for_signing=False):
         )
         and "PASSPHRASE" in os.environ
     ):  # noqa
-        log.Notice(_("Reuse configured PASSPHRASE as SIGN_PASSPHRASE"))
+        log.Info(_("Reuse configured PASSPHRASE as SIGN_PASSPHRASE"))
         return os.environ["PASSPHRASE"]
     # if one encryption key is also the signing key assume that the passphrase is identical
     if (
@@ -121,50 +129,42 @@ def get_passphrase(n, action, for_signing=False):
         )
         and "SIGN_PASSPHRASE" in os.environ
     ):  # noqa
-        log.Notice(_("Reuse configured SIGN_PASSPHRASE as PASSPHRASE"))
+        log.Info(_("Reuse configured SIGN_PASSPHRASE as PASSPHRASE"))
         return os.environ["SIGN_PASSPHRASE"]
 
-    # Next, verify we need to ask the user
-
-    # Assumptions:
-    #   - encrypt-key has no passphrase
-    #   - sign-key requires passphrase
-    #   - gpg-agent supplies all, no user interaction
-
-    # no passphrase if --no-encryption or --use-agent
-    if not config.encryption or config.use_agent:
-        return ""
-
-    # these commands don't need a password
-    elif action in [
-        "collection-status",
-        "list-current-files",
-        "remove-all-but-n-full",
-        "remove-all-inc-of-but-n-full",
-        "remove-older-than",
-    ]:
-        return ""
-
-    # for a full, inc, verify, we don't need a password if
-    # there is no sign_key and there are recipients
-    elif (
-        action in ("full", "inc", "verify")
-        and (config.gpg_profile.recipients or config.gpg_profile.hidden_recipients)
-        and (not config.gpg_profile.sign_key or (not config.restart and not for_signing))
-    ):
-        return ""
-
-    elif (
-        (config.gpg_profile.recipients or config.gpg_profile.hidden_recipients)
-        and config.metadata_sync_mode == "partial"
-        and action in ["full"]
-    ):
-        log.Info(_("Skipping passphrase input for full backup with encryption keys."))
-        return ""
-
-    # Finally, ask the user for the passphrase
+    # Not in the environment, check if encryption passphrase is needed
+    asymmetric = False
+    need_passphrase = False
+    profile = config.gpg_profile
+    encrypt_keys = profile.recipients + profile.hidden_recipients
+    if profile.sign_key:
+        encrypt_keys.append(profile.sign_key)
+    if encrypt_keys:
+        asymmetric = True
+        for key in encrypt_keys:
+            if util.key_needs_passphrase(key):
+                log.Info(f"Key {key} needs passphrase.")
+                need_passphrase = True
+                break
+        else:
+            log.Info("No encryption keys need passphrase.")
     else:
-        log.Info(_("PASSPHRASE variable not set, asking user."))
+        symmetric = True
+        need_passphrase = True
+        log.Info("No encryption keys configured.")
+
+    skips = copy.copy(skips_sync_archive)
+    skips.remove("full")
+    if (action == "full" and asymmetric) or config.restart or action in skips:
+        log.Info(f"Skipping passphrase request for action {action}")
+        return ""
+
+    elif asymmetric and not need_passphrase:
+        log.Info(_("Skipping because no encryption key passphrase is needed."))
+        return ""
+
+    else:
+        log.Notice(_("No environment variables are set, asking user."))
         use_cache = True
         while True:
             # ask the user to enter a new passphrase to avoid an infinite loop
@@ -1658,13 +1658,7 @@ def do_backup(action):
     ).set_values()
 
     # check archive synch with remote, fix if needed
-    if action not in [
-        "collection-status",
-        "full",
-        "remove-all-but-n-full",
-        "remove-all-inc-of-but-n-full",
-        "remove-older-than",
-    ]:
+    if action not in skips_sync_archive:
         sync_archive(col_stats)
 
     while True:
