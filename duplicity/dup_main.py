@@ -118,7 +118,7 @@ def get_passphrase(n, action, for_signing=False):
         )
         and "PASSPHRASE" in os.environ
     ):  # noqa
-        log.Info(_("Reuse configured PASSPHRASE as SIGN_PASSPHRASE"))
+        log.Notice(_("Reuse configured PASSPHRASE as SIGN_PASSPHRASE"))
         return os.environ["PASSPHRASE"]
     # if one encryption key is also the signing key assume that the passphrase is identical
     if (
@@ -129,7 +129,7 @@ def get_passphrase(n, action, for_signing=False):
         )
         and "SIGN_PASSPHRASE" in os.environ
     ):  # noqa
-        log.Info(_("Reuse configured SIGN_PASSPHRASE as PASSPHRASE"))
+        log.Notice(_("Reuse configured SIGN_PASSPHRASE as PASSPHRASE"))
         return os.environ["SIGN_PASSPHRASE"]
 
     # Not in the environment, check if encryption passphrase is needed
@@ -143,24 +143,24 @@ def get_passphrase(n, action, for_signing=False):
         asymmetric = True
         for key in encrypt_keys:
             if util.key_needs_passphrase(key):
-                log.Info(f"Key {key} needs passphrase.")
+                log.Notice(f"Key {key} needs passphrase.")
                 need_passphrase = True
                 break
         else:
-            log.Info("No encryption keys need passphrase.")
+            log.Notice("No encryption keys need passphrase.")
     else:
         symmetric = True
         need_passphrase = True
-        log.Info("No encryption keys configured.")
+        log.Notice("No encryption keys configured.")
 
     skips = copy.copy(skips_sync_archive)
     skips.remove("full")
     if (action == "full" and asymmetric) or config.restart or action in skips:
-        log.Info(f"Skipping passphrase request for action {action}")
+        log.Notice(f"Skipping passphrase request for action {action}")
         return ""
 
     elif asymmetric and not need_passphrase:
-        log.Info(_("Skipping because no encryption key passphrase is needed."))
+        log.Notice(_("Skipping because no encryption key passphrase is needed."))
         return ""
 
     else:
@@ -195,7 +195,9 @@ def get_passphrase(n, action, for_signing=False):
 
             if not pass1 == pass2:
                 log.Log(
-                    _("First and second passphrases do not match!  Please try again."), log.WARNING, force_print=True
+                    _("First and second passphrases do not match!  Please try again."),
+                    log.WARNING,
+                    force_print=True,
                 )
                 use_cache = False
                 continue
