@@ -1791,7 +1791,7 @@ def do_backup(action):
                         check_last_manifest(col_stats)  # not needed for full backups
                 incremental_backup(sig_chain, col_stats)
 
-        if action in ["full", "inc"] and not config.check_remote:
+        if action in ["full", "inc"] and config.check_remote:
             dup_collections.CollectionsStatus(
                 config.backend,
                 config.archive_dir_path,
