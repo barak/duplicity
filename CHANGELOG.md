@@ -1,10 +1,18 @@
 
-(Unreleased) / 2025-11-26
+(Unreleased) / 2025-12-05
 =========================
 
- * 29e319fa:chg: Add missing ':' between tags and subject.
- * 41e08e43:chg: Use chg|fix|new, not target part.
- * 3418970f:chg: Use `git changelog` instead of `gitchangelog`.
+
+
+rel.3.0.6.3 / 2025-12-05
+========================
+
+ * dd45a92d:chg: Update check_tags to use current branch.
+ * 5bbb5813:fix: Change log level from Info to Notice in get_passphrase().
+ * a9c4fbad:chg: Add key_needs_passphrase(key).
+ * abaf8485:chg: Better error message from get_remote_file().
+ * b083fca8:fix: 'duplicity --no-check-remote inc' prints spurious warning "found missing difftar(s) in backup sets"
+ * 9400fc37:chg: Add check_tags minor fix to setversion.
  * 29227571:fix: delete unused diffdir.DirSig, diffdir.SigTarBlockIter, librsync.SigFile.
  * 29205145:fix: Delete unused IndexedTuple.
  * b0653566:fix: Delete unused Patch, patch_diff_tarfile, PathPatcher.
@@ -444,6 +452,10 @@ rel.2.0.1 / 2023-08-08
  * fc8da777:fix: Restore pre-parser. Fixes #727.
  * 295e641b:fix: Add missing import to cli_util.py. Fixes #730.
  * 97fd0957:fix: Add missing import to b2backend.py. Fixes #729.
+
+rel.2.0.0 / 2023-08-07
+======================
+
  * 5cb97560:fix: Adjust version to build under LP.
  * 598352ba:fix: Adjust to build under LP Mantic.
 
