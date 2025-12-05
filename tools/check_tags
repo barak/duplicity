@@ -24,20 +24,23 @@
 #
 
 import re
+import sys
 from subprocess import run
 
 
 tag_regex = re.compile(r"^rel.\d+\.\d+\.\d+(?:\.\d+)?(?:(?:a|b|rc)\d+)?(?:\.dev\d+)?$")
 
 
-def check_tags(branch="dev"):
-    print(f"Checking tags on branch {branch}")
+def check_tags():
 
     p = run(
-        f"git switch {branch}".split(),
+        f"git branch --show-current".split(),
         capture_output=True,
         check=True,
     )
+    branch = p.stdout.decode().strip()
+
+    print(f"Checking tags on branch {branch}")
 
     p = run(
         "git tag --list".split(),
@@ -61,4 +64,4 @@ if __name__ == "__main__":
     if len(sys.argv) != 1:
         print("Usage: check_tags")
         sys.exit(1)
-    check_tags(branch="main")
+    check_tags()
