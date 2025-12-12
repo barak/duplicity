@@ -1,13 +1,13 @@
-duplicity (3.0.6.2-0.1) UNRELEASED; urgency=medium
+duplicity (3.0.6.3-0.1) UNRELEASED; urgency=medium
 
   * new upstream release (closes: #977546)
   * forward port quilt patches
   * add optional runtime dependency on python3-socks aka pysocks
   * bump policy version
-  * tweak debian/watch to skip *.dev* upstream version tags
+  * tweak debian/watch to v5 and skip non-numeric version tags
   * quilt patch man page typos
 
- -- Barak A. Pearlmutter <bap@debian.org>  Sun, 23 Nov 2025 15:41:19 +0000
+ -- Barak A. Pearlmutter <bap@debian.org>  Fri, 12 Dec 2025 11:24:44 +0000
 
 duplicity (3.0.5.1-2) unstable; urgency=medium
 
