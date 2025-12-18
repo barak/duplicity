@@ -132,24 +132,31 @@ def get_passphrase(n, action, for_signing=False):
         log.Notice(_("Reuse configured SIGN_PASSPHRASE as PASSPHRASE"))
         return os.environ["SIGN_PASSPHRASE"]
 
-    # Not in the environment, check if encryption passphrase is needed
+    # no passphrase if --no-encryption or --use-agent
+    if not config.encryption or config.use_agent:
+        return ""
+
+    # no passphrase if --passphrase* in --gpg-options
+    if "--passphrase" in config.gpg_options:
+        return ""
+
+    # Check if encryption passphrase is needed
     asymmetric = False
     need_passphrase = False
     profile = config.gpg_profile
     encrypt_keys = profile.recipients + profile.hidden_recipients
     if profile.sign_key:
         encrypt_keys.append(profile.sign_key)
-    if encrypt_keys:
+    if encrypt_keys and config.check_remote:
         asymmetric = True
         for key in encrypt_keys:
-            if util.key_needs_passphrase(key):
+            if util.key_needs_passphrase(config.gpg_binary, key):
                 log.Notice(f"Key {key} needs passphrase.")
                 need_passphrase = True
                 break
         else:
             log.Notice("No encryption keys need passphrase.")
     else:
-        symmetric = True
         need_passphrase = True
         log.Notice("No encryption keys configured.")
 

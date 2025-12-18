@@ -27,11 +27,13 @@ import atexit
 import csv
 import errno
 import json
+import locale
 import multiprocessing
 import os
 import socket
 import sys
 import traceback
+from contextlib import contextmanager
 from io import StringIO
 
 import fasteners
@@ -203,28 +205,93 @@ def release_lockfile():
             pass
 
 
-def key_needs_passphrase(key):
+def key_needs_passphrase(gpgbin, key, logfile=None):
     """
-    Check if a key needs a passphrase.
+    Determine whether a GnuPG key requires a passphrase.
+
+    This helper invokes the specified GnuPG frontend in a non‑destructive
+    way to discover if the secret key is protected by a passphrase. It uses
+    `pexpect` to spawn the command and watch for prompts or agent errors,
+    never changing the key material itself.
+
+    How it works
+    - Runs: ``<gpgbin> --pinentry-mode cancel --dry-run --change-passphrase <key>``
+      with a C UTF‑8 locale to ensure predictable output.
+    - Interprets the interaction:
+        - If the process reaches EOF without a passphrase prompt, the key is
+          considered not to need a passphrase.
+        - If a passphrase prompt appears (matches ``passphrase.*:``), the key
+          is considered to need a passphrase.
+        - If ``gpg-agent`` fails to start or ignores an inquiry, we log an
+          error and return ``None`` to signal an indeterminate result.
+
+    Parameters
+    - gpgbin: str
+        The GnuPG command to execute, e.g. ``"gpg"`` or ``"gpgsm"``.
+    - key: str
+        The key identifier understood by the given binary. Examples:
+        - For ``gpg`` (OpenPGP): a key ID or fingerprint, e.g. ``"56538CCF"``.
+        - For ``gpgsm`` (S/MIME): a certificate keyref, e.g.
+          ``"\\&165F2FB4F58D..."``.
+    - logfile: a file-like object or ``None``
+        If provided, raw pexpect I/O is mirrored to this stream for debugging
+        (e.g. ``sys.stdout``). Defaults to ``None``.
+
+    Returns
+    - ``True``  if the key requires a passphrase.
+    - ``False`` if the key does not require a passphrase.
+    - ``None``  if the status cannot be determined due to a runtime error
+      (e.g., agent failed to start or pexpect raised an exception).
+
+    Notes
+    - The check is read‑only: ``--dry-run`` and ``--pinentry-mode cancel`` are
+      used to avoid modifying the key or prompting the user.
+    - Environment variables ``LANG`` and ``LC_ALL`` are forced to ``C.utf8``
+      to make output matching stable across locales.
+    - For end‑to‑end manual verification with the repository’s test keyring,
+      see ``testing/manual/needspass.py``.
     """
-    try:
-        child = pexpect.spawn("gpg", f"--pinentry-mode=loopback --dry-run --passwd {key}".split())
-    except Exception:
-        log.FatalError(f"Exception spawning gpg while checking if passphrase needed for key: {key}")
+
+    environ = {**os.environ, "LANG": "C.utf8", "LC_ALL": "C.utf8"}
+    cmd = f"{gpgbin} --pinentry-mode cancel --dry-run --change-passphrase {key} "
+
+    log.Debug(f"{cmd=}")
 
     try:
-        got = child.expect(["passphrase.*:", pexpect.EOF])
-    except Exception:
-        log.FatalError(f"Exception while checking if passphrase needed for key: {key}: {str(child)}")
+        child = pexpect.spawn(cmd, encoding="utf-8", env=environ)
+        child.logfile = logfile
+    except pexpect.ExceptionPexpect as e:
+        log.Error(f"An unexpected error occurred: {e}")
+        return None
+
+    try:
+        got = child.expect(
+            [
+                pexpect.EOF,
+                "passphrase.*:",
+                "failed to start gpg-agent",
+                "ignoring gpg-agent inquiry",
+            ]
+        )
+    except pexpect.ExceptionPexpect as e:
+        log.Error(f"Exception while checking if passphrase needed for: {key}:\n{e}")
+        return None
+
+    child.close()
+    log.Debug(f"{child.exitstatus=}, {child.signalstatus=}, {got=}, {child.after=}")
 
     if got == 0:
-        log.Debug(f"Key {key} needs passphrase")
-        child.close()
-        return True
-    elif got == 1:
         log.Debug(f"Key {key} does not need passphrase")
         return False
-    return None
+    elif got == 1:
+        log.Debug(f"Key {key} needs passphrase")
+        return True
+    elif got == 2:
+        log.Error(f"gpg-agent failed to start.")
+        return None
+    elif got == 3:
+        log.Error(f"gpg-agent failed inquiry ignored.")
+        return None
 
 
 def copyfileobj(infp, outfp, byte_count=-1):
