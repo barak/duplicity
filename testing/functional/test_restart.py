@@ -88,6 +88,7 @@ class RestartTest(FunctionalTestCase):
         self.backup("full", f"{_runtest_dir}/testfiles/largefiles")
         self.verify(f"{_runtest_dir}/testfiles/largefiles")
 
+    @unittest.skipIf(os.path.exists("/.dockerenv"), "Won't work on docker")
     def test_restart_encrypt_without_password(self):
         """
         Test that we can successfully restart a encrypt-key-only backup without
