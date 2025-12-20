@@ -160,7 +160,7 @@ class SetLogTimestampAction(argparse._StoreConstAction):
         super().__init__(option_strings, dest, **kwargs)
 
     def __call__(self, parser, namespace, values, option_string=None):
-        log._log_timestamp = True
+        log.add_timestamp()
 
 
 def _check_int(val):
