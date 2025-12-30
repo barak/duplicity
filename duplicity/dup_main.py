@@ -765,7 +765,7 @@ def incremental_backup(sig_chain, col_stats=None):
     if config.progress:
         progress.tracker = progress.ProgressTracker()
         # Fake a backup to compute total of moving bytes
-        tarblock_iter = diffdir.DirDelta(config.select, sig_chain.get_fileobjs())
+        tarblock_iter = diffdir.DirDelta_WriteSig(config.select, sig_chain.get_fileobjs(), None)
         dummy_backup(tarblock_iter)
         # Store computed stats to compute progress later
         progress.tracker.set_evidence(diffdir.stats, False)
@@ -775,7 +775,7 @@ def incremental_backup(sig_chain, col_stats=None):
         progress.progress_thread = progress.LogProgressThread()
 
     if config.dry_run:
-        tarblock_iter = diffdir.DirDelta(config.select, sig_chain.get_fileobjs())
+        tarblock_iter = diffdir.DirDelta_WriteSig(config.select, sig_chain.get_fileobjs(), None)
         bytes_written = dummy_backup(tarblock_iter)
     else:
         new_sig_outfp = get_sig_fileobj("new-sig")

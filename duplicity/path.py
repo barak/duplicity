@@ -623,13 +623,8 @@ class Path(ROPath):
 
     def deltree(self):
         """Remove self by recursively deleting files under it"""
-        from duplicity import selection  # TODO: avoid circ. dep. issue
-
         log.Debug(_("Deleting tree %s") % self.uc_name)
-        itr = IterTreeReducer(PathDeleter, [])
-        for path in selection.Select(self).set_iter():
-            itr(path.index, path)
-        itr.Finish()
+        shutil.rmtree(self.name)
         self.setdata()
 
     def get_parent_dir(self):
@@ -807,19 +802,3 @@ class DupPath(Path):
                 return gpg.GPGFile(True, self, gpg_profile)
         else:
             return self.open(mode)
-
-
-class PathDeleter(ITRBranch):
-    """Delete a directory.  Called by Path.deltree"""
-
-    def start_process(self, index, path):  # pylint: disable=unused-argument
-        self.path = path
-
-    def end_process(self):
-        self.path.delete()
-
-    def can_fast_process(self, index, path):  # pylint: disable=unused-argument
-        return not path.isdir()
-
-    def fast_process(self, index, path):  # pylint: disable=unused-argument
-        path.delete()

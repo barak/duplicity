@@ -194,9 +194,10 @@ class WebDAVBackend(duplicity.backend.Backend):
         if self.username or self.password:
             # Workaround cpython http.client issue
             # https://github.com/python/cpython/issues/70107
-            self.conn.request("OPTIONS", self.directory, None)
-            response = self.conn.getresponse()
-            response.read()
+            # PUT may not return 401 when ran without basic-auth but throw SSL-EOF-Error or hang
+            # as a workaround we run an OPTIONS request that adds auth if needed and creates
+            # an authenticated connection to (re)use
+            response = self.request("OPTIONS", self.directory, None)
             response.close()
 
     def _close(self):
@@ -226,6 +227,8 @@ class WebDAVBackend(duplicity.backend.Backend):
 
         if self.digest_challenge is not None:
             self.headers["Authorization"] = self.get_digest_authorization(path)
+        elif self.username or self.password:
+            self.headers["Authorization"] = self.get_basic_authorization()
 
         log.Debug(_("WebDAV %s %s request with headers: %s ") % (method, quoted_path, munge_headers(self.headers)))
         log.Debug(_("WebDAV data length: %s ") % sys.getsizeof(data))
@@ -245,6 +248,7 @@ class WebDAVBackend(duplicity.backend.Backend):
                 return self.request(method, self.directory, data, redirected + 1)
             else:
                 raise FatalBackendException(_("WebDAV missing location header in redirect response."))
+        # mainly for digest-auth to recalculate with response values
         elif response.status == 401:
             response.read()
             response.close()
