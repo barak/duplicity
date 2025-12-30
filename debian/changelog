@@ -1,6 +1,12 @@
-duplicity (3.0.6.3-0.1) UNRELEASED; urgency=medium
+duplicity (3.0.6.3-1.1) UNRELEASED; urgency=medium
 
-  * new upstream release (closes: #977546)
+  * include upstream fixes
+    - in particular ac163d5e (closes: #977546)
+      Combined fix to upstream issues 912 and 914
+      #912 'duplicity --use-gpgsm --encrypt-key' prompts for passphrase
+            when it shouldn't
+      #914 Duplicity fails to check if gpg key needs passphrase with
+           non-English locale
   * forward port quilt patches
   * add optional runtime dependency on python3-socks aka pysocks
   * bump policy version
@@ -8,6 +14,20 @@ duplicity (3.0.6.3-0.1) UNRELEASED; urgency=medium
   * quilt patch man page typos
 
  -- Barak A. Pearlmutter <bap@debian.org>  Fri, 12 Dec 2025 11:24:44 +0000
+
+duplicity (3.0.6.3-1) unstable; urgency=medium
+
+  * new upstream release
+
+ -- Alexander Zangerl <az@debian.org>  Mon, 22 Dec 2025 14:42:10 +1000
+
+duplicity (3.0.6.2-1) unstable; urgency=medium
+
+  * thanks for various packaging patches go to Barak Pearlmutter
+  * new upstream release (closes: #977546, #1120839)
+  * adjusted dependencies to suggest b2sdk (closes: #1121044)
+
+ -- Alexander Zangerl <az@debian.org>  Sat, 29 Nov 2025 14:42:18 +1000
 
 duplicity (3.0.5.1-2) unstable; urgency=medium
 
